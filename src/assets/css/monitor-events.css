@@ -1,0 +1,25 @@
+/* FullCalendar event colors by status (shared) */
+/* timeGrid (day/week) */
+.fc .fc-timegrid-event.bg-monitor-Programada .fc-event-main { background-color: #3b82f6 !important; color: #fff; }
+.fc .fc-timegrid-event.bg-monitor-Iniciada .fc-event-main   { background-color: #f59e0b !important; color: #fff; }
+.fc .fc-timegrid-event.bg-monitor-EnEspera .fc-event-main   { background-color: #a855f7 !important; color: #fff; }
+.fc .fc-timegrid-event.bg-monitor-Completada .fc-event-main { background-color: #10b981 !important; color: #fff; }
+.fc .fc-timegrid-event.bg-monitor-Cancelada .fc-event-main  { background-color: #ef4444 !important; color: #fff; }
+.fc .fc-timegrid-event.bg-monitor-Noasistio .fc-event-main  { background-color: #ef4444 !important; color: #fff; }
+.fc .fc-timegrid-event.bg-monitor-Urgencia .fc-event-main   { background-color: #dc2626 !important; color: #fff; }
+
+/* dayGrid (month) and horizontal events */
+.fc .fc-daygrid-event.bg-monitor-Programada,
+.fc .fc-h-event.bg-monitor-Programada { background-color: #3b82f6 !important; border-color: #2563eb !important; color: #fff; }
+.fc .fc-daygrid-event.bg-monitor-Iniciada,
+.fc .fc-h-event.bg-monitor-Iniciada   { background-color: #f59e0b !important; border-color: #d97706 !important; color: #fff; }
+.fc .fc-daygrid-event.bg-monitor-EnEspera,
+.fc .fc-h-event.bg-monitor-EnEspera   { background-color: #a855f7 !important; border-color: #7e22ce !important; color: #fff; }
+.fc .fc-daygrid-event.bg-monitor-Completada,
+.fc .fc-h-event.bg-monitor-Completada { background-color: #10b981 !important; border-color: #059669 !important; color: #fff; }
+.fc .fc-daygrid-event.bg-monitor-Cancelada,
+.fc .fc-h-event.bg-monitor-Cancelada  { background-color: #ef4444 !important; border-color: #dc2626 !important; color: #fff; }
+.fc .fc-daygrid-event.bg-monitor-Noasistio,
+.fc .fc-h-event.bg-monitor-Noasistio  { background-color: #ef4444 !important; border-color: #dc2626 !important; color: #fff; }
+.fc .fc-daygrid-event.bg-monitor-Urgencia,
+.fc .fc-h-event.bg-monitor-Urgencia   { background-color: #dc2626 !important; border-color: #b91c1c !important; color: #fff; }
