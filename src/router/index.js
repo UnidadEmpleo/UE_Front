@@ -8,11 +8,6 @@ import routeRoles from "@mod1/modules/roles/route/routeRoles.js";
 import routeProcesos from "@mod1/modules/procesos/route/routeProceso.js";
 import routeBitacora from "@mod1/modules/bitacora/route/routeBitacora.js";
 import routeUsuarios from "@mod1/modules/usuarios/route/routeUsuarios.js";
-import routePaciente from "@mod2/modules/pacientes/route/routePaciente.js";
-import routeArchivoClinico from "@mod2/modules/ArchivoClinico/route/routeArchivoClinico.js";
-import routeAtencion from "@mod2/modules/atencion/route/routeAtencion.js";
-import routeFarmacia from "@mod2/modules/farmacia/route/routeFarmacia.js";
-import routeDireccion from "@mod2/modules/direccion/route/routeDireccion.js";
 import route2Factor from "@/views/auth/external/2Factor/route/route2Factor.js";
 import localStorageService from "@/utils/localStorageService";
 import routeAspirante from "../../UnidadEmpleo/src/modules/Aspirante/route/routeAspirante";
@@ -82,12 +77,7 @@ const routes = [
   ,...routeRoles
   ,...routeProcesos
   ,...routeBitacora
-  ,...routePaciente
   ,...route2Factor
-  ,...routeFarmacia
-  ,...routeArchivoClinico
-  ,...routeAtencion
-  ,...routeDireccion
   ,...routeAspirante
   ,...routeSolicitud
   ,...routeEvaluacion

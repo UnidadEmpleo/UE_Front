@@ -381,9 +381,10 @@ export default {
       if (options.value.perfilId == null){
         alert('No hay perfil ');
         router.push({ name: "EvaluacionList" });
-      }else if ()
-
-      console.log(options)
+      }else {
+        console.log(options.value.perfilId)
+      }
+      
       //if (options.perfilId == lñjkagsdflkjñadfslkñ) FALTA VER LOS PERFILES PARA VISUALIZACIÓN
 
     });
