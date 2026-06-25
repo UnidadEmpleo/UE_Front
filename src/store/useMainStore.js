@@ -211,6 +211,7 @@ export const useMainStore = defineStore("main", {
           localStorageService.remove("corporaciones");
           localStorageService.remove("userdata");
           localStorageService.remove("userInfo");
+          localStorageService.remove("navItems");
 
 
           try {
@@ -257,8 +258,6 @@ export const useMainStore = defineStore("main", {
       }
     },
     async getRol(id) {
-      //this.userRol = localStorageService.get("userRol") || null;
-      //if (this.userRol == null) {
       this.userRol = await getRolById(id);
       localStorageService.set("userRol", this.userRol);
 
@@ -271,7 +270,15 @@ export const useMainStore = defineStore("main", {
     async fetchProcess() {
 
       const permisosDelRolUsuario = this.userdata.permisos.map((p) => p.procesoId);
+      if (permisosDelRolUsuario == null || permisosDelRolUsuario.length <= 0){
+          console.log('No tiene permisos');
+          this.navItems = [];
+          localStorageService.remove("navItems");
+      }
+        
 
+      console.log('useMainStore.permisosDelRolUsuario = '+permisosDelRolUsuario)
+      
       const processByRol = this.userRol.procesos.filter((process) =>
         permisosDelRolUsuario.includes(process.id)
         && process.activo == true
@@ -282,9 +289,6 @@ export const useMainStore = defineStore("main", {
         listadoPadres.includes(process.id)
         && process.activo == true
       );
-
-
-
 
       const permisoProcesoPorUsuario = [];
       procesosPadreDelRol.forEach(element => {
@@ -307,7 +311,6 @@ export const useMainStore = defineStore("main", {
 
       /*Esto crea la navegacion*/
       if (procesosPadreDelRol.length > 0) {
-
 
         const nuevosItems = procesosPadreDelRol.map((pb) => ({
           title: pb.descr,
@@ -350,6 +353,8 @@ export const useMainStore = defineStore("main", {
 
 
     },
+
+
     async getUserInfo() {
       try {
         this.corporaciones = localStorageService.get("corporaciones");
@@ -369,7 +374,7 @@ export const useMainStore = defineStore("main", {
 
         this.userdata = localStorageService.get("userdata");
         if (this.userdata == null){
-          this.userdata = await getUser();
+        this.userdata = await getUser();
           if (!this.userdata.activo) {
             Swal.fire({
               title: "Usuario Deshabilitado",
@@ -383,70 +388,14 @@ export const useMainStore = defineStore("main", {
 
             return;
           }
-          localStorageService.set("userdata", this.userdata);
-          localStorageService.set("usercorporations", this.userdata.corporaciones);
-          this.inactivityTimeout = this.userdata.tiempoInactividad ? (this.userdata.tiempoInactividad * 60) * 1000 : 30000;
-          localStorageService.set("inactivityTimeout", this.inactivityTimeout);
+         localStorageService.set("userdata", this.userdata);
+         localStorageService.set("usercorporations", this.userdata.corporaciones);
+         this.inactivityTimeout = this.userdata.tiempoInactividad ? (this.userdata.tiempoInactividad * 60) * 1000 : 30000;
+         localStorageService.set("inactivityTimeout", this.inactivityTimeout);
         } 
         
         await this.getRol(this.userdata.rolId);
 
-        console.log('ROLES.....')
-        console.log(this.userRol)
-        //}
-        /* else {
-           this.usercorporations = this.userdata.corporaciones;
-           localStorageService.set("usercorporations",this.userdata.corporaciones);
-           this.inactivityTimeout = this.userdata.tiempoInactividad ? (this.userdata.tiempoInactividad * 60) * 1000 : 30000; // Default to 100 seconds if not set
-           localStorageService.set("inactivityTimeout",this.inactivityTimeout);
-         }
-           */
-
-        /*
-      // Aqui va la opción de seleccionar corporación para su uso que no será necesario.
-        if (this.coporacionSelected == null || this.coporacionSelected == '') {
-          if (this.userdata.corporaciones.length > 0) {
-            if (this.userdata.corporaciones.length > 1) {
-
-              let corporacionesSeleccionar = this.corporaciones.filter(c => this.userdata.corporaciones.includes(c.id)).map(c => c.nombre);
-
-              // Muestra un SweetAlert para seleccionar una corporación 
-              const { value: corporacion } = await Swal.fire({
-                title: "Selecciona una corporacion",
-                input: "select",
-                inputOptions: corporacionesSeleccionar,
-                inputPlaceholder: "Selecciona la corporacion!",
-                showCancelButton: false,
-                allowOutsideClick: false, // Evita que se cierre al hacer clic fuera
-                inputValidator: (value) => {
-                  return new Promise((resolve) => {
-                    const intValue = parseInt(value, 10);
-
-                    if (!value || isNaN(intValue)) {
-                      resolve("Necesitas seleccionar una corporación válida.");
-                    } else {
-                      resolve();
-                    }
-                  });
-                }
-
-              });
-
-              this.coporacionSelected = this.corporaciones.find(c => c.id === this.userdata.corporaciones[corporacion]).nombre;
-              this.coporacionSelectedId = this.corporaciones.find(c => c.id === this.userdata.corporaciones[corporacion]).id;
-            }
-            else {
-              this.coporacionSelected = this.corporaciones.find(c => c.id === this.userdata.corporaciones[0]).nombre;
-              this.coporacionSelectedId = this.corporaciones.find(c => c.id === this.userdata.corporaciones[0]).id;
-            }
-
-            localStorageService.set("coporacionSelected", this.coporacionSelected);
-            localStorageService.set("coporacionSelectedId", this.coporacionSelectedId);
-          }
-
-        }
-
-        */
         this.fetchProcess();
 
       } catch (error) {

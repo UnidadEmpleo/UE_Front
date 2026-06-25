@@ -32,7 +32,7 @@ const requireAuth = (to, from, next) => {
 const routeAspirante = [
   {
     path: "/aspirantes",
-    name: "AspirantesList",
+    name: "AspiranteList",
     component: () => import("@ue/modules/Aspirante/views/AspiranteList.vue"),
       beforeEnter: requireAuth,
   },

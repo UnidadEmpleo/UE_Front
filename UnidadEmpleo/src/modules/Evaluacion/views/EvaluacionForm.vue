@@ -27,8 +27,7 @@
                     <label  class="form-label font-weight-bolder col-sm-auto">Apellido Paterno: </label><label  class="form-label  col-sm-2">{{ asp.Apellido_Paterno }}</label>
                     <label  class="form-label font-weight-bolder col-sm-auto">Apellido Materno: </label><label  class="form-label  col-sm-2">{{ asp.Apellido_Materno }}</label>
                     <label  class="form-label font-weight-bolder col-sm-auto">Nombre: </label><label  class="form-label  col-sm-2">{{asp.Nombre}}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">Sexo: </label><label  class="form-label  col-sm-1">{{getSexoById(asp.Sexo) }}</label>
-                  </div>
+                    <label  class="form-label font-weight-bolder col-sm-auto">Sexo: </label><label  class="form-label  col-sm-1">{{getSexoById(asp.Sexo) }}  {{ asp.Sexo }}</label>                  </div>
                   <div class="container-fluid ">
                     <label  class="form-label font-weight-bolder col-sm-auto">CURP: </label><label  class="form-label  col-sm-2">{{ asp.Curp }}</label>
                     <label  class="form-label font-weight-bolder col-sm-auto">RFC: </label><label  class="form-label  col-sm-2">{{ asp.Rfc }}</label>
@@ -69,22 +68,13 @@
 
       <div class="card-body">
             <form class="multisteps-form__form">
-              <CardEval :class="activeStep === 0 ? activeClass : ''"/>
+              <CardEval :sexo="asp.Sexo" :class="activeStep === 0 ? activeClass : ''"/>
               
               <div class="mt-4 d-flex justify-content-between">
-                <MaterialButton id="prev-step-button" color="secondary" variant="outline"
-                  :disabled="activeStep === 0" @click.prevent="handlePrevStep">
-                  Anterior
-                </MaterialButton>
-
-                <MaterialButton id="verify" color="primary" variant="gradient" @click.prevent="verifyData()" :disabled="activeStep === 1" >
-                  {{ activeStep === 0 ? "Guardar y continuar..." : "-" }}
-                  
-                </MaterialButton>
-            
+                
                 <MaterialButton id="next-step-button" :color="sigColor" :variant="sigVariant" :disabled="sigPaso"
-                  @click.prevent="activeStep === 1 ? handleSave() : handleNextStep()">
-                  {{ activeStep === 1 ? "Continuar con su evaluacion" : "Siguiente" }}
+                  @click.prevent="activeStep === 0 ? handleSave() : handleNextStep()">
+                  {{ activeStep !== 0 ? "Continuar con su evaluacion" : "Terminar" }}
                 </MaterialButton>
 
               </div>
@@ -116,8 +106,6 @@ export default {
   },
   setup() {
     
-    
-    
     const solicitudStore = useSolicitudStore();
     const evalStore = useEvaluacionStore();
     const { activeStep, activeClass } = storeToRefs(evalStore); 
@@ -138,7 +126,8 @@ export default {
 
     const placeholder = fotoDefault;
     onMounted(() => {
-      activeStep.value = 0;
+      activeStep.value = 0;      
+      console.log('EvaluacionForm   '+evalStore.sexo +'  '+ asp.value.Sexo)
     });
     const calculaEdad = () => {
       const nacimiento = (asp.value.Fecha_Nacimiento instanceof Date) 
@@ -157,9 +146,7 @@ export default {
       }
       return años
     }
-    
    
-
     const navigateToList = () => {
       aspiranteStore.resetSelectedAspirante();
       evalStore.resetAll();
@@ -169,7 +156,7 @@ export default {
     }
 
     const handleSave = () => {
-        router.push({ name: "AspirantesList" }); // DE AQUI SE VA A LA PAGINA DE EVALUAR
+        router.push({ name: "EvaluacionList" }); // DE AQUI SE VA A LA PAGINA DE EVALUAR
     }
 
     const verifyData = () => {
@@ -215,11 +202,6 @@ export default {
 
     const validateStep = () => {
       let isValid = true;
-      // AGREGAR LOS CAMPOS DE CUERPO, REGION Y SITUACION
-      
-      ///CREAR REGISTRO EN LA BASE DE DATOS
-
-      
       return isValid;
     };
 

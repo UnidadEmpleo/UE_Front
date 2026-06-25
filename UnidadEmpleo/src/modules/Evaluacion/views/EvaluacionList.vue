@@ -107,9 +107,10 @@ export default {
     const handleEvaluar = async (row) => {
       aspiranteStore.verifyAspiranteByCurp(row.Curp)
       evalStore.solicitudId = row.id
-      evalStore.fetchEvaluaciones(row.id)
+      evalStore.sexo = row.sexoid
+      //evalStore.fetchEvaluaciones(row.id)
       solicitudStore.fetchSolicitudById(row.id)
-      console.log('hanldeUpdate solid='+evalStore.solicitudId+'-')
+      console.log('aspiorante ' +aspiranteStore.aspirante.Sexo)
       router.push({ name: "EvaluacionForm" });
     };
 

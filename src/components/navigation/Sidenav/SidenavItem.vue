@@ -1,7 +1,8 @@
 <template>
   <li class="nav-item">
-    <router-link class="nav-link" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" :title="text" :to="to" @click="handleClick($event)">
-       <i class="material-icons-round opacity-10 " style="font-size: 1.5rem;"> {{ miniIcon }}</i>
+    <router-link class="nav-link" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top"
+       :title="text" :to="to" @click="handleClick($event)">
+       <i class="material-icons-round opacity-10 " style="font-size: 1.3rem;"> {{ miniIcon }}</i>
     
       <span class="sidenav-normal me-3 ms-3 ps-1 text-white">
         {{ text }}

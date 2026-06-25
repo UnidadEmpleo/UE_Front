@@ -57,13 +57,9 @@ export default {
   setup() {
     const store = useMainStore();
     const {
-      navbarMinimize,
-      currentRoute,
-      navItems,
-      userdata,
-      usercorporations,
-      coporacionSelected,
-      isPinned,
+      navbarMinimize,   currentRoute,
+      navItems,         userdata,
+      usercorporations, coporacionSelected,  isPinned,
     } = storeToRefs(store);
     const route = useRoute();
     const router = useRouter();

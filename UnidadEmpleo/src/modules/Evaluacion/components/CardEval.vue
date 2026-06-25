@@ -3,10 +3,11 @@
     <div class="mb-3">
       <h5 class="font-weight-bolder mb-0">Evaluaciones</h5>
       <p class="mb-0 text-sm">Resultados</p>
+      {{ perfil }}
     </div>
     
 
-      <div class="row ">
+      <div class="row justify-content-center">
 
         <div class="card col-sm-3" :style="{display: visibleRegistro}">
           <div class="card-header d-flex justify-content-between">
@@ -258,7 +259,6 @@
           </div>
         </div>
 
-
       </div>
 
     
@@ -277,9 +277,11 @@
 </style>
 
 <script>
+
 import { useMainStore } from '@/store/useMainStore.js';
 import { useEvaluacionStore } from '../useEvaluacionStore.js';
 import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
+
 import ExpedienteCompleto from './ExpedienteCompleto.vue';
 import MaterialButton from '../../../../../src/components/common/MaterialButton.vue';
 import MaterialSwitch from "@/components/common/MaterialSwitch.vue";
@@ -295,27 +297,47 @@ export default {
     MaterialButton,MaterialSwitch,
     RichTextEditor,ExpedienteCompleto
   },
+  props: {sexo: { type: Boolean, default: false, }},
+  
   name: "SolicitudDatosBasicos",
-  setup() {
+  setup(props) {
+    console.log('In setup '+props.sexo)
     const store = useMainStore();
     const evalStore = useEvaluacionStore()
-    const { registro, psicologia,medico,antidoping,pie, options } = storeToRefs(evalStore);
+    const { registro, psicologia,medico,antidoping,pie, options, } = storeToRefs(evalStore);
     const usuario = store.externalUser.username;
-
     const solicitudStore = useSolicitudStore();
     const { solicitud: sol } = storeToRefs(solicitudStore);
     const router = useRouter();
-    const visibleRegistro="flex"
-    const visiblePsico="flex"
-    const visibleMedico="flex"
-    const visibleAnti="flex"
-    const visiblePie="flex"
-    let disabledRregistro = registro.id == 0? true:false
-    let disabledPsico = false
-    let disabledMedico = false
-    let disabledAnti = false
-    let disabledPie = false
+    const perfil = ref()
+    let visibleRegistro=ref("flex")
+    let visiblePsico=ref("flex")
+    let visibleMedico=ref("flex")
+    let visibleAnti=ref("flex")
+    let visiblePie= ref("flex")
+    let disabledRregistro = registro.id == 0? true:ref(false)
+    let disabledPsico = ref(false)
+    let disabledMedico = ref(false)
+    let disabledAnti = ref(false)
+    let disabledPie = ref(false)
     const expedienteVisible = ref(false)
+
+    const setPerfilVisibleDisabled= (vr,vp,vm,va,vpi,dr,dp,dm,da,dpi) =>{
+
+      visibleRegistro.value = vr
+      visiblePsico.value = vp
+      visibleMedico.value = vm
+      visibleAnti.value = va
+      visiblePie.value = vpi
+
+      disabledRregistro.value = dr
+      disabledPsico.value = dp
+      disabledMedico.value = dm
+      disabledAnti.value = da
+      disabledPie.value = dpi
+
+    }
+
     //let enableRegistroUpd = false;
     function openExpediente() {
       expedienteVisible.value = true
@@ -375,14 +397,50 @@ export default {
     }
 
     onMounted(() => {
-      console.log('En cardEval '+evalStore.solicitudId)
-      evalStore.setRecurso()
       
-      if (options.value.perfilId == null){
-        alert('No hay perfil ');
+      evalStore.setRecurso()
+
+      perfil.value = options.value.perfilId
+      
+      if (options.value.perfilId == null ){
+        alert('No hay perfil o se perdió la solicitud');
         router.push({ name: "EvaluacionList" });
-      }else {
-        console.log(options.value.perfilId)
+      }else if (options.value.perfilId == 8){
+        if (!evalStore.sexo)
+          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",false,false,false,false,false)
+        else
+          setPerfilVisibleDisabled("flex","flex","flex","flex","none",false,false,false,false,true)
+        console.log('Administrador '+sol.value)
+      }      
+      else if (options.value.perfilId == 1 || options.value.perfilId == 2){
+        if (!evalStore.sexo)
+          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",true,true,true,true,true)  
+        else
+          setPerfilVisibleDisabled("flex","flex","flex","flex","none",true,true,true,true,true)
+        console.log('Subdirector y gerente')
+      }
+      else if (options.value.perfilId == 3){
+        if (evalStore.sexo)
+          setPerfilVisibleDisabled("flex","flex","flex","flex","none",true,true,true,true,true)
+        else
+          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",true,true,true,true,true)
+
+        console.log('Atención y Registro')
+      }
+      else if (options.value.perfilId == 4){
+        setPerfilVisibleDisabled("none","flex","none","none","none",true,false,true,true,true)
+        console.log('Psicologo')
+      }
+      else if (options.value.perfilId == 5){
+        setPerfilVisibleDisabled("none","none","flex","none","none",true,true,false,true,true)
+        console.log('Médico')
+      }
+      else if (options.value.perfilId == 6){
+        if (!evalStore.sexo)
+          setPerfilVisibleDisabled("none","none","none","flex","flex",true,true,true,false,false)
+        else
+          setPerfilVisibleDisabled("none","none","none","flex","none",true,true,true,false,true)
+        console.log('Antidoping')
       }
       
       //if (options.perfilId == lñjkagsdflkjñadfslkñ) FALTA VER LOS PERFILES PARA VISUALIZACIÓN
@@ -394,7 +452,9 @@ export default {
       registro, psicologia,medico,antidoping,pie,
 
       EdicionRegistro,
-      ingreso,termino,openExpediente,closeExpediente,expedienteVisible
+      ingreso,termino,openExpediente,closeExpediente,expedienteVisible,perfil
+      
+
 
     };
   },

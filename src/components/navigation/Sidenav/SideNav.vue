@@ -5,8 +5,7 @@
         {{ isSidenavOpen ? "Close" : "Open" }}
       </button>
       <ul class="navbar-nav">
-        <SidenavItem
-v-for="(item, index) in navItems" :key="index" :to="item.to" :mini-icon="item.miniIcon" :sistema-id="item.sistemaId"
+        <SidenavItem v-for="(item, index) in navItems" :key="index" :to="item.to" :mini-icon="item.miniIcon" :sistema-id="item.sistemaId"
           :text="item.text" />
       </ul>
     </div>
@@ -33,11 +32,8 @@ export default {
     const toggleSidenav = () => 
     {
         console.log("Toggle Sidenav clicked");
-        isSidenavOpen.value = !isSidenavOpen.value;
-      
+        isSidenavOpen.value = !isSidenavOpen.value;      
     };
-
-     
 
     return {
       isSidenavOpen,

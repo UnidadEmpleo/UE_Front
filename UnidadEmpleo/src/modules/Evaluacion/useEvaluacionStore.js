@@ -59,7 +59,7 @@ export const useEvaluacionStore = defineStore('evaluacion', {
     regionEnable:false,
     situacionEnable:false,
     cuerpoEnable:false,
-
+    sexo:false,
     columns: ["id",
         "ingreso",
         "salida",
@@ -69,6 +69,15 @@ export const useEvaluacionStore = defineStore('evaluacion', {
         "idSoliciud",
         "tipoEvaluacion","usuarioEvaluo",
         "nombreUsuarioEvaluo"], 
+    visiblePsico : "flex",
+    visibleMedico : "flex",
+    visibleAnti : "flex",
+    visiblePie : "flex",
+    
+    disabledPsico : false,
+    disabledMedico : false,
+    disabledAnti : false,
+    disabledPie : false,
   }),
   
   actions: {
@@ -287,7 +296,7 @@ export const useEvaluacionStore = defineStore('evaluacion', {
       }
     },
 
-    setRecurso(){
+    setRecurso(sexo){
       var externalUser = localStorageService.get("externalUser");
       //Aqui vamos a dar visibilidad a los examenes de acuerdo al perfil
       // Administrador, gerente y subdirector TODAS las evaluaciones con opcion a modificar resultados en espera de que digan
@@ -296,6 +305,7 @@ export const useEvaluacionStore = defineStore('evaluacion', {
       this.options.cuerpoId = userdata.cuerpoId;   
       this.options.regionId = userdata.regionId;
       this.options.perfilId = externalUser.perfilId[0];
+      console.log('Sexo en setRecurso '+sexo)
     },
 
     nextStep() {
@@ -349,6 +359,12 @@ export const useEvaluacionStore = defineStore('evaluacion', {
       this.resetPsicologia();
       this.resetAntidoping();
       this.resetPie();
+      this.options = {
+            cuerpoId:'',
+            regionId:0,
+            perfilId:0,
+            situacion:2,
+      }
     }
   },
 })

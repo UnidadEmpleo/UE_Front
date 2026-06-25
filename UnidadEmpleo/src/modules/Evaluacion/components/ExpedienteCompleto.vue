@@ -7,7 +7,6 @@
       </div>
       <div class="modal-body">
     
-        
        <div class="mb-3">
           
           <div class="card">

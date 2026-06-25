@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import localStorageService from "@/utils/localStorageService";
 import {getSolicitudById,getItems,getItemsByAspirante,getItemsByOptions,createItem,updateItem,deleteItem,} from '@ue/services/solicitudService.js'
 import { getStatusSolicitudById } from '../../../services/catalogosDbService';
-
+import { getSexoById } from "@ue/services/catalogosDbService"
 import { useMainStore } from '@/store/useMainStore.js'
 
 export const useSolicitudStore = defineStore('solicitud', {
@@ -81,7 +81,7 @@ export const useSolicitudStore = defineStore('solicitud', {
     activeStep: 0,
     activeClass: 'js-active position-relative',
     formSteps: 2,
-    columns: ['Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud', 'Observaciones'], // Table columns
+    columns: ['Sexo','Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud', 'Observaciones'], // Table columns
     rowsSolicitudes: [],
 
     // para el filtro de List
@@ -140,6 +140,8 @@ export const useSolicitudStore = defineStore('solicitud', {
             "CorporacionId": ev.corporacionId,
             "RegionId": ev.regionId,
             "Curp": ev.curp,
+            "Sexo": getSexoById(ev.aspirante.sexo),
+            "sexoid":ev.aspirante.sexo
         }))
 
 
@@ -166,6 +168,8 @@ export const useSolicitudStore = defineStore('solicitud', {
             "CorporacionId": ev.corporacionId,
             "RegionId": ev.regionId,
             "Curp": ev.curp,
+            "Sexo": getSexoById(ev.aspirante.sexo),
+            "sexoid":ev.aspirante.sexo
         }))
 
         } catch (error) {
@@ -297,7 +301,9 @@ export const useSolicitudStore = defineStore('solicitud', {
               "status": itemStore.status,
               "observaciones": itemStore.observaciones,
 
-             
+              "aspirante":{
+                "sexo": itemStore.aspirante.sexo,
+              }
             }
           }
         } catch (error) {
