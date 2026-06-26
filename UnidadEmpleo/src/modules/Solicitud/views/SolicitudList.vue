@@ -66,13 +66,9 @@
         <div>
           
         </div>
-        <material-button
-         color="primary"
-          variant="gradient"
-          size="sm"
-          @click="handleUpdate(row)"
-          class="me-2"
-          v-permiso="'Grupos.Editar'">
+        <material-button color="primary" variant="gradient"
+          size="sm" @click="handleUpdate(row)"
+          class="me-2" v-permiso="'Grupos.Editar'">
           Actualizar
         </material-button>
         

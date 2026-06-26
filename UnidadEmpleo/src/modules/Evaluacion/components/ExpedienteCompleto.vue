@@ -262,7 +262,7 @@
         <div class="d-flex justify-content-between mt-3">
           <button class="btn btn-secondary" @click="$emit('close')">Cancelar</button>
           <div class="d-flex gap-2">
-            <button class="btn btn-gold" :disabled="loading" @click.prevent="onPrevSave">Vista previa</button>
+            <button class="btn btn-gold" :disabled="loading" @click.prevent="onPrevSave">Terminar</button>
           </div>
         </div>
         

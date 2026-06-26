@@ -20,9 +20,18 @@
               </div>
                 
              <div class="row container-fluid mb-1">
-                <div class="col-sm-1 mb-auto mt-auto">
-                    <div class="avatar avatar-xl position-relative">
+                <div class="col-sm-3 justify-content-between">
+                    <div class="avatar avatar-xl ">
                         <img :src="placeholder" alt="Ver detalle" class="shadow-sm avatar-img" @click="navigateToView" />
+                    </div>
+                    -
+                    <div class="avatar avatar-xl ">
+                      <img :src="qrholder" alt="profile_image" class="shadow-sm avatar-img"  :class="{ 'is-disabled': true }" @click="openQrView()"/>
+                      <QrCURP
+                        :visible="qrVisible"
+                        @update:completo="v => closeQrView()"
+                        @close="qrVisible = false"
+                      />
                     </div>
                 </div>
                 <div class="col-sm-3 mt-4">
@@ -30,9 +39,7 @@
                 </div>
                 <div class="col-sm-2 mt-4">
                   <div class="container-fluid ">
-                    <MaterialButton @click="existencia" color="success" size="sm">Existe?</MaterialButton>
-                    <MaterialButton @click="navigateToCreate" color="info" size="sm">Crear</MaterialButton> 
-                    
+                    <MaterialButton @click="existencia" color="success" size="sm">Verificar existencia</MaterialButton>
                   </div>
                 </div>
                 <div class="col-sm-3 mt-4">
@@ -92,9 +99,8 @@
             <solicitudDatosBasicos :class="activeStep === 0 ? activeClass : ''"/>
             <Referencias :class="activeStep === 1 ? activeClass : ''"/>
             
-
-            
             <div class="mt-4 d-flex justify-content-between">
+
               <MaterialButton id="prev-step-button" color="secondary" variant="outline"
                 :disabled="activeStep === 0" @click.prevent="handlePrevStep">
                 Anterior
@@ -107,7 +113,7 @@
            
               <MaterialButton id="next-step-button" :color="sigColor" :variant="sigVariant" :disabled="sigPaso"
                 @click.prevent="activeStep === 1 ? handleSave() : handleNextStep()">
-                {{ activeStep === 1 ? "Continuar con su evaluacion" : "Siguiente" }}
+                {{ activeStep === 1 ? "Concluir solicitud" : "Siguiente" }}
               </MaterialButton>
 
             </div>
@@ -132,6 +138,8 @@ import { useSolicitudStore } from "../store/solicitudStore";
 import { useReferenciaStore } from "../../Referencia/useReferenceStore.js";
 import { useEvaluacionStore } from "../../Evaluacion/useEvaluacionStore.js";
 import fotoDefault from "@/assets/img/user.png";
+import qrDefault from "@/assets/img/cusaem_qr.png";
+import QrCURP from "@ue/modules/Aspirante/components/QrCURP.vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { useMainStore } from "@/store/useMainStore";
@@ -146,7 +154,7 @@ export default {
   components: {
     MaterialButton,
     SolicitudDatosBasicos,Referencias,
-    MaterialInput,MaterialComboBox, MaterialSwitch, 
+    MaterialInput,MaterialComboBox, MaterialSwitch, QrCURP
   },
   setup() {
     const gradoEscolaridadOptions = getGradoescolaridad();
@@ -170,9 +178,19 @@ export default {
     let sigColor = ref('secundary');
     let sigVariant = ref('outline');
     
-    let isCreateMode = sol.value.id == 0;
+    const isCreateMode = sol.value.id == 0;
 
     const placeholder = fotoDefault;
+    const qrholder = qrDefault;
+    const qrVisible = ref(false)
+    function openQrView() {
+      qrVisible.value = true
+      //alert('qr clicked '+qrVisible.value)
+    }
+    function closeQrView() {      
+      qrVisible.value = false      
+    }
+
     onMounted(() => {
       activeStep.value = 0;
       if (!isCreateMode)
@@ -206,7 +224,7 @@ export default {
         evalStore.solicitudId = sol.value.id
         evalStore.fetchEvaluaciones(sol.value.id)
 
-        router.push({ name: "EvaluacionForm" }); // DE AQUI SE VA A LA PAGINA DE EVALUAR
+        router.push({ name: "SolicitudList" }); // DE AQUI SE VA A LA PAGINA DE EVALUAR
     }
 
     const verifyData = () => {
@@ -440,7 +458,7 @@ export default {
       asp,sol,placeholder,
       gradoEscolaridadOptions, estadoEscolaridadOptions,sexoOptions,edoCivilOptions,
       existencia,navigateToCreate,navigateToView,fecha,verifyData,sigPaso,sigColor,sigVariant,
-      rowsReferencias
+      rowsReferencias,qrholder,qrVisible,openQrView,closeQrView
     };
   },
 };

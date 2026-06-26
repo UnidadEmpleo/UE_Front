@@ -395,15 +395,19 @@ export const useSolicitudStore = defineStore('solicitud', {
         this.situacionEnable = false;
         this.regionEnable = false;
         console.log(' 2 o 3')
-      }else if ( this.options.perfilId === 7 ) {
+        
+      }else if ( this.options.perfilId === 7 ) { 
+        //CAPTURISTA
         this.cuerpoEnable = true;
         this.situacionEnable = false;
         this.regionEnable = true ;
         console.log(' 7')
       }else{
+        //PERFILES DE EVALUACION
         this.cuerpoEnable = true;
         this.situacionEnable = true;
         this.regionEnable = true;
+        this.options.regionId = 0;
         console.log(' ninguno ')
       }
 

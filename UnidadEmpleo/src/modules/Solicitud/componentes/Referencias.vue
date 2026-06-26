@@ -83,12 +83,11 @@
                       <MaterialInput id="givenCodigoPostal" type="text" label="Codigo Postal" name="givenCodigoPostal" v-model="dato.CodigoPostal" :isRequired="true" placeholder="Escribe el Codigo Postal"
                       @input="dato.CodigoPostal = dato.CodigoPostal.replace(/[^0-9]/g, '') " />
                   </div>
-                  <div class="col-sm-3 mb-3"> 
-                    <MaterialButton color="success" variant="gradient" @click.prevent="fetchFilteredCP(dato.CodigoPostal)" >
-                      Ubicar CP {{ dato.CodigoPostal }}
+                  <div class="col-sm-3 mb-3">
+                    <MaterialButton  @click.prevent="fetchFilteredCP(dato.CodigoPostal)" color="success">
+                      Buscar CP {{ dato.CodigoPostal }}
                     </MaterialButton>
                   </div>
-
                 </div>
 
                 <div class="row container-fluid mt-3">

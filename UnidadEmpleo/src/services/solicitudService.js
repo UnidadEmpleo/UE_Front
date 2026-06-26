@@ -155,7 +155,7 @@ export async function createItem() {
 
         // valores se llenan al finalizar la evaluación
         "revalorable": itemStore.revalorable,  
-        "status": itemStore.status,
+        "status": parseInt(itemStore.status),
         "observaciones": itemStore.observaciones,
         
   }

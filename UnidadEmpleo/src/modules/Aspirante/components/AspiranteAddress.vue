@@ -70,7 +70,7 @@
             />
           </div>
           <div class="col-sm-3 mb-3">
-            <MaterialButton @click="fetchFilteredCP(dato.CodigoPostal)">
+            <MaterialButton @click.prevent="fetchFilteredCP(dato.CodigoPostal)">
               Buscar CP {{ dato.CodigoPostal }}
             </MaterialButton>
           </div>
@@ -184,11 +184,7 @@
               :isRequired="true" disabled="true"
             />
           </div>
-          <div class="col-sm-4 mb-3">
-            <MaterialButton @click="getLocation(5)">
-                  Ubicar Codigo Postal
-            </MaterialButton>
-          </div>
+          
         </div>
 
         <div ref="mapContainer" style="width: 400px; height: 400px; align-content: center;"></div>
@@ -205,12 +201,15 @@ import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore
 import {  getGradoescolaridad,  getEstadoEscolaridad,  getSexo,  getEdoCivil,} from "@ue/services/catalogosDbService";
 import { storeToRefs } from "pinia";
 import MaterialInput from "@/components/common/MaterialInput.vue";
+import MaterialButton from "@/components/common/MaterialButton.vue";
 import { onMounted, ref } from "vue";
 import L from "leaflet";
 
+
+
 export default {
   components: {
-    MaterialInput,
+    MaterialInput,MaterialButton
   },
   name: "AspiranteInfo",
   setup() {
@@ -253,7 +252,7 @@ export default {
           lng.value = dato.value.longitud;
         }
           
-        map.value.setView([lat.value, lng.value], 13);
+        map.value.setView([lat.value, lng.value], 15);
         
       }
     };
@@ -266,7 +265,6 @@ export default {
 
     const setData = () => {
       store.setData();
-      
       marker.value = L.marker([dato.value.latitud, dato.value.longitud],{draggable:true}).addTo(map.value).on("dragend", (event) => 
            {dato.coordenadas = event.target._latlng.lat + ' '+event.target._latlng.lng;
             dato.value.latitud = event.target._latlng.lat;

@@ -92,6 +92,7 @@ import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore
 import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
 import { useEvaluacionStore } from "../useEvaluacionStore.js";
 import fotoDefault from "@/assets/img/user.png";
+
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
@@ -125,6 +126,7 @@ export default {
     let isCreateMode = sol.value.id == 0;
 
     const placeholder = fotoDefault;
+    
     onMounted(() => {
       activeStep.value = 0;      
       console.log('EvaluacionForm   '+evalStore.sexo +'  '+ asp.value.Sexo)

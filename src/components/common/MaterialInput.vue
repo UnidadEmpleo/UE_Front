@@ -10,8 +10,7 @@
       :placeholder="showError ? localErrorMessage : placeholder" :required="isRequired" :disabled="disabled"
       :style="{ borderColor: showError ? 'red' : '' }" :maxlength="maxLength || null" :minlength="minLength || null"
       :inputmode="validateType === 'phone' ? 'numeric' : null" :pattern="validateType === 'phone' ? '[0-9]*' : null"
-      @input="emitValue" @change="emitValue" @blur="onBlur" @focus="onFocus" @keypress="onKeyPress"
-      @keyup="$emit('keyup', $event)" />
+      @input="emitValue" @change="emitValue" @blur="onBlur" @focus="onFocus" @keypress="onKeyPress" @keyup="$emit('keyup', $event)" />
   </div>
 </template>
 
@@ -42,6 +41,7 @@ export default {
     maxLength: { type: Number, default: 8000, }, // Maximum characters allowed  
     validateType: { type: String, default: "" }, // '', 'curp', 'rfc', 'phone', 'email'
     uppercase: { type: Boolean, default: false },
+    
     
   },
   emits: ["update:modelValue", "keyup"],

@@ -169,7 +169,7 @@ export function getEstadoEscolaridadName(id) {
 export function getSexo() {
   return [
     { id: sexo.Femenino, name: 'Femenino' },
-    { id: sexo.Masculino, name: 'Masculiono' },
+    { id: sexo.Masculino, name: 'Masculino' },
   ];
 }
 
@@ -259,5 +259,15 @@ export function getTipoEvaluacionById(id) {
     [TipoEvaluacion.PIE] : 'PIE' ,
   };
   return map[Number(id)] || '';
+}
+
+export function getSexoByName(name){
+  const map = {
+    'MUJER':[sexo.Femenino],
+    'FEMENINO':[sexo.Femenino],
+    'MASCULINO':[sexo.Masculino],
+    'HOMBRE':[sexo.Masculino] }
+    
+  return map[String(name.toUpperCase())] || '---';
 }
 

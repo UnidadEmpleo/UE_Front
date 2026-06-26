@@ -72,6 +72,8 @@ import MaterialButton from "@/components/common/MaterialButton.vue";
 import AspiranteGeneral from "../components/AspiranteGeneral.vue";
 import AspiranteAddress from "../components/AspiranteAddress.vue";
 import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
+import { useReferenciaStore } from "@ue/modules/Referencia/useReferenceStore";
+import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { useMainStore } from '@/store/useMainStore' 
@@ -90,6 +92,10 @@ export default {
         const { activeStep, activeClass } = storeToRefs(aspiranteStore); // Use storeToRefs for reactivity
         const { nextStep, prevStep } = aspiranteStore;
         const mainStore = useMainStore();
+
+        const solicitudStore = useSolicitudStore();
+        const referenceStore = useReferenciaStore();
+
         const router = useRouter();        
         const isCreateMode = aspiranteStore.aspirante.Curp =='';
         
@@ -117,8 +123,12 @@ export default {
               else 
                 result = await aspiranteStore.updateAspirante();  
 
-              if(result)
+              if(result){
+                solicitudStore.resetSelectedSolicitud();
+                referenceStore.resetReferencia4new();
                 router.push({ name: "SolicitudForm" }); 
+              }
+                
             
             
         };

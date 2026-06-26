@@ -12,14 +12,11 @@
     
 
       <div class="card mb-3">
-        <label for="empleo" class="form-label font-weight-bolder">INFORMACIÓN DEL ASPIRANTE</label>
+        <label for="empleo" class="form-label font-weight-bolder">INFORMACIÓN DEL ASPIRANTE</label>       
         <div class="row container-fluid mt-3">        
         <div class="col-sm-3 ">
           <div class="avatar avatar-xl position-relative">
-          <img :src="placeholder" 
-          alt="profile_image" class="shadow-sm avatar-img"  :class="{ 'is-disabled': true }"
-            @click="showPicker = true"/>
-
+            <img :src="placeholder" alt="profile_image" class="shadow-sm avatar-img"  :class="{ 'is-disabled': true }" />
               <!-- Modal -->
               <PhotoPickerModal
               v-model:visible="showPicker"
@@ -31,6 +28,11 @@
               @select="onFoto"
               @error="(e)=>console.error(e)"
               />
+              
+          </div>
+          <div class="avatar avatar-xl position-relative">
+            <img :src="qrholder" alt="profile_image" class="shadow-sm avatar-img"  :class="{ 'is-disabled': true }" @click="openQrView()"/>
+            
           </div>
         </div>
         <div class=" col-sm-3 ">        
@@ -116,8 +118,15 @@
     
     </div>
   </form>
+   
+            <QrCURP
+              :visible="qrVisible"
+              @update:completo="v => closeQrView()"
+              @close="qrVisible = false"
+            />
+            
 </div>
-
+ 
 </template>
 
 <script>
@@ -129,12 +138,17 @@ import MaterialInput from "@/components/common/MaterialInput.vue";
 import MaterialComboBox from '@/components/common/MaterialComboBox.vue';
 import PhotoPickerModal from "@/components/PhotoPickerModal.vue";
 import fotoDefault from "@/assets/img/user.png";
+import qrDefault from "@/assets/img/cusaem_qr.png";
+import QrCURP from "./QrCURP.vue";
+
 
 import MaterialSwitch from "@/components/common/MaterialSwitch.vue";
+
 export default {
   components: {    
     MaterialInput,PhotoPickerModal,
-    MaterialComboBox,MaterialSwitch
+    MaterialComboBox,MaterialSwitch,
+    QrCURP
   },
   name: "AspiranteInfo",
   setup() {
@@ -146,12 +160,22 @@ export default {
     const sexoOptions = getSexo();
     const edoCivilOptions = getEdoCivil();
     const placeholder = fotoDefault;
+    const qrholder = qrDefault;
     const foto = ref(null);
+    const qrVisible = ref(false)
     const canEditPhoto = computed(() => {
           return !!(dato.value && dato.value.id != null);
         });
     const showPicker = ref(false);
-      
+    
+    function openQrView() {
+      qrVisible.value = true
+      //alert('qr clicked '+qrVisible.value)
+    }
+    function closeQrView() {      
+      qrVisible.value = false      
+    }
+
     function onFoto(payload) {         
       if (payload && payload.dataUrl) {
         store.dato.anexos = {
@@ -173,7 +197,8 @@ export default {
           showPicker.value = true;
         }
 
-    return { onFoto, foto, openPhotoPicker, canEditPhoto, dato, gradoEscolaridadOptions, estadoEscolaridadOptions,sexoOptions,edoCivilOptions, placeholder};
+    return { onFoto, foto, openPhotoPicker, canEditPhoto, dato, gradoEscolaridadOptions, estadoEscolaridadOptions,sexoOptions,edoCivilOptions, 
+      placeholder,qrholder,openQrView,closeQrView,qrVisible};
   },
 };
 </script>
