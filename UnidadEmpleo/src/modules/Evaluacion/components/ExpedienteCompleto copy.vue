@@ -6,215 +6,7 @@
         <button class="btn-close" @click="$emit('close')">×</button>
       </div>
       <div class="modal-body">
-        <div class="card ">
-              <div class="row container-fluid ">
-                  <label  class="form-label font-weight-bolder col-sm-9">ASPIRANTE</label>
-              </div>
-                
-             <div class="row container-fluid mb-1">
-                <div class="col-sm-11 container-fluid mb-1">
-                  <div class="container-fluid ">
-                    <label  class="form-label font-weight-bolder col-sm-auto">Apellido Paterno: </label><label  class="form-label  col-sm-2" style="width: auto;">{{ dato.Apellido_Paterno }}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">Apellido Materno: </label><label  class="form-label  col-sm-2" style="width: auto;">{{ dato.Apellido_Materno }}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">Nombre: </label><label  class="form-label  col-sm-2" style="width: auto;">{{dato.Nombre}}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">Sexo: </label><label  class="form-label  col-sm-1" style="width: auto;">{{getSexoById(dato.Sexo) }} </label>                  </div>
-                  <div class="container-fluid ">
-                    <label  class="form-label font-weight-bolder col-sm-auto">CURP: </label><label  class="form-label  col-sm-2 " style="width: auto;">{{ dato.Curp }}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">RFC: </label><label  class="form-label  col-sm-2" style="width: auto;">{{ dato.Rfc }}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">Fecha de Nacimiento: </label><label  class="form-label  col-sm-2" style="width: auto;">{{ dato.Fecha_Nacimiento }}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">Edad: </label><label  class="form-label  col-sm-1" style="width: auto;">{{ calculaEdad(dato.Fecha_Nacimiento) }} años</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto" >Estado Civil: </label>
-                    <label  class="form-label  col-sm-2" style="width: auto;">
-                        {{getEdoCivilName( sol.enteraEmpleo )}}
-                    </label>
-                  </div>
-                  
-                </div>
-              </div>
-        </div>
-        
-        <div class="col-sm-11 container-fluid mb-1">
-           <div class="row   mt-2">
-              <label  class="form-label font-weight-bolder col-sm-auto">Como se enteró del empleo: </label>
-              <div class="text-center bg-light border mb-1" style="width: auto;"> 
-                  {{getEnteraEmpleoId( sol.enteraEmpleo )}}
-              </div>
-              
-            </div>
-        </div>
-        
-        <div class="card mb-1">
-            <label for="Escolaridad" class="form-label font-weight-bolder" >DOMICILIO</label>
-            <div class="row   mt-2">
-              <div class="col-sm-4">
-                <MaterialLabel label="CALLE" /> 
-                <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  Calle venustiano carranza de juarez y salamón dondi tu estas
-                </div>
-              </div>
-              <div class="col-sm-2" >
-                <MaterialLabel  label="No. Ext." /> 
-                <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  1
-                </div>
-                <MaterialLabel  label="No. Int." />
-                <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  2
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <MaterialLabel label="Entre calles"/>
-                <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  Calle uno y dos
-                </div>
-              </div>
-            </div>
-            <div class="row   mt-4">
-              
-              <div class="col-sm-3 " >
-                <MaterialLabel label="Colonia"/> 
-                <div class="text-center bg-light border mt-2" style="width: auto;">
-                  buenavista
-                </div> 
-              </div>
-              <div class="col-sm-3 " >
-                <MaterialLabel label="Delegación o Municipio" /> 
-                <div class="text-center bg-light border mt-2" style="width: auto;">
-                  Miguel Hidalgo 
-                </div>
-              </div>
-              <div class="col-sm-3 " >
-                <MaterialLabel label="Entidad Federativa" />
-                
-                <div class="text-center bg-light border mt-2" style="width: auto;">
-                  Ciudad de México
-                </div>
-              </div>
-              <div class="col-sm-3 " >
-                <MaterialLabel label="Codigo Postal" />
-                
-                <div class="text-center bg-light border mt-2 mb-1" style="width: auto;">
-                  55410
-                </div>
-              </div>
-            </div>
-        </div>
-
-        <div class="card mb-1">
-          <label for="Escolaridad" class="form-label font-weight-bolder" >TELÉFONO</label>
-            
-            <div class="row   mt-2">
-              <div class="col-sm-4">
-                <MaterialLabel label="Casa" /> 
-                <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  {{ sol.telefonoCasa }}
-                </div>
-              </div>
-              <div class="col-sm-2" >
-                <MaterialLabel  label="Recado" /> 
-                <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  {{ sol.telefonoRecado }}
-                </div>                
-              </div>
-              <div class="col-sm-6">
-                <MaterialLabel label="Telefono Celular"/>
-                <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  {{ dato.TelefonoCelular }}
-                </div>
-              </div>
-            </div>
-            
-        </div>
-        <div class="card mb-1">
-          <label for="Escolaridad" class="form-label font-weight-bolder" >ESCOLARIDAD</label>
-          <div class="row container-fluid">
-              <div class="col-sm-4 mb-">
-                <MaterialLabel label="Grado de Escolaridad" /> 
-                <div class="text-center bg-light border mb-1" style="width: auto;"> 
-                {{getGradoEscolaridadName(dato.Grado_Escolaridad) }}
-                </div>
-              </div>
-              <div class="col-sm-4 mb-3">
-                <MaterialLabel label="Concluida o trunca"/>
-                <div class="text-center bg-light border mb-1" style="width: auto;"> 
-                 {{ getEstadoEscolaridadName(dato.EscolaridadConcluidaTrunca) }}
-                 </div>
-              </div>
-              <div class="mb-3">
-                <MaterialLabel label="Documento que acredite" />
-                <div class="text-center bg-light border mb-1" style="width: auto;"> 
-                   {{dato.DocumentoAcreditaEscolaridad}}
-                </div>
-              </div>              
-          </div>
-        </div>
-          
-      <div class="card mb-1">
-        <label for="empleo" class="form-label font-weight-bolder">Ú L T I M O  -  E M P L E O</label>
-        <div class="row container-fluid mt-3">
-          
-            <div class="col-sm-2 ">
-                <MaterialLabel label="Gobierno" />
-                <div class="text-center bg-light border mt-2" style="width: auto;">  {{ sol.gobierno? 'SÍ': 'NO' }}</div>
-            </div>
-            <div class="col-sm-2 ">
-                <MaterialLabel label="Privda" /> 
-                <div class="text-center bg-light border mt-2" style="width: auto;"> {{ sol.privada? 'SÍ': 'NO' }} </div>    
-            </div>
-          
-          <div class="col-sm-8 mb-2 mt-1">
-                <MaterialLabel label="Nombre de la dependencia o empresa" /><div class="text-center bg-light border mt-2" style="width: auto;"> {{sol.nombreEmpresa}}</div>
-        </div>
-              <div class="col-sm-5 mb-2">
-                <MaterialLabel label="Descripción de la dependencia o empresa"/> <div class="text-center bg-light border mt-2" style="width: auto;">{{ sol.descripcionEmpresa }}</div>
-              </div>
-              <div class="col-sm-4 mb-2">
-                <MaterialLabel label="Motivo de Baja" /> <div class="text-center bg-light border mt-2" style="width: auto;">{{ sol.motivoBaja }}</div>
-              </div>
-              <div class="col-sm-3 mb-2">
-                <MaterialLabel label="Puesto" /> <div class="text-center bg-light border mt-2" style="width: auto;">{{ sol.puesto }}</div>
-              </div>
-              <div class="col-sm-3 mb-2">
-                <MaterialLabel label="Jefe Imediato" /> <div class="text-center bg-light border mt-2" style="width: auto;">{{ sol.jefeInmediato }}</div>
-              </div>
-              <div class="col-sm-3 mb-2">
-                <MaterialLabel label="Teléfono" /> <div class="text-center bg-light border mt-2" style="width: auto;">{{ sol.telefonoEmpleo }}</div>              </div>
-              <div class="col-sm-3 mb-2">
-                <MaterialLabel label="Fecha de Inicio" /> <div class="text-center bg-light border mt-2" style="width: auto;">{{ sol.fechaInicio }}</div>
-              </div>
-              <div class="col-sm-3 mb-2">
-                <MaterialLabel label="Fecha de termino" /> <div class="text-center bg-light border mt-2 mb-1" style="width: auto;">{{ sol.fechaFinal }}</div>
-              </div>
-            </div>
-          </div>  
-
-
-
-        <div class="card mb-1">
-           <h5 class="card-title">¿HA SIDO?</h5>
-            <div class="row container-fluid mt-2">
-              <div class="col-sm-2">
-                <MaterialLabel label="Policia" /> <div class="text-center bg-light border mt-2" style="width: auto;"> {{ sol.policia? 'Sí':'No' }}</div>
-              </div>
-              <div class="col-sm-3" v-if="sol.policia">
-                <MaterialLabel  label="Grado de inicio" v-model="sol.gradoInicioPolicia"/>
-                <MaterialLabel  label="Grado de termino" v-model="sol.gradoFinalPolicia"/>
-              </div>
-           
-              <div class="col-sm-2">
-                <MaterialLabel label="Militar"/>
-                <div class="text-center bg-light border mt-2 mb-1" style="width: auto;">
-                  {{ sol.militar? 'Sí':'No' }}
-                </div>
-              </div>
-              <div class="col-sm-3" v-if="sol.militar">
-                <MaterialLabel label="Grado de inicio"/> {{ "sol.gradoInicioMilitar" }}
-                <MaterialLabel label="Grado de termino" /> {{ "sol.gradoFinalMilitar" }}
-              </div>
-            </div>
-        </div>
-
-        
+    
        <div class="mb-3">
           
           <div class="card">
@@ -453,9 +245,7 @@
             </div>
           </div>
         </div>
-
-
-
+        
         <div class="row">
           <div class="row col-sm-2 justify-content-start">
               <material-switch  id="statusExpediente" name="estatusExp" :disabled="true" label="Expediente completo" v-model:checked="sol.statusExp" />              
@@ -479,20 +269,16 @@
       </div>
     </div>
   </div>
-  
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import {  ref, watch } from 'vue';
 import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
-import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
-import {calculaEdad,getStatusSolicitud,getEnteraEmpleoId,getEdoCivilName,getEstadoEscolaridadName,getGradoEscolaridadName,getSexoById } from "@ue/services/catalogosDbService"
+import {getStatusSolicitud, } from "@ue/services/catalogosDbService"
 import { storeToRefs } from "pinia";
 import MaterialInput from "@/components/common/MaterialInput.vue";
 import MaterialSwitch from "@/components/common/MaterialSwitch.vue";
 import MaterialComboBox from "@/components/common/MaterialComboBox.vue";
-
-import MaterialLabel from '../../../../../src/components/common/MaterialLabel.vue';
 
 export default {
   name: 'ExpedienteCompleto',
@@ -500,7 +286,6 @@ export default {
     MaterialInput,
     MaterialSwitch,
     MaterialComboBox,
-    MaterialLabel
   },
   props: {
     visible: { type: Boolean, default: false },
@@ -511,9 +296,6 @@ export default {
   setup(props, { emit }) {
     const store = useSolicitudStore();
     const { solicitud: sol } = storeToRefs(store);
-
-    const storeAspirante = useAspiranteStore();
-    const {aspirante: dato} = storeToRefs(storeAspirante);
     const optStatusSolicitud = getStatusSolicitud();
 
     const loading = ref(false)
@@ -550,7 +332,7 @@ export default {
       syncFilters()
     }
     
-    return { sol, dato, calculaEdad,getGradoEscolaridadName,getEstadoEscolaridadName,getEdoCivilName,getEnteraEmpleoId,getSexoById,optStatusSolicitud, loading, onPrevSave,};
+    return { sol, optStatusSolicitud, loading, onPrevSave};
   },
 };
 </script>

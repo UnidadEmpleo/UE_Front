@@ -271,3 +271,37 @@ export function getSexoByName(name){
   return map[String(name.toUpperCase())] || '---';
 }
 
+export function getEnteraEmpleoId(id) {
+  const map = {
+    1: 'Reingreso' ,
+    2: 'Volante' ,
+    3: 'Reclutador' ,
+    4: 'Empresa o Particular' ,
+    5: 'Centro de Reclutamiento' ,
+    6: 'Iniciativa Propia' ,
+    7: 'Feria de Empleo' ,
+    8: 'Bolsa de Trabajo' ,
+    9: 'Conocido de un Familiar de la Corporacion' ,
+    
+  };
+  return map[Number(id)] || '';
+}
+
+export function calculaEdad (Fecha_Nacimiento) {
+  const fecha = new Date();
+      const nacimiento = (Fecha_Nacimiento instanceof Date) 
+            ? Fecha_Nacimiento 
+            : new Date(Fecha_Nacimiento);
+      
+      if (isNaN(nacimiento.getTime())) {
+            return "Fecha inválida. Usa formato 'YYYY-MM-DD' o un objeto Date. "+Fecha_Nacimiento;
+        }
+
+      let años = fecha.getFullYear() - nacimiento.getFullYear();
+      const m = fecha.getMonth() - nacimiento.getMonth();
+
+      if (m < 0 || (m === 0 && fecha.getDate() < nacimiento.getDate())) {
+        años--;
+      }
+      return años
+    }

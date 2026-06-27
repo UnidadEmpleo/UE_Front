@@ -32,7 +32,7 @@
                     <label  class="form-label font-weight-bolder col-sm-auto">CURP: </label><label  class="form-label  col-sm-2">{{ asp.Curp }}</label>
                     <label  class="form-label font-weight-bolder col-sm-auto">RFC: </label><label  class="form-label  col-sm-2">{{ asp.Rfc }}</label>
                     <label  class="form-label font-weight-bolder col-sm-auto">Fecha de Nacimiento: </label><label  class="form-label  col-sm-2">{{ asp.Fecha_Nacimiento }}</label>
-                    <label  class="form-label font-weight-bolder col-sm-auto">Edad: </label><label  class="form-label  col-sm-1">{{ calculaEdad() }} años</label>
+                    <label  class="form-label font-weight-bolder col-sm-auto">Edad: </label><label  class="form-label  col-sm-1">{{ calculaEdad(asp.Fecha_Nacimiento) }} años</label>
                   </div>
                   
                 </div>
@@ -87,7 +87,7 @@
 <script>
 
 import CardEval from "../components/CardEval.vue";
-import { getSexoById } from "@ue/services/catalogosDbService"
+import { getSexoById,calculaEdad } from "@ue/services/catalogosDbService"
 import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
 import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
 import { useEvaluacionStore } from "../useEvaluacionStore.js";
@@ -131,23 +131,7 @@ export default {
       activeStep.value = 0;      
       console.log('EvaluacionForm   '+evalStore.sexo +'  '+ asp.value.Sexo)
     });
-    const calculaEdad = () => {
-      const nacimiento = (asp.value.Fecha_Nacimiento instanceof Date) 
-            ? asp.value.Fecha_Nacimiento 
-            : new Date(asp.value.Fecha_Nacimiento);
-      
-      if (isNaN(nacimiento.getTime())) {
-            return "Fecha inválida. Usa formato 'YYYY-MM-DD' o un objeto Date. "+asp.value.Fecha_Nacimiento;
-        }
-
-      let años = fecha.getFullYear() - nacimiento.getFullYear();
-      const m = fecha.getMonth() - nacimiento.getMonth();
-
-      if (m < 0 || (m === 0 && fecha.getDate() < nacimiento.getDate())) {
-        años--;
-      }
-      return años
-    }
+    
    
     const navigateToList = () => {
       aspiranteStore.resetSelectedAspirante();
@@ -219,7 +203,7 @@ export default {
       navigateToList,nodeWasClicked,
       asp,sol,placeholder,
       calculaEdad,getSexoById,
-      fecha,verifyData,sigPaso,sigColor,sigVariant,
+      fecha,verifyData,sigPaso,sigColor,sigVariant
       
     };
   },

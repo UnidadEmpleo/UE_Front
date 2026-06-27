@@ -421,9 +421,9 @@ export default {
       }
       else if (options.value.perfilId == 3){
         if (evalStore.sexo)
-          setPerfilVisibleDisabled("flex","flex","flex","flex","none",true,true,true,true,true)
+          setPerfilVisibleDisabled("flex","flex","flex","flex","none",false,true,true,true,true)
         else
-          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",true,true,true,true,true)
+          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",false,true,true,true,true)
 
         console.log('Atención y Registro')
       }
