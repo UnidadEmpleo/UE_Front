@@ -7,8 +7,8 @@
       </div>
       <div class="modal-body">
         <div class="card ">
-              <div class="row container-fluid ">
-                  <label  class="form-label font-weight-bolder col-sm-9">ASPIRANTE</label>
+              <div class="row container-fluid text-center">
+                  <label  class="form-label font-weight-bolder col-sm-9 col-form-label-lg">ASPIRANTE</label>
               </div>
                 
              <div class="row container-fluid mb-1">
@@ -43,29 +43,29 @@
             </div>
         </div>
         
-        <div class="card mb-1">
-            <label for="Escolaridad" class="form-label font-weight-bolder" >DOMICILIO</label>
+        <div class="card mb-3">
+            <label for="Escolaridad" class="form-label font-weight-bolder col-form-label-lg" >DOMICILIO</label>
             <div class="row   mt-2">
               <div class="col-sm-4">
                 <MaterialLabel label="CALLE" /> 
                 <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  Calle venustiano carranza de juarez y salamón dondi tu estas
+                  {{ dato.Calle }}
                 </div>
               </div>
               <div class="col-sm-2" >
                 <MaterialLabel  label="No. Ext." /> 
                 <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  1
+                  {{dato.numero}}
                 </div>
                 <MaterialLabel  label="No. Int." />
                 <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  2
+                  {{dato.numeroInterior}}
                 </div>
               </div>
               <div class="col-sm-6">
                 <MaterialLabel label="Entre calles"/>
                 <div class="text-center bg-light border mt-2" style="width: auto;"> 
-                  Calle uno y dos
+                  {{ dato.EntreCalles }}
                 </div>
               </div>
             </div>
@@ -74,36 +74,36 @@
               <div class="col-sm-3 " >
                 <MaterialLabel label="Colonia"/> 
                 <div class="text-center bg-light border mt-2" style="width: auto;">
-                  buenavista
+                  {{ dato.Colonia }}
                 </div> 
               </div>
               <div class="col-sm-3 " >
                 <MaterialLabel label="Delegación o Municipio" /> 
                 <div class="text-center bg-light border mt-2" style="width: auto;">
-                  Miguel Hidalgo 
+                  {{ dato.Municipio }}
                 </div>
               </div>
               <div class="col-sm-3 " >
                 <MaterialLabel label="Entidad Federativa" />
                 
                 <div class="text-center bg-light border mt-2" style="width: auto;">
-                  Ciudad de México
+                  {{ dato.Estado }}
                 </div>
               </div>
               <div class="col-sm-3 " >
                 <MaterialLabel label="Codigo Postal" />
                 
                 <div class="text-center bg-light border mt-2 mb-1" style="width: auto;">
-                  55410
+                  {{ dato.CodigoPostal }}
                 </div>
               </div>
             </div>
         </div>
 
-        <div class="card mb-1">
-          <label for="Escolaridad" class="form-label font-weight-bolder" >TELÉFONO</label>
+        <div class="card mb-3">
+          <label for="Escolaridad" class="form-label font-weight-bolder col-form-label-lg" >TELÉFONO</label>
             
-            <div class="row   mt-2">
+            <div class="row   mt-2 mb-1">
               <div class="col-sm-4">
                 <MaterialLabel label="Casa" /> 
                 <div class="text-center bg-light border mt-2" style="width: auto;"> 
@@ -125,8 +125,8 @@
             </div>
             
         </div>
-        <div class="card mb-1">
-          <label for="Escolaridad" class="form-label font-weight-bolder" >ESCOLARIDAD</label>
+        <div class="card mb-3">
+          <label for="Escolaridad" class="form-label font-weight-bolder col-form-label-lg" >ESCOLARIDAD</label>
           <div class="row container-fluid">
               <div class="col-sm-4 mb-">
                 <MaterialLabel label="Grado de Escolaridad" /> 
@@ -149,8 +149,8 @@
           </div>
         </div>
           
-      <div class="card mb-1">
-        <label for="empleo" class="form-label font-weight-bolder">Ú L T I M O  -  E M P L E O</label>
+      <div class="card mb-3">
+        <label for="empleo" class="form-label font-weight-bolder col-form-label-lg">Ú L T I M O  -  E M P L E O</label>
         <div class="row container-fluid mt-3">
           
             <div class="col-sm-2 ">
@@ -190,27 +190,40 @@
 
 
 
-        <div class="card mb-1">
-           <h5 class="card-title">¿HA SIDO?</h5>
-            <div class="row container-fluid mt-2">
+        <div class="card mb-3">
+          <label for="empleo" class=" form-label font-weight-bolder col-form-label-lg">¿HA SIDO?</label>
+           
+            <div class="row container-fluid mb-2">
+
               <div class="col-sm-2">
                 <MaterialLabel label="Policia" /> <div class="text-center bg-light border mt-2" style="width: auto;"> {{ sol.policia? 'Sí':'No' }}</div>
               </div>
               <div class="col-sm-3" v-if="sol.policia">
-                <MaterialLabel  label="Grado de inicio" v-model="sol.gradoInicioPolicia"/>
-                <MaterialLabel  label="Grado de termino" v-model="sol.gradoFinalPolicia"/>
+                <MaterialLabel  label="Grado de inicio" /> <div class="text-center bg-light border mt-2" style="width: auto;"> 
+                  {{ sol.gradoInicioPolicia }}
+                </div>
+                <MaterialLabel  label="Grado de termino" class="mt-2" />
+                <div class="text-center bg-light border mt-2" style="width: auto;"> 
+                  {{ sol.gradoFinalPolicia }}
+                </div>
               </div>
            
               <div class="col-sm-2">
-                <MaterialLabel label="Militar"/>
+                <MaterialLabel label="Militar" />
                 <div class="text-center bg-light border mt-2 mb-1" style="width: auto;">
                   {{ sol.militar? 'Sí':'No' }}
                 </div>
               </div>
               <div class="col-sm-3" v-if="sol.militar">
-                <MaterialLabel label="Grado de inicio"/> {{ "sol.gradoInicioMilitar" }}
-                <MaterialLabel label="Grado de termino" /> {{ "sol.gradoFinalMilitar" }}
+                <MaterialLabel  label="Grado de inicio" /> <div class="text-center bg-light border mt-2" style="width: auto;"> 
+                  {{ sol.gradoInicioMilitar }}
+                </div>
+                <MaterialLabel  label="Grado de termino" class="mt-2" />
+                <div class="text-center bg-light border mt-2" style="width: auto;"> 
+                  {{ sol.gradoFinalMilitar }}
+                </div>                
               </div>
+
             </div>
         </div>
 
@@ -218,7 +231,7 @@
        <div class="mb-3">
           
           <div class="card">
-            <label for="empleo" class="form-label font-weight-bolder ">DOCUMENTOS ENTREGADOS</label>
+            <label for="empleo" class="form-label font-weight-bolder col-form-label-lg">DOCUMENTOS ENTREGADOS</label>
             <div class="row container-fluid mt-2">
               <div class="card col-sm-6" >
                 
@@ -511,7 +524,6 @@ export default {
   setup(props, { emit }) {
     const store = useSolicitudStore();
     const { solicitud: sol } = storeToRefs(store);
-
     const storeAspirante = useAspiranteStore();
     const {aspirante: dato} = storeToRefs(storeAspirante);
     const optStatusSolicitud = getStatusSolicitud();
@@ -521,7 +533,7 @@ export default {
     watch(() => props.visible, (v) => {
       if (v) {
         //AQUI PUEDO AGREGAR UNA FUNCIÓN DE VALORES INICIALES
-        console.log('whatching ExpedienteCompleto '+v)
+        console.log('. '+v)
       }
     }, { immediate: true })
 
@@ -538,11 +550,9 @@ export default {
           sol.value.comprobanteDomicilio == true &&   sol.value.cartasRecomendacion == true &&    sol.value.curpActualizado == true &&
           sol.value.ine == true &&        sol.value.rfcHomoclave == true 
           ){ 
-            console.log('Eval sol.value.statusExp = true')
             sol.value.statusExp = true  
           }          
         else{ 
-          console.log('Eval sol.value.statusExp = false')
           sol.value.statusExp = false
         }
       //actualiza 

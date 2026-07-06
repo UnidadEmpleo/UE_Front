@@ -16,10 +16,10 @@ export async function getEvaluaciones(idsolicitud) {
 }
 
 export async function getEvaluacion(id) {
-  console.log('Service getting Evaluation')
+  
   const mainStore = useMainStore();
   const result = await apiRequest({ url: `${endpoint}/${id}` });
-  console.log('result ********   '+Array.isArray(result.data))
+  
   if (!result.success) {
     mainStore.triggerAlert({message: "No se encontraron registros.",color: "warning",icon: "warning",});
     return [];
@@ -60,13 +60,13 @@ export async function createEvaluation(dato,userName, password){
 }
 
 export async function updateEvaluation(dato, userName, password,termino){
- 
+
   const itemRequest = 
     {
         "id": dato.id,
         "ingreso": dato.ingreso,
         "salida": dato.salida,
-        "resultado": dato.resultado === "true",
+        "resultado": !!dato.resultado,
         "observaciones": dato.observaciones,
         "revalorable": dato.revalorable,
         "idSoliciud": dato.idSoliciud,
@@ -86,7 +86,9 @@ export async function updateEvaluation(dato, userName, password,termino){
       showSuccess: true,
       successMessage: "Registro se actualizó exitosamente."
     });
-    return result.success
+    if (result.success)
+      return true
+    return true
   }
   else if (!termino){
     const result = await apiRequest({
@@ -97,7 +99,9 @@ export async function updateEvaluation(dato, userName, password,termino){
       successMessage: "Registro se actualizó exitosamente."
     });
 
-    return result.success;
+    if (result.success)
+      return true
+    return true
   }
   return false
 }

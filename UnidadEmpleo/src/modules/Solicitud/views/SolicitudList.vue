@@ -1,12 +1,21 @@
 <template>
   <div class="container-fluid py-4">
-    <div class="d-sm-flex justify-content-between">
-      <div>
-        <material-button  v-permiso="'Aspirante.Agregar'" color="primary" variant="gradient" @click="navigateToCreate">
-          Nuevo Solicitud
+
+    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-dark"
+      style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+      Gestión de Solicitudes de Aspirantes
+    </div>
+
+    <div class="d-sm-flex justify-content-end ">
+      <div class="me-4">
+        <material-button v-permiso="'Usuarios.Agregar'" color="primary" variant="gradient" @click="navigateToCreate"
+          class="d-flex align-items-center">
+          <i class="material-icons-round me-2">person_add</i>
+          Nueva Solicitud
         </material-button>
       </div>
     </div>
+
 
     <div class="card ">
         <div class="row container-fluid mt-3 ">
@@ -40,9 +49,10 @@
                 <div class="mt-2">
                   <MaterialInput id="f_termino" type="date" label="Fecha de termino" v-model="options.fechaFinal"/>
                 </div>
+                {{ options.fechaInicio }}-{{ options.fechaFinal }}
               </div>
             <div class="form-group button-group col-sm-3 mt-auto mb-auto">
-              <material-button color="warning" variant="gradient" size="sm" @click="filtrar" class="me-2" v-permiso="'Grupos.Editar'">
+              <material-button color="warning" variant="gradient" size="sm" @click="filtrar" class="me-2" >
                 Buscar
               </material-button>
               
@@ -72,9 +82,27 @@
           Actualizar
         </material-button>
         
+        <material-button color="secundary" variant="gradient"
+          size="sm" @click="printSolicitud(row)"
+          class="me-2" v-permiso="'Grupos.Editar'">
+          pdf
+        </material-button>
+
       </template>
     </DataTable>
+
+  <PdfContainer
+    :visible="pdfVisible"
+    :IdSolicitud="idSolicitud"
+    :curp:="curpSelected"
+    @update:completo="v => closePdfView(v)"
+    @close="pdfVisible = false"
+  />
+
+
   </div>
+
+
 </template>
 
 <script>
@@ -89,11 +117,12 @@ import { useRouter } from "vue-router";
 import { useCuerpoStore } from "@ue/modules/Cuerpo/useCuerpoStore";
 import { useAspiranteStore } from "../../Aspirante/store/useAspiranteStore";
 import { getStatusSolicitud } from "../../../services/catalogosDbService";
+import PdfContainer from "./PdfContainer.vue";
 export default {
   name: "SolicitudesList",
   components: {
     DataTable,
-    MaterialButton,MaterialInput
+    MaterialButton,MaterialInput,PdfContainer
   },
   setup() {
     const itmesStore = useSolicitudStore();
@@ -104,6 +133,9 @@ export default {
     const cuerpoStore = useCuerpoStore();
     let { rowsCuerpo } = storeToRefs(cuerpoStore); 
     let regionesLista =  ref([]);
+    let idSolicitud =  ref([]);
+    let curpSelected =  ref([]);    
+    const pdfVisible = ref(false)
     const statusLista = getStatusSolicitud();
     const aspiranteStore = useAspiranteStore();
     
@@ -114,30 +146,37 @@ export default {
       router.push({ name: "SolicitudForm" });
     };
 
+    const printSolicitud = async (row)=>{     
+      idSolicitud.value = row.id
+      curpSelected.value = row.Curp
+      console.log('curp  '+curpSelected.value)
+      pdfVisible.value = true      
+    }
+    
+    function closePdfView() {    
+      
+      pdfVisible.value = false      
+      
+    }
+  
+
     const handleUpdate = async (row) => {
       itmesStore.aspirante = { ...row };    
       await itmesStore.fetchSolicitudById(row.id);
-      console.log('id '+row.id + 'curp '+row.Curp)
       aspiranteStore.verifyAspiranteByCurp(row.Curp) 
       router.push({ name: "SolicitudForm" });
     };
 
-    const handleDelete = (row) => {
-      if (confirm(`¿Estás seguro de que deseas eliminar la solicitud "${row.nombre}"?`)) {
-        //itmesStore.deleteAspirante(row.id);
-      }
-    };
-
     const filtrar = async () =>{
-      console.log(options.value)
+      console.log('Filtrar SolicitudList'+options.value.cuerpoId)
       //await itmesStore.fetchSolicitudesPorAreaYPeriodo(options.cuerpoId, options.regionId, options.fechaInicio, options.fechaFin, options.status);
       await itmesStore.fetchRowsByOptions();
     }
     onBeforeMount(async () => {
-      itmesStore.setRecurso();
       cuerpoStore.fetchCuerpoTodo();
+      itmesStore.setRecurso();
+      await itmesStore.fetchRowsByOptions();
       availableRegiones();
-      await itmesStore.fetchRowsSolicitudes();
     });
 
     const availableRegiones = () => {
@@ -165,12 +204,11 @@ export default {
       loadingProgress,
       navigateToCreate,
       handleUpdate,
-      handleDelete,
-      
       //consultas
       filtrar,
       itmesStore,options,rowsCuerpo,
-      regionesLista,availableRegiones,statusLista
+      regionesLista,availableRegiones,statusLista,
+      printSolicitud, idSolicitud,pdfVisible,closePdfView,curpSelected
     };
   },
 };

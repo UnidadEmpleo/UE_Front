@@ -1,0 +1,50 @@
+export function yyyymmddFecha(fecha) {
+    var formato = 'yyyy-mm-dd'
+    var mapa = {
+      dd: fecha.getDate().toString().padStart(2, '0'),
+      mm: (fecha.getMonth() + 1).toString().padStart(2, '0'),
+      yyyy: fecha.getFullYear(),
+    };
+    return formato.replace(/dd|mm|yyyy/gi, (coincidencia) => mapa[coincidencia]);
+}
+
+export function getTimeOffset(date){
+    var offsetDate = new Date(date)
+    offsetDate.setMinutes( offsetDate.getMinutes() + offsetDate.getTimezoneOffset())
+    return offsetDate.toDateString();
+}
+
+
+export function downloadBlob(blob, fileName) {
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = fileName
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    }
+    
+async function onExport() {
+      syncFilters()
+      loading.value = true
+      try {
+        const result = await props.exportHandler({ ...localFilters.value })
+        const blobCandidate = (result && result.data && result.data instanceof Blob) ? result.data : result
+        if (blobCandidate instanceof Blob) {
+          if (blobCandidate.type && blobCandidate.type.includes('application/json')) {
+            try { const text = await blobCandidate.text(); console.warn('Export devolvió JSON en lugar de archivo:', text) } catch {console.error('Error leyendo blob JSON de exportación')}
+          }
+          downloadBlob(blobCandidate, localFilters.value.fileName || defaultFileName())
+        } else if (result?.fileBytes && result?.contentType) {
+          const byteChars = atob(result.fileBytes)
+          const byteNumbers = Array.from({ length: byteChars.length }, (_, i) => byteChars.charCodeAt(i))
+          const byteArray = new Uint8Array(byteNumbers)
+          const blob = new Blob([byteArray], { type: result.contentType })
+          downloadBlob(blob, result.fileName || defaultFileName())
+        } else {
+          console.warn('Formato de exportación no reconocido', result)
+        }
+      } catch (e) { console.warn('Export error', e) } finally { loading.value = false }
+    }

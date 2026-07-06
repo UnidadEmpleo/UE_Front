@@ -14,12 +14,11 @@
             <div  class="col-sm-6"> 
               <h3>R E G I S T R O</h3>
             </div>
-            <div  class="col-sm-3"> 
-              <MaterialButton @click.prevent="EdicionRegistro" :style="{display:'flex'}"  :disabled="disabledRregistro? true:false" size="sm">Modificar</MaterialButton>{{ disabledRregistro }}
-            </div>
+            
           </div>
 
           <div class="card col-sm-12">   
+            
             <material-button color="warning" size="sm" @click.prevent="ingreso(1)" :disabled="registro.ingreso.length == 0? disabledRregistro: true">Ingreso</material-button>
             <label  class="form-label  col-sm-auto"> {{ registro.ingreso }}</label>
             
@@ -27,7 +26,7 @@
 
           <div class="card col-sm-12"> 
             
-              <material-button color="success" size="sm" @click.prevent="termino(1, true)" :disabled="(registro.salida == null || registro.salida.length == 0) && registro.salida != registro.ingreso? disabledRregistro: true">Salida</material-button>
+            <material-button color="success" size="sm" @click.prevent="termino(1, true)" :disabled="(registro.salida == null || registro.salida.length == 0) && registro.salida != registro.ingreso? disabledRregistro: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ registro.salida }}</label>
             
           </div>
@@ -37,36 +36,46 @@
           </div>
 
           <div class="row col-sm-5 justify-content-start">
-            <material-switch  id="resultado" name="resultado" :disabled="disabledRregistro" label="Expediente completo" v-model:checked="registro.resultado" />      
+            <material-switch  id="resultado" name="resultado" :disabled="true" label="Expediente completo" v-model:checked="registro.resultado" />      
             <hr>        
-            <material-switch  id="revalorable" name="revalorable" :disabled="disabledRregistro" label="Revalorable" v-model:checked="registro.revalorable" />              
+            
           </div>
           <div>
             <RichTextEditor id="obs" label="Observaciones" v-model="registro.observaciones" is-required :disabled="disabledRregistro"/>
           </div>
-          <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="openExpediente()" :disabled="registro.salida == null || registro.salida.length == 0 != registro.ingreso? disabledRregistro: true">Validar Registro</material-button>
+          <div class=""> 
+            
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="openExpediente()" :disabled="
+              (registro.salida == null || registro.salida.length == 0)? true:(registro.observaciones? false:disabledRregistro) ">Validar Registro</material-button>
             <label  class="form-label col-sm-auto label" >{{ registro.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
+
+        
+
+
+
         
         <div class="card col-sm-3 " :style="{display: visiblePsico}">
           <div class="card-header d-flex text-center">
               <h3>PSICOLOGÍA</h3>
           </div>
           
-          <div class="card col-sm-7">   
-            <div>
-            <material-button color="warning" size="sm" @click.prevent="ingreso(3)" :disabled="psicologia.ingreso.length == 0? disabledPsico: true">Ingreso</material-button>
+          <div class="card col-sm-12">   
+            
+            <material-button color="warning" size="sm" 
+            @click.prevent="ingreso(3)" 
+            :disabled="psicologia.ingreso.length == 0? disabledPsico: true">
+            Ingreso</material-button>
             <label  class="form-label  col-sm-auto"> {{ psicologia.ingreso }}</label>
-            </div>
+            
           </div>
 
-          <div class="card col-sm-7"> 
-            <div  class="justify-content-center"> 
+          <div class="card col-sm-12"> 
+            
               <material-button color="success" size="sm" @click.prevent="termino(3,true)" :disabled="(psicologia.salida == null || psicologia.salida.length == 0) && psicologia.salida != psicologia.ingreso? disabledPsico: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ psicologia.salida }}</label>     
-            </div>  
+            
           </div>
 
           <div class="row"> 
@@ -96,7 +105,7 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="psicologia.observaciones" is-required :disabled="disabledPsico"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(3,false)" :disabled=" psicologia.nombreUsuarioEvaluo.length == 0? disabledPsico : true">Validar Psicología</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(3,false)" :disabled=" (psicologia.salida == null || psicologia.salida.length == 0)? true: disabledPsico">Validar Psicología</material-button>
             <label  class="form-label col-sm-auto label" >{{ psicologia.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
@@ -108,18 +117,18 @@
               <h3>M É D I C O</h3>
           </div>
           
-          <div class="card col-sm-7">   
-            <div>
+          <div class="card col-sm-12">   
+            
             <material-button color="warning" size="sm" @click.prevent="ingreso(2)" :disabled="medico.ingreso.length == 0? disabledMedico: true">Ingreso</material-button>
             <label  class="form-label  col-sm-auto"> {{ medico.ingreso }}</label>
-            </div>
+            
           </div>
 
-          <div class="card col-sm-7"> 
-            <div  class="justify-content-center"> 
-              <material-button color="success" size="sm" @click.prevent="termino(2,true)" :disabled="medico.salida == null || medico.salida.length == 0? disabledMedico: true">Salida</material-button>
+          <div class="card col-sm-12"> 
+            
+              <material-button color="success" size="sm" @click.prevent="termino(2,true)" :disabled="(medico.salida == null || medico.salida.length == 0) && medico.salida != medico.ingreso? disabledMedico: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ medico.salida }}</label>
-            </div>  
+             
           </div>
 
           <div class="row"> 
@@ -149,9 +158,11 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="medico.observaciones" is-required :disabled="disabledMedico"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(2,false)" :disabled=" medico.nombreUsuarioEvaluo.length == 0? disabledMedico : true">Validar Médico</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(2,false)" :disabled=" (medico.salida == null || medico.salida.length == 0)? true:disabledMedico">Validar Médico</material-button>
             <label  class="form-label col-sm-auto label" >{{ medico.nombreUsuarioEvaluo }} </label>
           </div>
+
+          
         </div>
 
 
@@ -161,18 +172,18 @@
               <h3>ANTIDOPING</h3>
           </div>
           
-          <div class="card col-sm-7">   
-            <div>
+          <div class="card col-sm-12">   
+            
             <material-button color="warning" size="sm" @click.prevent="ingreso(4)" :disabled="antidoping.ingreso.length == 0? disabledAnti: true">Ingreso</material-button>
             <label  class="form-label  col-sm-auto"> {{ antidoping.ingreso }}</label>
-            </div>
+            
           </div>
 
-          <div class="card col-sm-7"> 
-            <div  class="justify-content-center"> 
-              <material-button color="success" size="sm" @click.prevent="termino(4,true)" :disabled="antidoping.salida == null || antidoping.salida.length == 0? disabledAnti: true">Salida</material-button>
+          <div class="card col-sm-12"> 
+            
+              <material-button color="success" size="sm" @click.prevent="termino(4,true)" :disabled="(antidoping.salida == null || antidoping.salida.length == 0) && antidoping.salida != antidoping.ingreso? disabledAnti: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ antidoping.salida }}</label>
-            </div>  
+           
           </div>
 
           <div class="row"> 
@@ -187,11 +198,11 @@
               <div class="row justify-content-start">
                 <div class="col-sm-auto">
                   <input class="form-check-input" type="radio" id="true" value="true"  v-model="antidoping.resultado"/>
-                  <label for="one">APTO</label>
+                  <label for="one">NEGATIVO</label>
                 </div>
                 <div class="col-sm-auto">
                   <input class="form-check-input"  type="radio" id="false" value="false"  v-model="antidoping.resultado"/>
-                  <label for="two">NO APTO</label>
+                  <label for="two">POSITIVO</label>
                 </div>
               </div>
               <hr>
@@ -202,7 +213,7 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="antidoping.observaciones" is-required :disabled="disabledAnti"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(4,false)" :disabled=" antidoping.nombreUsuarioEvaluo.length == 0? disabledAnti : true">Validar Antidoping</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(4,false)" :disabled=" (antidoping.salida == null || antidoping.salida.length == 0)? true:disabledAnti">Validar Antidoping</material-button>
             <label  class="form-label col-sm-auto label" >{{ antidoping.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
@@ -213,18 +224,18 @@
               <h3>P I E</h3>
           </div>
           
-          <div class="card col-sm-7">   
-            <div>
+          <div class="card col-sm-12">   
+            
             <material-button color="warning" size="sm" @click.prevent="ingreso(5)" :disabled="pie.ingreso.length == 0? disabledPie:true">Ingreso</material-button>
             <label  class="form-label  col-sm-auto"> {{ pie.ingreso }}</label>
-            </div>
+            
           </div>
 
-          <div class="card col-sm-7"> 
-            <div  class="justify-content-center"> 
-              <material-button color="success" size="sm" @click.prevent="termino(5,true)" :disabled="pie.salida.length == 0? disabledPie:true">Salida</material-button>
+          <div class="card col-sm-12"> 
+            
+              <material-button color="success" size="sm" @click.prevent="termino(5,true)" :disabled="(pie.salida == null || pie.salida.length == 0) && pie.salida != pie.ingreso? disabledPie:true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ pie.salida }}</label>
-            </div>  
+            
           </div>
 
           <div class="row"> 
@@ -239,11 +250,11 @@
               <div class="row justify-content-start">
                 <div class="col-sm-auto">
                   <input class="form-check-input" type="radio" id="true" value="true" v-model="pie.resultado" />
-                  <label for="one">Positivo</label>
+                  <label for="one">NEGATIVO</label>
                 </div>
                 <div class="col-sm-auto">
                   <input class="form-check-input"  type="radio" id="false" value="false"  v-model="pie.resultado"/>
-                  <label for="two">Negativo</label>
+                  <label for="two">POSITIVO</label>
                 </div>
               </div>
               <hr>
@@ -254,7 +265,7 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="pie.observaciones" is-required :disabled="disabledPie"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(5,false)" :disabled=" pie.nombreUsuarioEvaluo.length == 0? disabledPie : true">Validar PIE</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(5,false)" :disabled=" (pie.salida == null || pie.salida.length == 0)? true:disabledPie">Validar PIE</material-button>
             <label  class="form-label col-sm-auto label" >{{ pie.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
@@ -264,7 +275,7 @@
     
     <ExpedienteCompleto
       :visible="expedienteVisible"
-      @update:completo="v => closeExpediente()"
+      @update:completo="v => closeExpediente(v)"
       @close="expedienteVisible = false"
     />
 
@@ -297,12 +308,11 @@ export default {
     MaterialButton,MaterialSwitch,
     RichTextEditor,ExpedienteCompleto
   },
-  props: {sexo: { type: Boolean, default: false, }},
   
   name: "SolicitudDatosBasicos",
-  setup(props) {
-    console.log('In setup '+props.sexo)
-    const store = useMainStore();
+  setup() {
+    
+    const store = useMainStore();    
     const evalStore = useEvaluacionStore()
     const { registro, psicologia,medico,antidoping,pie, options, } = storeToRefs(evalStore);
     const usuario = store.externalUser.username;
@@ -346,7 +356,7 @@ export default {
     function closeExpediente() {
       registro.value.resultado = sol.value.statusExp
       expedienteVisible.value = false
-      termino(1,false);
+      termino(1,false);//crea el registro de atn y registro
     }
 
     const psw = async () =>{
@@ -365,31 +375,77 @@ export default {
           if (!value) return "Requieres ingresar la contraseña";
         }
       });
+
       return password
     }
 
     const ingreso = async (op) => {
       //Levantar pupop para autenticar al usuario
-      let password = await psw();
-      //Indicar la hora de inicio e igualar a la hora de termino en el store se hace
-      //setear los datos del post en el store
-      //post insert en el store
-      //password = 'Password123!'
-      let res = await evalStore.createEvaluaciones(op, usuario, password)
-      if (res)
-        EdicionRegistro()
-      //resultado
+      var continuar = false;
+      let password = await psw().then((result) => {
+        if (result=='') continuar = false
+        else if (result != undefined ) continuar = true
+        return result
+      });      
+      
+      if (continuar){
+        let res = await evalStore.createEvaluaciones(op, usuario, password)
+        if (res)
+          EdicionRegistro()
+        else
+          setEmptyDate(op)
+
+      }
+       
     }
 
+    const setEmptyDate = (op) =>{
+      console.log('limpiando op '+op)
+      switch (op) {
+        case 1:
+          registro.value.salida = '';
+          break;
+        case 2:
+          medico.value.salida = '';
+          break;
+        case 3:
+          psicologia.value.salida = '';
+          break;
+        case 4:
+          antidoping.value.salida = '';
+          break;
+        case 5:
+          pie.value.salida = '';
+          break;               
+      }          
+    }
+
+    //OPCION 1 a 5 DE ACUERDO AL TIPO DE EVALUACIÓN
+    //termino = true se agrega la hora de termino
     const termino = async (op, termino) => {
+      
       //Levantar pupop para autenticar al usuario
-      let password = await psw();
+      var continuar = false;
+      let password = await psw().then((result) => {
+        if (result=='') continuar = false
+        else if (result != undefined ) continuar = true
+        return result
+      });      
       //Indicar la hora de termino      
       //setear los datos del put
-      //put update
-      if(await evalStore.updateEvaluaciones(op, usuario, password, termino)) //Actualiza evaluación
-        store.updateSolicitud() //se actualiza datos de solicitud
+      //put update      
+      if (continuar){
+        
+        let resp = await evalStore.updateEvaluaciones(op, usuario, password, termino)
+        console.log('DATOS CAPTURADOS '+usuario + '  '+ password + '  '+ resp)
+        if(resp) {//Actualiza evaluación
+          if (op == 1 & !termino)
+            solicitudStore.updateSolicitud() //se actualiza datos de solicitud
+        }else 
+          setEmptyDate(op)
 
+        console.log('respuestas '+resp)
+      }
     }
 
     const EdicionRegistro = ()=> {disabledRregistro = !disabledRregistro  
@@ -405,46 +461,39 @@ export default {
       if (options.value.perfilId == null ){
         alert('No hay perfil o se perdió la solicitud');
         router.push({ name: "EvaluacionList" });
-      }else if (options.value.perfilId == 8){
+      }else if (options.value.perfilId == 8){ //Administrador
         if (!evalStore.sexo)
           setPerfilVisibleDisabled("flex","flex","flex","flex","flex",false,false,false,false,false)
         else
           setPerfilVisibleDisabled("flex","flex","flex","flex","none",false,false,false,false,true)
-        console.log('Administrador '+sol.value)
+        
       }      
-      else if (options.value.perfilId == 1 || options.value.perfilId == 2){
+      else if (options.value.perfilId == 1 || options.value.perfilId == 2){ //Subdirector y gerente
         if (!evalStore.sexo)
           setPerfilVisibleDisabled("flex","flex","flex","flex","flex",true,true,true,true,true)  
         else
           setPerfilVisibleDisabled("flex","flex","flex","flex","none",true,true,true,true,true)
-        console.log('Subdirector y gerente')
+        
       }
-      else if (options.value.perfilId == 3){
+      else if (options.value.perfilId == 3){  //Atención y registro
         if (evalStore.sexo)
           setPerfilVisibleDisabled("flex","flex","flex","flex","none",false,true,true,true,true)
         else
           setPerfilVisibleDisabled("flex","flex","flex","flex","flex",false,true,true,true,true)
-
-        console.log('Atención y Registro')
       }
-      else if (options.value.perfilId == 4){
+      else if (options.value.perfilId == 4){ //Psicologo
         setPerfilVisibleDisabled("none","flex","none","none","none",true,false,true,true,true)
-        console.log('Psicologo')
       }
-      else if (options.value.perfilId == 5){
+      else if (options.value.perfilId == 5){ //Medico
         setPerfilVisibleDisabled("none","none","flex","none","none",true,true,false,true,true)
-        console.log('Médico')
       }
-      else if (options.value.perfilId == 6){
+      else if (options.value.perfilId == 6){//Antidoping
         if (!evalStore.sexo)
           setPerfilVisibleDisabled("none","none","none","flex","flex",true,true,true,false,false)
         else
           setPerfilVisibleDisabled("none","none","none","flex","none",true,true,true,false,true)
-        console.log('Antidoping')
       }
       
-      //if (options.perfilId == lñjkagsdflkjñadfslkñ) FALTA VER LOS PERFILES PARA VISUALIZACIÓN
-
     });
 
     return { visibleRegistro,visiblePsico,visibleMedico,visibleAnti,visiblePie,

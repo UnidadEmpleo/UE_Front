@@ -437,8 +437,6 @@ export default {
 
     });
 
-    
-
     return {
       getLocation,
       dato,

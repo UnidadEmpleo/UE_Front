@@ -54,6 +54,7 @@
         <div>
           
         </div>
+
         <material-button
          color="primary"
           variant="gradient"
@@ -108,9 +109,8 @@ export default {
       aspiranteStore.verifyAspiranteByCurp(row.Curp)
       evalStore.solicitudId = row.id
       evalStore.sexo = row.sexoid
-      //evalStore.fetchEvaluaciones(row.id)
+      evalStore.fetchEvaluaciones(row.id)
       solicitudStore.fetchSolicitudById(row.id)
-      console.log('aspiorante ' +aspiranteStore.aspirante.Sexo)
       router.push({ name: "EvaluacionForm" });
     };
 
@@ -121,11 +121,11 @@ export default {
     };
 
     const filtrar = async () =>{
+      console.log('Filtrando evaluacionList')
       await solicitudStore.fetchRowsByOptions();
     }
-    onBeforeMount(async () => {
+    onBeforeMount(async () => {      
       solicitudStore.setRecurso(2);
-      options.situacion = 2;
       cuerpoStore.fetchCuerpoTodo();
       availableRegiones();
       await solicitudStore.fetchRowsByOptions();

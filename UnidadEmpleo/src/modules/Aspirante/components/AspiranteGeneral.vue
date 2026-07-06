@@ -15,7 +15,7 @@
         <label for="empleo" class="form-label font-weight-bolder">INFORMACIÓN DEL ASPIRANTE</label>       
         <div class="row container-fluid mt-3">        
         <div class="col-sm-3 ">
-          <div class="avatar avatar-xl position-relative">
+          <div class="avatar avatar-lg position-relative">
             <img :src="placeholder" alt="profile_image" class="shadow-sm avatar-img"  :class="{ 'is-disabled': true }" />
               <!-- Modal -->
               <PhotoPickerModal
@@ -30,9 +30,11 @@
               />
               
           </div>
-          <div class="avatar avatar-xl position-relative">
+          <div class="avatar avatar-lg position-relative">
             <img :src="qrholder" alt="profile_image" class="shadow-sm avatar-img"  :class="{ 'is-disabled': true }" @click="openQrView()"/>
-            
+          </div>
+          <div class="avatar avatar-lg position-relative">
+            <img :src="solicitud" alt="profile_image" class="shadow-sm avatar-img" :style = "{visibility:solicitudVisible}" @click="openViewSolicitud()"/>
           </div>
         </div>
         <div class=" col-sm-3 ">        
@@ -119,12 +121,18 @@
     </div>
   </form>
    
-            <QrCURP
-              :visible="qrVisible"
-              @update:completo="v => closeQrView()"
-              @close="qrVisible = false"
-            />
-            
+  <QrCURP
+    :visible="qrVisible"
+    @update:completo="v => closeQrView(v)"
+    @close="qrVisible = false"
+  />
+  <ModalEvaluacionesAspirante
+    :visible="modSolVisible"
+    :title="Evaluaciones"
+    @update:completo="v => closeModEvaluacion()"
+    @close="modSolVisible = false"
+  />
+  
 </div>
  
 </template>
@@ -132,28 +140,36 @@
 <script>
 import { ref, computed} from "vue";
 import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
-import {getGradoescolaridad, getEstadoEscolaridad, getSexo, getEdoCivil } from "@ue/services/catalogosDbService"
+import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
+import {getGradoescolaridad, getEstadoEscolaridad, getSexo, getEdoCivil } from "@ue/services/catalogosDbService";
 import { storeToRefs } from "pinia";
 import MaterialInput from "@/components/common/MaterialInput.vue";
 import MaterialComboBox from '@/components/common/MaterialComboBox.vue';
 import PhotoPickerModal from "@/components/PhotoPickerModal.vue";
 import fotoDefault from "@/assets/img/user.png";
 import qrDefault from "@/assets/img/cusaem_qr.png";
+import solicitudDefault from "@/assets/img/solicitud.png";
 import QrCURP from "./QrCURP.vue";
-
-
+import ModalEvaluacionesAspirante from "../../Evaluacion/components/ModalEvaluacionesAspirante.vue";
 import MaterialSwitch from "@/components/common/MaterialSwitch.vue";
 
 export default {
   components: {    
     MaterialInput,PhotoPickerModal,
     MaterialComboBox,MaterialSwitch,
-    QrCURP
+    QrCURP,ModalEvaluacionesAspirante
   },
   name: "AspiranteInfo",
-  setup() {
+   props: {
+    isCreateMode: { type: Boolean, default: false },
+    completo: {type: Boolean,default: false}
+  },
+  emits: [ 'update:completo'],
+  setup(props,{emit}) {
     
     const store = useAspiranteStore();
+    const solicitudStore = useSolicitudStore()
+    
     const { aspirante: dato } = storeToRefs(store);
     const gradoEscolaridadOptions = getGradoescolaridad();
     const estadoEscolaridadOptions = getEstadoEscolaridad();
@@ -162,18 +178,38 @@ export default {
     const placeholder = fotoDefault;
     const qrholder = qrDefault;
     const foto = ref(null);
+    const solicitud = solicitudDefault;
     const qrVisible = ref(false)
+    const modSolVisible = ref(false)
     const canEditPhoto = computed(() => {
           return !!(dato.value && dato.value.id != null);
         });
     const showPicker = ref(false);
+    const solicitudVisible = ref('hidden');
     
+
     function openQrView() {
       qrVisible.value = true
-      //alert('qr clicked '+qrVisible.value)
     }
-    function closeQrView() {      
+    function closeQrView(v) {      
       qrVisible.value = false      
+      console.log('que valor tiene v='+v)
+      solicitudVisible.value = v? 'visible':'hidden'
+      syncIsUpdateMode(v)
+    }
+    function openViewSolicitud(){
+      solicitudStore.fetchSolicitudesPorAspirante(dato.value.Curp)
+      modSolVisible.value = true;
+    } 
+
+    function closeModEvaluacion(){
+      modSolVisible.value = false;
+    }
+
+    function syncIsUpdateMode(estado) {   
+         
+      emit('update:completo', estado == false? true:false)
+      console.log('Que pasa aqui '+estado)
     }
 
     function onFoto(payload) {         
@@ -193,12 +229,12 @@ export default {
     }
 
     function openPhotoPicker() {
-          if (!canEditPhoto.value) return; // disabled when no patient id
-          showPicker.value = true;
-        }
+      if (!canEditPhoto.value) return; // disabled when no patient id
+        showPicker.value = true;
+    }
 
     return { onFoto, foto, openPhotoPicker, canEditPhoto, dato, gradoEscolaridadOptions, estadoEscolaridadOptions,sexoOptions,edoCivilOptions, 
-      placeholder,qrholder,openQrView,closeQrView,qrVisible};
+      placeholder,qrholder,openQrView,closeQrView,qrVisible,openViewSolicitud,solicitudVisible,solicitud,closeModEvaluacion,modSolVisible};
   },
 };
 </script>

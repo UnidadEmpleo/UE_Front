@@ -3,7 +3,16 @@ import { useSolicitudStore } from '../modules/Solicitud/store/solicitudStore';
 import { useMainStore } from '@/store/useMainStore'
 
 const endpoint = '/Solicitud';
+const endpointImprimir = '/Pdf/presolicitud'
 
+
+export async function printSolicitud(id){
+    const store = useSolicitudStore();
+    store.loadingProgress = 0
+    store.loadingProgress = 20
+    var retorno = await apiRequest({ url: `${endpointImprimir}/${id}` , nocontentType: "application/pdf", responseType : 'stream',});    
+    return retorno;
+}
 export async function getItems() {
   const store = useSolicitudStore();
   const mainStore = useMainStore();
@@ -54,7 +63,7 @@ export async function getItemsByAspirante(curp) {
     const store = useSolicitudStore();
     store.loadingProgress = 0
     store.loadingProgress = 20
-    const result = await apiRequest({ url: `${endpoint}/ListSolicitudesPorAspirante/${curp}` });    
+    const result = await apiRequest({ url: `${endpoint}/Aspirante/${curp}` });    
     return result.data; 
 }
 
@@ -175,8 +184,8 @@ export async function createItem() {
 export async function updateItem() {
     const store = useSolicitudStore();
     const itemStore = store.solicitud;
-
     const itemRequest = {
+
         "IdRequest":itemStore.id,
         "id": itemStore.id,
 

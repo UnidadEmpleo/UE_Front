@@ -24,9 +24,9 @@ export async function apiRequest({
     
     try {
         
-      console.log("apiRequest: "+url) ;
-      console.log("METHOD :"+method)
-      console.log("DATA :"+data)
+      //console.log("apiRequest: "+url) ;
+      //console.log("METHOD :"+method)
+      //console.log("DATA :"+data)
       
         const response = await axios({
         url,
@@ -45,6 +45,8 @@ export async function apiRequest({
       if (showSuccess && successMessage) {
         mainStore.triggerAlert({message: successMessage,color: 'success',icon: 'check',})
       }
+      
+      
 
       return { 
         success: true,

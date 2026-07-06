@@ -68,7 +68,7 @@
 
       <div class="card-body">
             <form class="multisteps-form__form">
-              <CardEval :sexo="asp.Sexo" :class="activeStep === 0 ? activeClass : ''"/>
+              <CardEval :class="activeStep === 0 ? activeClass : ''"/>
               
               <div class="mt-4 d-flex justify-content-between">
                 
@@ -129,7 +129,6 @@ export default {
     
     onMounted(() => {
       activeStep.value = 0;      
-      console.log('EvaluacionForm   '+evalStore.sexo +'  '+ asp.value.Sexo)
     });
     
    
@@ -158,7 +157,7 @@ export default {
           sigColor.value = 'primary';
           sigVariant.value = 'gradient';
           sigPaso.value = false;
-          console.log(sigColor.value+'  '+sigVariant.value+ ' '+sigPaso.value)
+          
         }
       }
     }

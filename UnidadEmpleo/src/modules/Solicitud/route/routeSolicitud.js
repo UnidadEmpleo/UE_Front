@@ -44,6 +44,7 @@ const routeSolicitud = [
     beforeEnter: requireAuth,
   },
 
+
 ];
 
 

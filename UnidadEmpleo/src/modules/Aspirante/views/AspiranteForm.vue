@@ -3,23 +3,22 @@
 
     <div class="d-sm-flex justify-content-between">
       <div>
-        <material-button color="primary" variant="gradient" @click="navigateToList">
-          Regresar
-        </material-button>
+        |
       </div>
     </div>
 
     <div class="row min-vh-10">
       <div class="col-lg-8 col-md-10 col-12 m-auto">
-        <h3 class="mt-3 mb-0 text-center">{{ isCreateMode ? "Crear Nuevo " : "Editar " }} Aspirante</h3>
+        <h3 class="mt-3 mb-0 text-center">{{ isNew()  }} Aspirante</h3>
         <p class="lead font-weight-normal opacity-8 mb-7 text-center">
-          Rellena los campos para {{ isCreateMode ? "AGREGAR un nuevo XXXX " : "EDITAR el " }} Aspirante
+          Rellena los campos para {{ isUpdate() }} Aspirante
         </p>
+        
         <div class="card">         
            <div class="card-header p-0 position-relative mt-n5 mx-3 z-index-2">
             <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
               <div class="multisteps-form__progress">
-
+                
                 <button class="multisteps-form__progress-btn" type="button" title="Información del Aspirante">
                     <span>Información del aspirante</span>
                 </button>
@@ -33,8 +32,8 @@
           <div class="card-body">
             <form class="multisteps-form__form">
               
-              <AspiranteGeneral :class="activeStep === 0 ? activeClass : ''" />
-              <AspiranteAddress :class="activeStep === 1 ? activeClass : ''" />
+              <AspiranteGeneral :class="activeStep === 0 ? activeClass : ''" :isCreateMode="isCreateMode" @update:completo="v => isUpdateMode(v)"/>
+              <AspiranteAddress :class="activeStep === 1 ? activeClass : ''"  />
               
               <div class="mt-4 d-flex justify-content-between">
               
@@ -77,7 +76,7 @@ import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { useMainStore } from '@/store/useMainStore' 
-import { onMounted } from "vue";
+import { onMounted , ref} from "vue";
  
 export default {
   name: "AspiranteCreate",
@@ -92,22 +91,20 @@ export default {
         const { activeStep, activeClass } = storeToRefs(aspiranteStore); // Use storeToRefs for reactivity
         const { nextStep, prevStep } = aspiranteStore;
         const mainStore = useMainStore();
-
         const solicitudStore = useSolicitudStore();
         const referenceStore = useReferenciaStore();
-
         const router = useRouter();        
-        const isCreateMode = aspiranteStore.aspirante.Curp =='';
+        const isCreateMode = ref(aspiranteStore.aspirante.Curp =='');
         
+        const isUpdateMode = (value)=>{
+            isCreateMode.value = value; //==true? true:false;
+            isNew()
+            isUpdate()            
+        }
+
         onMounted(() => {
           activeStep.value = 0;
         });
-
-        const navigateToList = () => {
-            aspiranteStore.resetSelectedAspirante(); 
-            activeStep.value = 0;
-            router.push({ name: "AspirantesList" });
-          };
           
         const handleSave = () => {
           if (validateStep()) {
@@ -115,10 +112,9 @@ export default {
           }
         };
         const save = async () => {
-            
               let result;
-              console.log('isCreateMode = '+ isCreateMode.value +' '+ isCreateMode)
-              if (isCreateMode) 
+              console.log('isCreateMode = '+ isCreateMode.value )
+              if (isCreateMode.value) 
                 result =  await aspiranteStore.createAspirante();             
               else 
                 result = await aspiranteStore.updateAspirante();  
@@ -128,12 +124,10 @@ export default {
                 referenceStore.resetReferencia4new();
                 router.push({ name: "SolicitudForm" }); 
               }
-                
-            
-            
         };
 
-
+        const isNew = () => isCreateMode.value ? "Crear Nuevo " : "Editar ";
+        const isUpdate = () => isCreateMode.value ? "AGREGAR un nuevo  " : "EDITAR el ";
 
         const setActiveStep= () => {
           if (validateStep()) {
@@ -191,7 +185,7 @@ export default {
               if(aspiranteStore.aspirante.TelefonoCelular != null ){
                   if(aspiranteStore.aspirante.TelefonoCelular.length < 10){
                     isValid = false; 
-                    mainStore.triggerAlert({message: "El telefono debe tener al menos 10 caracteres.",
+                    mainStore.triggerAlert({message: "El telefono debe tener 10 caracteres.",
                     color: "warning", icon: "warning",});
                   return isValid;    
                   }
@@ -311,8 +305,11 @@ export default {
       handleNextStep,
       handleSave,
       setActiveStep,
-      navigateToList,
+      
       nodeWasClicked,
+      isUpdateMode,
+      isNew,isUpdate
+      
     };
   },
 };

@@ -47,29 +47,30 @@ export default {
     const loading = ref(false)
 
     const analitics = async () =>{
-        console.log(dato.value.Curp)
-        const dataCurp = dato.value.Curp.split(']')
-        
-        dato.value.Curp = dataCurp[0]
-        var result = await store.verifyAspiranteByCurp(dato.value.Curp)
-        if(result){
-            //store.resetSelectedAspirante()
-            syncFilters(false)
-            alert('Ya existe un elemento con esa CURP')
-        }
-        else{
-            dato.value.Nombre = dataCurp[4]
-            dato.value.Apellido_Paterno = dataCurp[2]
-            dato.value.Apellido_Materno = dataCurp[3]
-            const fechaPaso = dataCurp[6].split("-")
-            dato.value.Fecha_Nacimiento = fechaPaso[2]+'-'+fechaPaso[1]+'-'+fechaPaso[0]
-            dato.value.Sexo = getSexoByName(dataCurp[5])            
-            dato.value.Rfc = dato.value.Curp.substring(0, 10)
-        }  
+        //console.log(dato.value.Curp)
+        try{
+          const dataCurp = dato.value.Curp.split(']')
+          dato.value.Rfc = dato.value.Curp.substring(0, 10)
+          dato.value.Curp = dataCurp[0]
+          
+          var result = await store.verifyAspiranteByCurp(dato.value.Curp)
+          if(result){              
+              dato.value.Rfc = dato.value.Curp.substring(0, 10)
+              syncFilters(true)
+              alert('Ya existe un elemento con esa CURP')
+          }
+          else{
+              dato.value.Nombre = dataCurp[4]
+              dato.value.Apellido_Paterno = dataCurp[2]
+              dato.value.Apellido_Materno = dataCurp[3]
+              const fechaPaso = dataCurp[6].split("-")
+              dato.value.Fecha_Nacimiento = fechaPaso[2]+'-'+fechaPaso[1]+'-'+fechaPaso[0]
+              dato.value.Sexo = getSexoByName(dataCurp[5])            
+              dato.value.Rfc = dato.value.Curp.substring(0, 10)
+              syncFilters(false)
+          }
+        }catch(e){console.log('Todo fallo '+e)}
     }
-
-
-    
 
     watch(() => props.visible, (v) => {
       if (v) {
@@ -85,7 +86,7 @@ export default {
     }
     
     async function onPrevSave() {
-      syncFilters(true)
+      syncFilters(false)
     }
     
 

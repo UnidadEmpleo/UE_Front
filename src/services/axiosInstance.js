@@ -32,9 +32,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(async config => 
   {
     const headers = await getApiHeaders(config.anonimus);
-    
-     
-     
     const merged = { ...config.headers, ...headers };
     if (config.nocontentType) {
       // Remove any preset content-type so the browser can set correct multipart boundaries
@@ -75,9 +72,6 @@ axiosInstance.interceptors.response.use(
           // No refresh token available, force logout by rejecting
           return Promise.reject(error);
         }
-
-        
-
         // Call refresh endpoint directly with axios (no interceptors)
         const refreshUrl = `${API_BASE_URL.replace(/\/$/, '')}/auth/refresh-token`;
         try {

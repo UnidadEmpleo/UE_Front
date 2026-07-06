@@ -1,12 +1,22 @@
 <template>
   <div class="container-fluid py-4">
-    <div class="d-sm-flex justify-content-between">
-      <div>
-        <material-button  v-permiso="'Aspirante.Agregar'" color="primary" variant="gradient" @click="navigateToCreate">
+
+    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-dark"
+      style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+      Gestión de Aspirantes
+    </div>
+
+    <div class="d-sm-flex justify-content-end ">
+      <div class="me-4">
+        <material-button v-permiso="'Usuarios.Agregar'" color="primary" variant="gradient" @click="navigateToCreate"
+          class="d-flex align-items-center">
+          <i class="material-icons-round me-2">person_add</i>
           Nuevo Aspirante
         </material-button>
       </div>
     </div>
+
+
     
       
       <div class="card ">
@@ -66,11 +76,22 @@
         <material-button color="primary" variant="gradient" size="sm" @click="handleUpdate(row)" class="me-2" v-permiso="'Grupos.Editar'">
           Actualizar
         </material-button>
-         <material-button color="danger" variant="gradient" size="sm" @click="handleNuevaSolicitud(row)">
-          Nueva
-        </material-button> 
+
+        <material-button color="secondary" variant="gradient" size="sm" @click="openModalEvaluaciones(row)" class="me-2" v-permiso="'Grupos.Editar'">
+          Solicitudes {{ row.Solicitudes }}
+        </material-button>
+
       </template>
     </DataTable>
+
+
+    <ModalEvaluacionesAspirante
+    :visible="modVisible"
+    :title="Evaluaciones"
+    @update:completo="v => closeModEvaluacion()"
+    @close="modVisible = false"
+  />
+
   </div>
 </template>
 
@@ -85,12 +106,13 @@ import { useRouter } from "vue-router";
 import { useCuerpoStore } from "@ue/modules/Cuerpo/useCuerpoStore";
 import { getSituacionAspirante } from "@ue/services/catalogosDbService"
 
-
+import ModalEvaluacionesAspirante from "../../Evaluacion/components/ModalEvaluacionesAspirante.vue";
+import { useSolicitudStore } from '../../Solicitud/store/solicitudStore';
 export default {
   name: "AspirantesList",
   components: {
     DataTable,
-    MaterialButton,
+    MaterialButton,ModalEvaluacionesAspirante
   },
   setup() {
     const itmesStore = useAspiranteStore();
@@ -114,12 +136,6 @@ export default {
       await itmesStore.fetchAspiranteByCurp(row.CURP, row.Cuerpo, row.Region);
       router.push({ name: "AspiranteForm" });
     };
-    
-    const handleNuevaSolicitud = async (row) => {
-      itmesStore.aspirante = { ...row };
-      await itmesStore.fetchAspiranteByCurp(row.CURP);
-      router.push({ name: "SolicitudForm" });
-    }
 
     const handleDelete = (row) => {
       if (confirm(`¿Estás seguro de que deseas eliminar el aspirante "${row.nombre}"?`)) {
@@ -129,8 +145,7 @@ export default {
 
     onBeforeMount(async () => {
       itmesStore.setRecurso();
-      cuerpoStore.fetchCuerpoTodo();
-      
+      cuerpoStore.fetchCuerpoTodo();      
       availableRegiones();
       await itmesStore.fetchAspirantes();
     });
@@ -159,6 +174,19 @@ export default {
     const filtrar = (async () =>{
       await itmesStore.fetchAspirantes();
     })
+
+
+    //modal evaluaciones por aspirante
+    const modVisible = ref(false)
+    const solicitudStore = useSolicitudStore()
+    function openModalEvaluaciones(row){
+      solicitudStore.fetchSolicitudesPorAspirante(row.CURP)
+      modVisible.value = true;
+    } 
+
+    function closeModEvaluacion(){
+      modVisible.value = false;
+    }
     
     return {
       rowsAspirantes,
@@ -167,14 +195,15 @@ export default {
       navigateToCreate,
       handleUpdate,
       handleDelete,
-      handleNuevaSolicitud,
       rowsCuerpo,
       regionesLista,
       situacionesLista,
       MaterialComboBox,
       options,
       availableRegiones,
-      filtrar,itmesStore
+      filtrar,itmesStore,
+      openModalEvaluaciones,closeModEvaluacion,modVisible
+
     };
   },
 };

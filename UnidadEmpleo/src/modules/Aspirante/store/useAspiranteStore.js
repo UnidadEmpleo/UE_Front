@@ -45,7 +45,7 @@ export const useAspiranteStore = defineStore('candidate', {
     estado: [],
     tipoAsentamiento: [],
     asentamiento: [],
-    columns: ['CURP','Nombre','Apellido Paterno','Apellido Materno','Cuerpo','Region','SOLICITUDES'], // Table columns
+    columns: ['CURP','Nombre','Apellido Paterno','Apellido Materno','Cuerpo','Region'], // Table columns
     rowsAspirantes: [],
     rowsSituacion:[],
     
@@ -78,6 +78,8 @@ export const useAspiranteStore = defineStore('candidate', {
               'Apellido Materno': asp.apellido_Materno,
               Cuerpo:asp.idCuerpoCaptura,
               Region:asp.idRegionCaptura,
+              Solicitudes:asp.solicitudes.length
+
           }))
         } catch (error) {
           console.error('Error fetching lists:', error)

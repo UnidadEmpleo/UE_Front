@@ -85,8 +85,7 @@ export const useCuerpoStore = defineStore('proceso', {
             regiones: val.regiones,
         }));
         this.rowsCuerpo.unshift(this.cuerpoTodo);
-        //this.rowsCuerpo.push(this.cuerpoTodo);
-      console.log(this.rowsCuerpo)
+      
       } catch (error) {
         console.error('Error fetching:', error)
         this.loadingProgress = 0 // Reset progress on error

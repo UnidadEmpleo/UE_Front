@@ -13,7 +13,7 @@ export const useEvaluacionStore = defineStore('evaluacion', {
         "observaciones": '',
         "revalorable": false,
         "idSoliciud": 0,
-        "tipoEvaluacion": 0,
+        "tipoEvaluacion": 1,
         "usuarioSalida": '',
         "usuarioIngreso": '',
         "usuarioEvaluo": '',
@@ -220,7 +220,7 @@ export const useEvaluacionStore = defineStore('evaluacion', {
               this.registro.salida = new Date();
             
             if (!await updateEvaluation(this.registro,usuario, password,termino))
-              console.log('Error')
+              return false;  
             else
               if (!termino){
                 const data = await getEvaluacion(this.registro.id);
@@ -228,67 +228,65 @@ export const useEvaluacionStore = defineStore('evaluacion', {
                   this.registro.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
                 }
               }
-              
-            break;
+            return true; 
+            
           case 2:
             if (termino)
               this.medico.salida = new Date()
 
             if (!await updateEvaluation(this.medico,usuario, password,termino))
-              console.log('Error')
+              return false
             else
               if (!termino){
                 const data = await getEvaluacion(this.medico.id);
                 if (!Array.isArray(data) || data.length > 0) {
                   this.medico.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
-                  console.log('el dato se ha actualizado '+this.medico.nombreUsuarioEvaluo)
+                  
                 }
-              }            
-            break;
+              }
+            return true;
           case 3:
             if (termino)
               this.psicologia.salida = new Date()
             
             if (!await updateEvaluation(this.psicologia,usuario, password,termino))
-              console.log('Error')
+              return false;
             else
               if (!termino){
                 const data = await getEvaluacion(this.psicologia.id);
                 if (!Array.isArray(data) || data.length > 0) {
-                  this.psicologia.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
-                  console.log('el dato se ha actualizado '+this.psicologia.nombreUsuarioEvaluo)
+                  this.psicologia.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo                  
                 }
               }
-            break;
+            return true
           case 4:
             if (termino)
               this.antidoping.salida = new Date()
 
             if (!await updateEvaluation(this.antidoping,usuario, password,termino))
-              console.log('Error')
+              return false
             else
               if (!termino){
                 const data = await getEvaluacion(this.antidoping.id);
                 if (!Array.isArray(data) || data.length > 0) {
-                  this.antidoping.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
-                  console.log('el dato se ha actualizado '+this.antidoping.nombreUsuarioEvaluo)
+                  this.antidoping.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo                  
                 }
               }
-            break;
+            return true
           case 5:
             if (termino)
               this.pie.salida = new Date()
             if (!await updateEvaluation(this.pie,usuario, password,termino))
-              console.log('Error')
+              return false
             else
               if (!termino){
                 const data = await getEvaluacion(this.pie.id);
                 if (!Array.isArray(data) || data.length > 0) {
                   this.pie.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
-                  console.log('el dato se ha actualizado '+this.pie.nombreUsuarioEvaluo)
+                  
                 }
               }
-            break;
+            return true
         }
         
       } catch (error) {
@@ -296,7 +294,7 @@ export const useEvaluacionStore = defineStore('evaluacion', {
       }
     },
 
-    setRecurso(sexo){
+    setRecurso(){
       var externalUser = localStorageService.get("externalUser");
       //Aqui vamos a dar visibilidad a los examenes de acuerdo al perfil
       // Administrador, gerente y subdirector TODAS las evaluaciones con opcion a modificar resultados en espera de que digan
@@ -305,7 +303,7 @@ export const useEvaluacionStore = defineStore('evaluacion', {
       this.options.cuerpoId = userdata.cuerpoId;   
       this.options.regionId = userdata.regionId;
       this.options.perfilId = externalUser.perfilId[0];
-      console.log('Sexo en setRecurso '+sexo)
+      
     },
 
     nextStep() {

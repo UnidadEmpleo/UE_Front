@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
 import localStorageService from "@/utils/localStorageService";
-import {getSolicitudById,getItems,getItemsByAspirante,getItemsByOptions,createItem,updateItem,deleteItem,} from '@ue/services/solicitudService.js'
+import {getSolicitudById,getItems,getItemsByAspirante,getItemsByOptions,createItem,updateItem,deleteItem, printSolicitud} from '@ue/services/solicitudService.js'
 import { getStatusSolicitudById } from '../../../services/catalogosDbService';
 import { getSexoById } from "@ue/services/catalogosDbService"
 import { useMainStore } from '@/store/useMainStore.js'
+import { yyyymmddFecha,getTimeOffset} from "@ue/services/utilService"
+import { faWarning } from '@fortawesome/free-solid-svg-icons';
 
 export const useSolicitudStore = defineStore('solicitud', {
   state: () => ({
@@ -132,7 +134,7 @@ export const useSolicitudStore = defineStore('solicitud', {
         this.rowsSolicitudes = evals.map((ev) => ({
             "id": ev.id,
             "Nombre": ev.aspirante.nombre + ' '+ev.aspirante.apellido_Paterno+' '+ev.aspirante.apellido_Materno,
-            "Fecha solicitud": ev.fechaSolicitud,
+            "Fecha solicitud": getTimeOffset(ev.fechaSolicitud),
             "Expediente Completo":ev.statusExp? 'Sí':'No',
             "Revalorable": ev.revalorable? 'Sí':'No',
             "Estatus Solicitud":  getStatusSolicitudById(ev.status),
@@ -153,14 +155,15 @@ export const useSolicitudStore = defineStore('solicitud', {
 
     async fetchRowsByOptions(){
       
-      if (this.options.perfilId ===  8 || this.options.perfilId === 1 || this.options.perfilId == 2 || this.options.perfilId == 3 || this.options.perfilId == 7 ){
+      if (this.options.perfilId ===  8 || this.options.perfilId >= 1 || this.options.perfilId <= 7 ){
         try {
           const evals = await getItemsByOptions(this.options)
           //const evals = await getItems()
+          this.columns = ['Sexo','Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud','CorporacionId', 'Observaciones'], // Table columns
           this.rowsSolicitudes = evals.map((ev) => ({
             "id": ev.id,
             "Nombre": ev.aspirante.nombre + ' '+ev.aspirante.apellido_Paterno+' '+ev.aspirante.apellido_Materno,
-            "Fecha solicitud": ev.fechaSolicitud,
+            "Fecha solicitud": getTimeOffset(ev.fechaSolicitud),
             "Expediente Completo":ev.statusExp? 'Sí':'No',
             "Revalorable": ev.revalorable? 'Sí':'No',
             "Estatus Solicitud":  getStatusSolicitudById(ev.status),
@@ -179,22 +182,27 @@ export const useSolicitudStore = defineStore('solicitud', {
           this.loadingProgress = 0
         }
       }
+      else
+        useMainStore().triggerAlert({message: faWarning || 'El perfil de usuario no puede visualizar este dato',
+            color: 'danger',icon: 'error',})
     },
 
     async fetchSolicitudesPorAspirante(curp) {
       try {
+        this.columns= ['Id','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud', 'Observaciones', 'Corporacion','Region','Curp'] // Table columns
         const asps = await getItemsByAspirante(curp)
         this.rowsSolicitudes = asps.map((asp) => ({
-            "id": asp.id,
+            "Id": asp.id,
             "Fecha solicitud": asp.fechaSolicitud,
-            "Estatus Expediente": asp.statusExp,
-            "Revalorable": asp.revalorable,
-            "Etatus Examen": asp.status,
+            "Expediente Completo": asp.statusExp? 'Sí':'No',
+            "Revalorable": asp.revalorable? 'Sí':'No',
+            "Estatus Solicitud": getStatusSolicitudById(asp.status),
             "Observaciones": asp.observaciones,
-            "CorporacionId": asp.corporacionId,
-            "RegionId": asp.regionId,
+            "Corporacion": asp.corporacionId,
+            "Region": asp.regionId,
             "Curp": asp.curp,
         }))
+        console.log('solicitudes llegaron '+this.rowsSolicitudes.length)
       } catch (error) {
         console.error('Error fetching solicitudes:', error)
         this.loadingProgress = 0 // Reset progress on error
@@ -245,7 +253,7 @@ export const useSolicitudStore = defineStore('solicitud', {
 
               "fot": parseInt(itemStore.fot),
               "fechaSolicitud": itemStore.fechaSolicitud,
-              "statusExp": parseInt(itemStore.statusExp),
+              "statusExp": itemStore.statusExp,
               
               "enteraEmpleo":  parseInt(itemStore.enteraEmpleo), 
               "gobierno": itemStore.gobierno,
@@ -329,8 +337,16 @@ export const useSolicitudStore = defineStore('solicitud', {
     },
 
     async updateSolicitud() {
-      try {      
+      try {             
         return await updateItem();    
+      } catch (error) {        console.error('Error updating Aspirante:', error)      }
+    },
+
+     async imprimirSolicitud(id) {
+      try {    
+
+        return await printSolicitud(id);    
+        
       } catch (error) {        console.error('Error updating Aspirante:', error)      }
     },
 
@@ -342,6 +358,7 @@ export const useSolicitudStore = defineStore('solicitud', {
         console.error('Error deleting CANDIDATE:', error)
       }
     },
+
 
     
     
@@ -361,16 +378,8 @@ export const useSolicitudStore = defineStore('solicitud', {
       }
     },
 
-    ftFecha(fecha) {
-      var formato = 'yyyy-mm-dd'
-      const mapa = {
-      dd: fecha.getDate().toString().padStart(2, '0'),
-      mm: (fecha.getMonth() + 1).toString().padStart(2, '0'),
-      yyyy: fecha.getFullYear(),
-      };
-      return formato.replace(/dd|mm|yyyy/gi, (coincidencia) => mapa[coincidencia]);
-    },
-  
+    
+
     setRecurso(sit = -1){
       var externalUser = localStorageService.get("externalUser");
       var userdata = localStorageService.get("userdata");
@@ -380,8 +389,8 @@ export const useSolicitudStore = defineStore('solicitud', {
       this.options.perfilId = externalUser.perfilId[0];
       this.options.situacion=sit;
       var hoy = new Date();
-      this.options.fechaInicio = this.ftFecha(hoy)
-      this.options.fechaFinal = this.ftFecha(hoy)
+      this.options.fechaInicio = yyyymmddFecha(hoy)
+      this.options.fechaFinal = yyyymmddFecha(hoy)
       
       //si perfil es administrador o subdirector todo con opciones  
       if (this.options.perfilId === 8 || this.options.perfilId === 1) {
@@ -406,9 +415,9 @@ export const useSolicitudStore = defineStore('solicitud', {
         //PERFILES DE EVALUACION
         this.cuerpoEnable = true;
         this.situacionEnable = true;
-        this.regionEnable = true;
-        this.options.regionId = 0;
-        console.log(' ninguno ')
+        this.regionEnable = false;
+        
+        console.log(' ninguno '+this.options.cuerpoId)
       }
 
     },

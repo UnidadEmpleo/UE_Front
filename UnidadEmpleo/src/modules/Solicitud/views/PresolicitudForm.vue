@@ -93,8 +93,10 @@
             </div>
           </div>
         </div>
-
+<div> <p>{{ sol.corporacionId }} {{ sol.regionId }} </p>
+</div>
         <div class="card-body">
+          
           <form class="multisteps-form__form">
             <solicitudDatosBasicos :class="activeStep === 0 ? activeClass : ''"/>
             <Referencias :class="activeStep === 1 ? activeClass : ''"/>
@@ -108,7 +110,6 @@
 
               <MaterialButton id="verify" color="primary" variant="gradient" @click.prevent="verifyData()" :disabled="activeStep === 1" >
                 {{ activeStep === 0 ? "Guardar y continuar..." : "-" }}
-                
               </MaterialButton>
            
               <MaterialButton id="next-step-button" :color="sigColor" :variant="sigVariant" :disabled="sigPaso"
@@ -152,8 +153,7 @@ import Referencias from "../componentes/Referencias.vue";
 export default {
   name: "AspiranteCreate",
   components: {
-    MaterialButton,
-    SolicitudDatosBasicos,Referencias,
+    MaterialButton,SolicitudDatosBasicos,Referencias,
     MaterialInput,MaterialComboBox, MaterialSwitch, QrCURP
   },
   setup() {
@@ -232,9 +232,14 @@ export default {
         let result = false;
         if (isCreateMode && sol.value.id == 0){
           sol.value.fechaSolicitud = fecha.getFullYear()+'-'+(fecha.getMonth() + 1).toString().padStart(2, '0')+'-'+fecha.getDate().toString().padStart(2, '0')
+          sol.value.corporacionId = mainStore.userdata.cuerpoId;
+          sol.value.regionId = mainStore.userdata.regionId;
           result = solicitudStore.createSolicitud();
         }
-        else result =  solicitudStore.updateSolicitud();
+        else {
+          console.log('verifyData PresolicitudForm line 238  corpor y reg '+sol.value.corporacionId+' , '+sol.value.regionId + ' *')
+          result =  solicitudStore.updateSolicitud();
+        }
         
         if (result){
           sigColor.value = 'primary';
@@ -272,8 +277,7 @@ export default {
     const validateStep = () => {
       let isValid = true;
       // AGREGAR LOS CAMPOS DE CUERPO, REGION Y SITUACION
-      sol.value.corporacionId = mainStore.userdata.cuerpoId;
-      sol.value.regionId = mainStore.userdata.regionId;
+      
       sol.value.coordenadasVivienda = '0'
       if (!sol.value.fechaSolicitud)
         sol.value.fechaSolicitud = fecha.getFullYear()+'-'+(fecha.getMonth() + 1).toString().padStart(2, '0')+'-'+fecha.getDate().toString().padStart(2, '0')
@@ -302,7 +306,7 @@ export default {
         if( sol.value.telefonoCasa != null ){
           if(sol.value.telefonoCasa.length < 10){
               isValid = false;       
-              mainStore.triggerAlert({message: "Capture el Teléfono de casa",color: "warning",icon: "warning",});
+              mainStore.triggerAlert({message: "Capture el Teléfono de casa con sus 10 numeros",color: "warning",icon: "warning",});
               return isValid;
             }    
         }
@@ -310,7 +314,7 @@ export default {
         if(sol.value.telefonoRecado != null ){
           if(sol.value.telefonoRecado.length < 10){
               isValid = false;       
-              mainStore.triggerAlert({message: "Capture el Teléfono para recados",color: "warning",icon: "warning",});
+              mainStore.triggerAlert({message: "Capture el Teléfono para recados con sus 10 numeros",color: "warning",icon: "warning",});
               return isValid;  
             }  
         }
@@ -428,14 +432,14 @@ export default {
           sol.value.comprobanteDomicilio == true &&        sol.value.cartasRecomendacion == true &&        sol.value.curpActualizado == true &&
           sol.value.ine == true &&        sol.value.rfcHomoclave == true 
           ){ 
-            console.log('Eval sol.value.statusExp = true')
+            
             sol.value.statusExp = true  
           }          
         else{ 
-          console.log('Eval sol.value.statusExp = false')
+          
           sol.value.statusExp = false
         }
-        console.log('Ya se evaluo sol.value.statusExp ' + sol.value.statusExp)
+        
         ///CREAR REGISTRO EN LA BASE DE DATOS
 
       } else if (activeStep.value === 1) {

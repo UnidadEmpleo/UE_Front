@@ -169,8 +169,7 @@ export default {
       () => user.value.password,
       (newVal) => {
         if (!validatePassword(newVal)) {
-          passwordError.value =
-            "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.";
+          passwordError.value = "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.";
         } else {
           passwordError.value = "";
         }
