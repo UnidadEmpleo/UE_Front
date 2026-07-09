@@ -1,7 +1,6 @@
 import CryptoJS from "crypto-js";
 const SECRET_KEY = process.env.VUE_APP_STORAGE_SECRET; // Usa una clave fuerte y mantenla segura
 
-
 const localStorageService = {
   get(key, defaultValue = null) {
     try {
@@ -15,10 +14,10 @@ const localStorageService = {
         console.log('userInfo '+ decrypted)
       if (key == 'userdata')
         console.log('userData '+ decrypted)
-      if (key == 'externalUser')
-        console.log('externalUser '+ decrypted)
-      */
       
+      if (key == 'userPermisos')
+        console.log('userPermisos '+ decrypted)
+      */
       return decrypted ? JSON.parse(decrypted) : defaultValue;
       //return encrypted //localStorage.getItem(key);
     } catch (e) {

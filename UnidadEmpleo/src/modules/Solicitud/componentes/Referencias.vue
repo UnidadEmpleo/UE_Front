@@ -6,8 +6,8 @@
       <div class="mb-3">
         <h5 class="font-weight-bolder mb-0">REFERENCIAS:</h5>
         <p class="mb-0 text-sm">1. Padre, madre, esposa o hermano</p>
-        <p class="mb-0 text-sm">2. Padre, madre, esposa o hermano</p>
-        <p class="mb-0 text-sm">3. Padre, madre, esposa o hermano</p>
+        <p class="mb-0 text-sm">2. Tío, primo, sobrino, cuñado, abuelo o suegro</p>
+        <p class="mb-0 text-sm">3. Amigo, vecino o conocido</p>
       </div>
 
       <div class="multisteps-form__content">      
@@ -340,7 +340,6 @@ export default {
 
     const validateStep = () => {
       var isValid = true;
-      console.log(dato.value.Calle)
       if(!dato.value.Calle) {
         isValid = false;       
         mainStore.triggerAlert({message: "Capture la Calle",color: "warning",icon: "warning",});return isValid;    

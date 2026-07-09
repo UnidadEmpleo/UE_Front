@@ -68,7 +68,7 @@ export const useGruposStore = defineStore('grupos', {
         
           }))
       
-        console.log('Dentro de fechaAspirantesOtro '+grupos[0].id + '   '  +this.rowsGrupos[0].descripcion);
+        //console.log('Dentro de fechaAspirantesOtro '+grupos[0].id + '   '  +this.rowsGrupos[0].descripcion);
       } catch (error) {
         console.error('Error fetching groups:', error)
         this.loadingProgress = 0 // Reset progress on error

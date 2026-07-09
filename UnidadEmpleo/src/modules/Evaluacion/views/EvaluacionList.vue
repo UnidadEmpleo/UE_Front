@@ -1,9 +1,13 @@
 <template>
   <div class="container-fluid py-4">
     
+    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-warning bg-white"
+      style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+      Personal en Evaluación
+    </div>
     
     
-    <div class="card ">
+    <div class="card mt-3">
         <div class="row container-fluid mt-3 ">
               <div class="col-sm-3">
                 <label for="CuerpoId" class="form-label">Cuerpo</label>
@@ -35,10 +39,9 @@
               </material-button>
               
             </div>
-          </div>
-          
-      </div>
-
+        </div>  
+    </div>
+    
     <!-- DataTable Component -->
     <DataTable
       title="Evaluando"
@@ -121,7 +124,6 @@ export default {
     };
 
     const filtrar = async () =>{
-      console.log('Filtrando evaluacionList')
       await solicitudStore.fetchRowsByOptions();
     }
     onBeforeMount(async () => {      

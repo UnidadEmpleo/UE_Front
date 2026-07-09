@@ -18,7 +18,7 @@ const pdfRef = ref(null);
 const pdfUrl = ref(process.env.VUE_APP_API_BASE_URL+"/Pdf/presolicitud");
 
 const handlePageChange = (newPage) => {
-  console.log(`new page: ${newPage}`);
+  //console.log(`new page: ${newPage}`);
   page.value = newPage;
 };
 
@@ -49,42 +49,14 @@ const handlePdfInit = (pdf) => {
 
   watch(() => props.visible, (v) => {
       if (v) {
-        //AQUI PUEDO AGREGAR UNA FUNCIÓN DE VALORES INICIALES
-        console.log('whatching ExpedienteCompleto '+v)
-
+        //AQUI PUEDO AGREGAR UNA FUNCIÓN DE VALORES INICIALES        
         getPdf(props.IdSolicitud)
-
-        console.log('props.IdSolicitud = '+props.curp)
       }
   }, { immediate: true })
 
 
   async function getPdf(id){
     pdfUrl.value = process.env.VUE_APP_API_BASE_URL+"/Pdf/presolicitud/"+id
-    /*
-    try {
-      var result = await itmesStore.imprimirSolicitud(id)
-      const candidate = (result && result.data && result.data instanceof Blob) ? result.data : result
-      const blobCandidate = new Blob(candidate.data, { type: "application/pdf" });
-      console.log('candidate '+blobCandidate)
-      if (blobCandidate instanceof Blob) {
-          if (blobCandidate.type && blobCandidate.type.includes('application/json')) {
-            try { const text = await blobCandidate.text(); console.warn('Export devolvió JSON en lugar de archivo:', text) } catch {console.error('Error leyendo blob JSON de exportación')}
-          }
-          this.pdfUrl = URL.createObjectURL(blobCandidate)
-          
-      } else if (result?.fileBytes && result?.contentType) {
-          const byteChars = atob(result.fileBytes)
-          const byteNumbers = Array.from({ length: byteChars.length }, (_, i) => byteChars.charCodeAt(i))
-          const byteArray = new Uint8Array(byteNumbers)
-          const blob = new Blob([byteArray], { type: result.contentType })
-          this.pdfUrl = URL.createObjectURL(blob)
-      } else {
-          this.pdfUrl =  URL.createObjectURL(blobCandidate.data)
-          console.warn('Formato no reconocido', result)
-        }
-      } catch (e) { console.warn('Export error', e) }  
-       */
   }
 
   function syncFilters(estado) {

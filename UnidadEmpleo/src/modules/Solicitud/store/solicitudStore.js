@@ -189,6 +189,7 @@ export const useSolicitudStore = defineStore('solicitud', {
 
     async fetchSolicitudesPorAspirante(curp) {
       try {
+             
         this.columns= ['Id','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud', 'Observaciones', 'Corporacion','Region','Curp'] // Table columns
         const asps = await getItemsByAspirante(curp)
         this.rowsSolicitudes = asps.map((asp) => ({
@@ -201,8 +202,9 @@ export const useSolicitudStore = defineStore('solicitud', {
             "Corporacion": asp.corporacionId,
             "Region": asp.regionId,
             "Curp": asp.curp,
+            "sexoid":asp.aspirante.sexo,
+            
         }))
-        console.log('solicitudes llegaron '+this.rowsSolicitudes.length)
       } catch (error) {
         console.error('Error fetching solicitudes:', error)
         this.loadingProgress = 0 // Reset progress on error
@@ -211,21 +213,20 @@ export const useSolicitudStore = defineStore('solicitud', {
 
     async fetchSolicitudesPorAreaYPeriodo(corporacionId, regionId, fechaInicio, fechaFin, status) {
       if (this.options.perfilId ===  8 || this.options.perfilId === 1 || this.options.perfilId == 2 || this.options.perfilId == 3 || this.options.perfilId == 7 ){
-        console.log('' +corporacionId)
-        console.log(' '+ regionId )
-        console.log( ' ' + fechaInicio +' '+ fechaFin +' '+ status)
+
         try {
           let solicitudes = await getItemsByOptions(corporacionId, regionId, fechaInicio, fechaFin, status)
           this.rowsSolicitudes = solicitudes.map((asp) => ({
-            "id": asp.id,
+            "Id": asp.id,
             "Fecha solicitud": asp.fechaSolicitud,
-            "Expediente Completo": asp.statusExp==true? 'Sí':'No',
-            "Revalorable": asp.revalorable,
-            "Etatus Examen": asp.status,
+            "Expediente Completo": asp.statusExp? 'Sí':'No',
+            "Revalorable": asp.revalorable? 'Sí':'No',
+            "Estatus Solicitud": getStatusSolicitudById(asp.status),
             "Observaciones": asp.observaciones,
-            "CorporacionId": asp.corporacionId,
-            "RegionId": asp.regionId,
+            "Corporacion": asp.corporacionId,
+            "Region": asp.regionId,
             "Curp": asp.curp,
+            "sexoid":asp.aspirante.sexo
           }))
         } catch (error) {
           console.error('Error fetching solicitudes:', error)
@@ -403,21 +404,19 @@ export const useSolicitudStore = defineStore('solicitud', {
         this.cuerpoEnable = true;
         this.situacionEnable = false;
         this.regionEnable = false;
-        console.log(' 2 o 3')
         
       }else if ( this.options.perfilId === 7 ) { 
         //CAPTURISTA
         this.cuerpoEnable = true;
         this.situacionEnable = false;
         this.regionEnable = true ;
-        console.log(' 7')
+        
       }else{
         //PERFILES DE EVALUACION
         this.cuerpoEnable = true;
         this.situacionEnable = true;
         this.regionEnable = false;
         
-        console.log(' ninguno '+this.options.cuerpoId)
       }
 
     },

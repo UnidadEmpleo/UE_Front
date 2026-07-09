@@ -7,10 +7,6 @@ import { useMainStore } from '@/store/useMainStore';
  */
 export async function fetchCatalog(api,catalogName) {
   const store = useMainStore();
-  
-   
-  
-
   const result = await apiRequest({ url: `/`  + api + `/` + catalogName  ,useCorporacionHeader: true  }); 
 
   if (!Array.isArray(result.data) || result.data.length === 0) {

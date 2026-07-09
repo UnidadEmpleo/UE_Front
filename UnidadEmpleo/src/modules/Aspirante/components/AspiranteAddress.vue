@@ -296,10 +296,8 @@ export default {
       }).addTo(map.value);
 
       map.value.on('dblclick',createMarker);
-      console.log('latitud '+dato.value + ' Longitud '+dato.value.longitud)
       
-      if (dato.value.longitud === undefined){ console.log()}
-      else{
+      if (dato.value.longitud !== undefined){
         marker.value = L.marker([dato.value.latitud, dato.value.longitud],{draggable:true}).addTo(map.value).on("dragend", (event) => 
            {dato.coordenadas = event.target._latlng.lat + ' '+event.target._latlng.lng;
             dato.value.latitud = event.target._latlng.lat;

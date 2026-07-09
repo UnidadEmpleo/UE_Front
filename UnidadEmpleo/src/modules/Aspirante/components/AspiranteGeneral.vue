@@ -129,6 +129,7 @@
   <ModalEvaluacionesAspirante
     :visible="modSolVisible"
     :title="Evaluaciones"
+    :permisos="permisos"
     @update:completo="v => closeModEvaluacion()"
     @close="modSolVisible = false"
   />
@@ -138,7 +139,8 @@
 </template>
 
 <script>
-import { ref, computed} from "vue";
+import { ref, computed, onMounted} from "vue";
+import {useMainStore} from "@/store/useMainStore";
 import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
 import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
 import {getGradoescolaridad, getEstadoEscolaridad, getSexo, getEdoCivil } from "@ue/services/catalogosDbService";
@@ -169,7 +171,7 @@ export default {
     
     const store = useAspiranteStore();
     const solicitudStore = useSolicitudStore()
-    
+    const mainStore = useMainStore()
     const { aspirante: dato } = storeToRefs(store);
     const gradoEscolaridadOptions = getGradoescolaridad();
     const estadoEscolaridadOptions = getEstadoEscolaridad();
@@ -193,11 +195,19 @@ export default {
     }
     function closeQrView(v) {      
       qrVisible.value = false      
-      console.log('que valor tiene v='+v)
       solicitudVisible.value = v? 'visible':'hidden'
       syncIsUpdateMode(v)
     }
-    function openViewSolicitud(){
+
+    const permisos = ref(false)
+
+    onMounted(() => {
+      permisos.value = mainStore.userPermisos ?? []
+    });
+    
+    
+
+    function openViewSolicitud(){   
       solicitudStore.fetchSolicitudesPorAspirante(dato.value.Curp)
       modSolVisible.value = true;
     } 
@@ -207,9 +217,7 @@ export default {
     }
 
     function syncIsUpdateMode(estado) {   
-         
       emit('update:completo', estado == false? true:false)
-      console.log('Que pasa aqui '+estado)
     }
 
     function onFoto(payload) {         
@@ -234,7 +242,7 @@ export default {
     }
 
     return { onFoto, foto, openPhotoPicker, canEditPhoto, dato, gradoEscolaridadOptions, estadoEscolaridadOptions,sexoOptions,edoCivilOptions, 
-      placeholder,qrholder,openQrView,closeQrView,qrVisible,openViewSolicitud,solicitudVisible,solicitud,closeModEvaluacion,modSolVisible};
+      placeholder,qrholder,openQrView,closeQrView,qrVisible,openViewSolicitud,solicitudVisible,solicitud,closeModEvaluacion,modSolVisible,permisos};
   },
 };
 </script>

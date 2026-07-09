@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid py-4">
 
-    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-dark"
+    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-primary bg-gradient-primary"
       style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
       Gestión de Aspirantes
     </div>
@@ -84,13 +84,13 @@
       </template>
     </DataTable>
 
-
     <ModalEvaluacionesAspirante
-    :visible="modVisible"
-    :title="Evaluaciones"
-    @update:completo="v => closeModEvaluacion()"
-    @close="modVisible = false"
-  />
+      :visible="modVisible"
+      :title="Evaluaciones"
+      :permisos="permisos"
+      @update:completo="v => closeModEvaluacion()"
+      @close="modVisible = false"
+     />
 
   </div>
 </template>
@@ -105,7 +105,7 @@ import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCuerpoStore } from "@ue/modules/Cuerpo/useCuerpoStore";
 import { getSituacionAspirante } from "@ue/services/catalogosDbService"
-
+import {useMainStore} from "@/store/useMainStore";
 import ModalEvaluacionesAspirante from "../../Evaluacion/components/ModalEvaluacionesAspirante.vue";
 import { useSolicitudStore } from '../../Solicitud/store/solicitudStore';
 export default {
@@ -115,6 +115,7 @@ export default {
     MaterialButton,ModalEvaluacionesAspirante
   },
   setup() {
+    const mainStore = useMainStore()
     const itmesStore = useAspiranteStore();
     const { rowsAspirantes, columns, loadingProgress } = storeToRefs(itmesStore);
     const cuerpoStore = useCuerpoStore();
@@ -175,11 +176,13 @@ export default {
       await itmesStore.fetchAspirantes();
     })
 
-
     //modal evaluaciones por aspirante
     const modVisible = ref(false)
+    const permisos = ref(false)
     const solicitudStore = useSolicitudStore()
+
     function openModalEvaluaciones(row){
+      permisos.value = mainStore.userPermisos ?? []
       solicitudStore.fetchSolicitudesPorAspirante(row.CURP)
       modVisible.value = true;
     } 
@@ -202,7 +205,7 @@ export default {
       options,
       availableRegiones,
       filtrar,itmesStore,
-      openModalEvaluaciones,closeModEvaluacion,modVisible
+      openModalEvaluaciones,closeModEvaluacion,modVisible,permisos
 
     };
   },

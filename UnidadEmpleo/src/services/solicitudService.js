@@ -97,14 +97,13 @@ export async function createItem() {
   const store = useSolicitudStore();
 
   const itemStore = store.solicitud
-  console.log('DATA preloading')
-  console.log(itemStore)
+
   const itemRequest = {
         "id": itemStore.id,
         "coordenadasVivienda" : itemStore.coordenadasVivienda,
         
         "corporacionId": itemStore.corporacionId,
-        "regionId": itemStore.regionId,
+        "regionId": itemStore.regionId < 0? 0:itemStore.regionId,
         "curp": itemStore.curp,
         "telefonoCasa": itemStore.telefonoCasa,
         "telefonoRecado": itemStore.telefonoRecado,

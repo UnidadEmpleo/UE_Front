@@ -162,7 +162,7 @@ export const useUsuarioStore = defineStore("usuario", {
 
         // Ensure we have an array of procesos; protect against undefined responses
         const procesos = Array.isArray(response?.procesos) ? response.procesos : [];
-        console.log("Procesos fetched for rol:", procesos);
+        
         // Skip procesos that have null/undefined 'acciones'
         const procesosConAcciones = procesos.filter((p) => p && p.acciones != null);
 
@@ -174,7 +174,9 @@ export const useUsuarioStore = defineStore("usuario", {
           activo: row.activo,
           ruta: row.ruta,
           subprocesos: row.subprocesos,
+          acciones:row.acciones,
         }));
+
 
           if(this.selecteduser.id != null && this.selecteduser.id != 0)
          {       

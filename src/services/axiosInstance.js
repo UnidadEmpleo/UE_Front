@@ -48,12 +48,12 @@ axiosInstance.interceptors.response.use(
   async error => {
     try {
 
-      console.log('axiosInstance response interceptor caught error:', error);
+      //console.log('axiosInstance response interceptor caught error:', error);
       const originalRequest = error.config;
       if (!originalRequest) return Promise.reject(error);
 
       const status = error.response?.status;
-      console.log('axiosInstance response interceptor caught error, status:', status);
+      //console.log('axiosInstance response interceptor caught error, status:', status);
       if ((status === 401) && !originalRequest._retry) {
         // Only attempt refresh when the token is actually expired per stored expiration
         const stored = localStorageService.get('externalUser') || {};
@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
           return Promise.reject(error);
         }
 
-        console.log('axiosInstance response interceptor attempting token refresh');
+        //console.log('axiosInstance response interceptor attempting token refresh');
         originalRequest._retry = true;
         const refreshToken = stored.refreshToken;
         if (!refreshToken) {

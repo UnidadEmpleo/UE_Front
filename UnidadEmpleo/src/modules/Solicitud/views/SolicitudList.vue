@@ -1,9 +1,9 @@
 <template>
   <div class="container-fluid py-4">
 
-    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-dark"
+    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-light bg-gradient-info"
       style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
-      Gestión de Solicitudes de Aspirantes
+      Solicitudes de Aspirantes
     </div>
 
     <div class="d-sm-flex justify-content-end ">
@@ -87,6 +87,11 @@
           class="me-2" v-permiso="'Grupos.Editar'">
           pdf
         </material-button>
+        <material-button color="secundary" variant="gradient"
+          size="sm" @click="handleEvaluar(row)"
+          class="me-2" v-permiso="'Grupos.Editar'">
+          Evaluación
+        </material-button>
 
       </template>
     </DataTable>
@@ -114,10 +119,15 @@ import { useReferenciaStore } from "@ue/modules/Referencia/useReferenceStore";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
+import {useMainStore} from "@/store/useMainStore";
 import { useCuerpoStore } from "@ue/modules/Cuerpo/useCuerpoStore";
 import { useAspiranteStore } from "../../Aspirante/store/useAspiranteStore";
+import { useEvaluacionStore } from "../../Evaluacion/useEvaluacionStore.js";
 import { getStatusSolicitud } from "../../../services/catalogosDbService";
 import PdfContainer from "./PdfContainer.vue";
+import Swal from 'sweetalert2'
+import { verificaPermiso } from "@ue/services/securityService"
+
 export default {
   name: "SolicitudesList",
   components: {
@@ -125,8 +135,10 @@ export default {
     MaterialButton,MaterialInput,PdfContainer
   },
   setup() {
+    const mainStore = useMainStore()
     const itmesStore = useSolicitudStore();
     const referenceStore = useReferenciaStore();
+    const evalStore = useEvaluacionStore();
     const { rowsSolicitudes, columns, loadingProgress } = storeToRefs(itmesStore);
     const router = useRouter();
     const { options } = storeToRefs(itmesStore);
@@ -146,20 +158,35 @@ export default {
       router.push({ name: "SolicitudForm" });
     };
 
+    const handleEvaluar = async (row) => {
+      var permisos = mainStore.userPermisos ?? []
+      let go = verificaPermiso(permisos, "SolicitudList", "Evaluar")
+      if (go){
+        aspiranteStore.verifyAspiranteByCurp(row.Curp)
+        evalStore.solicitudId = row.id
+        evalStore.sexo = row.sexoid
+        evalStore.fetchEvaluaciones(row.id)
+        itmesStore.fetchSolicitudById(row.id)
+        router.push({ name: "EvaluacionForm" });
+      }
+      else
+       Swal.fire({
+          icon: "error",
+          title: "Sin privilegios",
+          text: "¡No tienes acceso a esta información!",
+        });
+      
+    };
+
     const printSolicitud = async (row)=>{     
       idSolicitud.value = row.id
       curpSelected.value = row.Curp
-      console.log('curp  '+curpSelected.value)
       pdfVisible.value = true      
     }
     
-    function closePdfView() {    
-      
-      pdfVisible.value = false      
-      
+    function closePdfView() {          
+      pdfVisible.value = false            
     }
-  
-
     const handleUpdate = async (row) => {
       itmesStore.aspirante = { ...row };    
       await itmesStore.fetchSolicitudById(row.id);
@@ -167,9 +194,7 @@ export default {
       router.push({ name: "SolicitudForm" });
     };
 
-    const filtrar = async () =>{
-      console.log('Filtrar SolicitudList'+options.value.cuerpoId)
-      //await itmesStore.fetchSolicitudesPorAreaYPeriodo(options.cuerpoId, options.regionId, options.fechaInicio, options.fechaFin, options.status);
+    const filtrar = async () =>{      
       await itmesStore.fetchRowsByOptions();
     }
     onBeforeMount(async () => {
@@ -208,7 +233,8 @@ export default {
       filtrar,
       itmesStore,options,rowsCuerpo,
       regionesLista,availableRegiones,statusLista,
-      printSolicitud, idSolicitud,pdfVisible,closePdfView,curpSelected
+      printSolicitud, idSolicitud,pdfVisible,closePdfView,curpSelected,
+      handleEvaluar
     };
   },
 };

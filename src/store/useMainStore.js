@@ -271,13 +271,11 @@ export const useMainStore = defineStore("main", {
 
       const permisosDelRolUsuario = this.userdata.permisos.map((p) => p.procesoId);
       if (permisosDelRolUsuario == null || permisosDelRolUsuario.length <= 0){
-          console.log('No tiene permisos');
+          //console.log('No tiene permisos');
           this.navItems = [];
           localStorageService.remove("navItems");
-      }
-        
-
-      console.log('useMainStore.permisosDelRolUsuario = '+permisosDelRolUsuario)
+      }        
+      //console.log('useMainStore.permisosDelRolUsuario = '+permisosDelRolUsuario)
       
       const processByRol = this.userRol.procesos.filter((process) =>
         permisosDelRolUsuario.includes(process.id)
@@ -437,13 +435,8 @@ export const useMainStore = defineStore("main", {
           if (resultLogin.data.user) {
             this.externalUser.username = resultLogin.data.user.userName;
             this.externalUser.userid = resultLogin.data.user.id;
-            //this.externalUser.cuerpoId = resultLogin.data.user.cuerpoId;
-            //this.externalUser.regionId = resultLogin.data.user.regionId;
-
- /// ********************          T H I S     I S     M I S S I N G      *********************** SOMEONE FIND IT AND RESOLVE IT **********************
             this.externalUser.perfilId = resultLogin.data.user.tiposRol;
 
-            console.log('Login user '+this.externalUser.perfilId)
           }
 
           localStorageService.set("externalUser", this.externalUser);

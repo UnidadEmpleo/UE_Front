@@ -88,12 +88,11 @@
             :loadingProgress="loadingProgress"
           >
             <template #row-actions="{ row, index }">
-              <div
-                class="form-check form-check-inline"
+              <div class="form-check form-check-inline" 
                 v-for="(valor, clave) in row.Permiso[0]"
                 :key="clave"
               >
-                <input
+                <input 
                   class="form-check-input"
                   type="checkbox"
                   v-model="row.Permiso[0][clave]"
@@ -103,6 +102,7 @@
                   clave
                 }}</label>
               </div>
+
               <div class="form-check form-check-inline">
                 <material-button
                   color="danger"
@@ -158,6 +158,7 @@ export default {
     const cuperoSeleccionado = ref("");
     const regionSeleccionado = ref("");
     let regionesLista = ref([]); //rowsCuerpo.value[0].Regiones;
+    
     const addPermission = () => {
       if (!selectedProcess.value) {
         mainStore.triggerAlert({
@@ -171,7 +172,7 @@ export default {
       const processName = process.value.find(
         (p) => p.id === selectedProcess.value
       )?.descr;
-
+      
       if (
         Array.isArray(user.value.usuarioPermisos) &&
         user.value.usuarioPermisos.find(
@@ -191,25 +192,23 @@ export default {
         user.value.usuarioPermisos = [];
       }
 
-      let roleByUserSelected = usuarioStore.getRolByUserSelected(
-        user.value.rolId
-      );
+      //let roleByUserSelected = usuarioStore.getRolByUserSelected(user.value.rolId);
 
-      console.log(
-        "Procesos desde localStorageService:",
-        user.value.usuarioPermisos
-      );
+      /*
+      console.log(        "Procesos desde localStorageService:",user.value.usuarioPermisos);
       console.log("userRol:", roleByUserSelected);
+      */
 
       if (user.value.usuarioPermisos == null) {
         user.value.usuarioPermisos = [];
       }
 
-      console.log("Antes de agregar, usuarioPermisos:", processName);
+      //console.log("Antes de agregar, usuarioPermisos:", processName);
       // Safely resolve acciones from the selected role; fall back to defaults
-      const accionesRaw =
-        roleByUserSelected?.procesos?.find((x) => x.descr === processName)
-          ?.acciones ?? '[{"Agregar":true,"Editar":true,"Borrar":false}]';
+      //const accionesRaw = roleByUserSelected?.procesos?.find((x) => x.descr === processName) ?.acciones ?? '[{"Agregar":true,"Editar":true,"Borrar":false}]';
+      
+      const accionesRaw = process.value.find((p) => p.id === selectedProcess.value)?.acciones ?? '[{"Agregar":true,"Editar":true,"Borrar":false}]';
+
       let permisoParsed = [];
       try {
         permisoParsed = JSON.parse(accionesRaw);
@@ -273,7 +272,7 @@ export default {
           // cuperoSeleccionado.value){
           regionesLista.value = [];
           regionesLista.value = rowsCuerpo.value[i].regiones;
-          console.log("cuerpoId " + rowsCuerpo.value[i].regiones.length);
+          //console.log("cuerpoId " + rowsCuerpo.value[i].regiones.length);
         }
       }
     };
@@ -282,6 +281,7 @@ export default {
       usuarioStore.getProcessByRol();
       cuerpoStore.fetchCuerpo();
       availableRegiones();
+      
     });
 
     return {

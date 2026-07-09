@@ -78,7 +78,7 @@ export async function setUser(userData) {
 
 
 export async function updateUser(userData) {
-  console.log('UPDATE ' + userData.cuerpoId+'   '+userData.regionId)
+  
   userData.activo = userData.activo ? userData.activo : false;
   const corporaciones = localStorageService.get("corporaciones");
   userData.nombreCompleto = userData.nombre + " " + userData.primerApellido + " " + userData.segundoApellido;

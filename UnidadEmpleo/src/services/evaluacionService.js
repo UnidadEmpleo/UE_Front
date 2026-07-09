@@ -46,8 +46,6 @@ export async function createEvaluation(dato,userName, password){
         "usuarioIngreso":""
     }
 
-  console.log("itemRequest "+itemRequest.idSolicitud)
-
   const result = await apiRequest({
     url: `${endpoint}`,
     method: "POST",

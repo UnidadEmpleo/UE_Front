@@ -271,7 +271,7 @@ export const useAspiranteStore = defineStore('candidate', {
           app: aspirante.Apellido_Paterno || '',
           apm: aspirante.Apellido_Materno || '',
         }))    
-        console.log('Dentro de fechaAspirantesOtro '+fetchedAspirantes[0]+ '   '  +this.aspirante);
+        
        
       } catch (error) {
         console.error('Error fetching aspirantes:', error)
@@ -326,7 +326,7 @@ export const useAspiranteStore = defineStore('candidate', {
           this.aspirante.coordenadas = this.asentamiento[i].latitud +','+this.asentamiento[i].longitud;
           this.aspirante.longitud =  this.asentamiento[i].longitud;
           this.aspirante.latitud =  this.asentamiento[i].latitud;
-          console.log('llenado de aspirante '+this.aspirante.latitud+','+this.aspirante.longitud);
+          
           break;
         }
 
@@ -367,29 +367,29 @@ export const useAspiranteStore = defineStore('candidate', {
       this.options.regionId = userdata.regionId;
       this.options.perfilId = externalUser.perfilId[0];
       this.options.situacion=situacion;
-      console.log(this.options+ '  '+ this.options.perfilId)
+      
       //si perfil es administrador o subdirector todo con opciones  
       if (this.options.perfilId === 8 || this.options.perfilId === 1) {
         this.cuerpoEnable = false;
         this.situacionEnable = false;
         this.regionEnable = false;
-        console.log(' 8 o 1')
+        
       // Perfil de Gerente y Atención a registro solo los del cuerpo  
       }else if ( this.options.perfilId === 2 || this.options.perfilId === 3) {
         this.cuerpoEnable = true;
         this.situacionEnable = false;
         this.regionEnable = false ;
-        console.log(' 2 o 3')
+        
       }else if ( this.options.perfilId === 7 ) {
         this.cuerpoEnable = true;
         this.situacionEnable = false;
         this.regionEnable = true ;
-        console.log(' 7')
+        
       }else{
         this.cuerpoEnable = true;
         this.situacionEnable = true;
         this.regionEnable = true ;
-        console.log(' ninguno ')
+        
       }
 
     },

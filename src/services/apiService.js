@@ -104,7 +104,7 @@ export async function apiRequest({
           else
           {
             message =  data?.detail || data?.message || error.response.statusText;
-            console.log("error api 2",error);
+            
           }
           
 

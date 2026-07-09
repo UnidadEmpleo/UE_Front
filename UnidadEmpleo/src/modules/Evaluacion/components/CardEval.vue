@@ -50,11 +50,6 @@
             <label  class="form-label col-sm-auto label" >{{ registro.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
-
-        
-
-
-
         
         <div class="card col-sm-3 " :style="{display: visiblePsico}">
           <div class="card-header d-flex text-center">
@@ -400,7 +395,7 @@ export default {
     }
 
     const setEmptyDate = (op) =>{
-      console.log('limpiando op '+op)
+      
       switch (op) {
         case 1:
           registro.value.salida = '';
@@ -437,14 +432,13 @@ export default {
       if (continuar){
         
         let resp = await evalStore.updateEvaluaciones(op, usuario, password, termino)
-        console.log('DATOS CAPTURADOS '+usuario + '  '+ password + '  '+ resp)
+        
         if(resp) {//Actualiza evaluación
           if (op == 1 & !termino)
             solicitudStore.updateSolicitud() //se actualiza datos de solicitud
         }else 
           setEmptyDate(op)
 
-        console.log('respuestas '+resp)
       }
     }
 

@@ -133,8 +133,8 @@ export const useReferenciaStore = defineStore('referencia', {
             "desc": t.d_tipo_asenta,
             
         }))
-        console.log('datos obtenidos '+this.asentamientoList[0].d_estado)
-        //forEach (v in asentamiento){
+        
+        
         for (let i = 0; i< this.asentamientoList.length; i++)
          {
           //console.log('setting data ' + i)

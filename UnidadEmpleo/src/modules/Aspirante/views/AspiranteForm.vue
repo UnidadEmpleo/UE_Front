@@ -113,7 +113,7 @@ export default {
         };
         const save = async () => {
               let result;
-              console.log('isCreateMode = '+ isCreateMode.value )
+              
               if (isCreateMode.value) 
                 result =  await aspiranteStore.createAspirante();             
               else 

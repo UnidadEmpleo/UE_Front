@@ -1,6 +1,5 @@
 <template>
-  <button
-    class="btn mb-0"
+  <button class="btn mb-0"
     :class="getClasses(variant, color, size, fullWidth, active)"
   >
     <slot />
@@ -8,12 +7,6 @@
 </template>
 
 <script>
-
-
-
-
-
-
 
 export default {
   name: "MaterialButton", 
@@ -38,6 +31,7 @@ export default {
       type: Boolean,
       default: false,
     },
+
   }, 
   // do the same of methos but in setup method
   setup() {

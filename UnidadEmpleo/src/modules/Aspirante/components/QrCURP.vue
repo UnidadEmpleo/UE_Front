@@ -47,17 +47,20 @@ export default {
     const loading = ref(false)
 
     const analitics = async () =>{
-        //console.log(dato.value.Curp)
+        let sincroniza = false
+        
+        
         try{
           const dataCurp = dato.value.Curp.split(']')
           dato.value.Rfc = dato.value.Curp.substring(0, 10)
           dato.value.Curp = dataCurp[0]
           
           var result = await store.verifyAspiranteByCurp(dato.value.Curp)
+        
           if(result){              
               dato.value.Rfc = dato.value.Curp.substring(0, 10)
-              syncFilters(true)
-              alert('Ya existe un elemento con esa CURP')
+              sincroniza = true    
+        
           }
           else{
               dato.value.Nombre = dataCurp[4]
@@ -67,9 +70,13 @@ export default {
               dato.value.Fecha_Nacimiento = fechaPaso[2]+'-'+fechaPaso[1]+'-'+fechaPaso[0]
               dato.value.Sexo = getSexoByName(dataCurp[5])            
               dato.value.Rfc = dato.value.Curp.substring(0, 10)
-              syncFilters(false)
+              sincroniza = false
+        
           }
         }catch(e){console.log('Todo fallo '+e)}
+
+        syncFilters(sincroniza)
+
     }
 
     watch(() => props.visible, (v) => {

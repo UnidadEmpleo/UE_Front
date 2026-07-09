@@ -31,7 +31,6 @@ export default {
 
     const toggleSidenav = () => 
     {
-        console.log("Toggle Sidenav clicked");
         isSidenavOpen.value = !isSidenavOpen.value;      
     };
 

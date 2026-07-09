@@ -319,12 +319,10 @@ export default {
           sol.value.certificadoEstudios == true &&    sol.value.actaNacimiento == true &&         sol.value.noAntecedentesPenales == true &&
           sol.value.comprobanteDomicilio == true &&   sol.value.cartasRecomendacion == true &&    sol.value.curpActualizado == true &&
           sol.value.ine == true &&        sol.value.rfcHomoclave == true 
-          ){ 
-            console.log('Eval sol.value.statusExp = true')
+          ){
             sol.value.statusExp = true  
           }          
         else{ 
-          console.log('Eval sol.value.statusExp = false')
           sol.value.statusExp = false
         }
       //actualiza 

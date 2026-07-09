@@ -11,7 +11,7 @@
         <div class="rounded-circle bg-secondary justify-content-center align-items-center d-flex h5 fw-medium"
             style=" aspect-ratio:1/1; height: 60px; margin-left: 0px; font-size: 1rem; text-shadow: 10px 5px 1px rgba(0,0,0,0.3);" >
             {{ user.region }}
-          </div>
+        </div>
 
         <div class="col-6 d-flex justify-content-center align-items-center text-center">
           <h2 class="text-white fw-bold mb-0 text-uppercase tracking-wider" style="font-size: 1.4rem; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
@@ -119,7 +119,11 @@ export default {
         if (num == 0) 
           return 'G';
 
-        if (num < 1 || num > 101) {
+        if (num < 1 ) {
+            return 'S';
+        }
+
+        if ( num > 101) {
             return 'Error: El número debe estar entre 1 y 100.';
         }
 

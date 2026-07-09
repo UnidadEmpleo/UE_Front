@@ -422,7 +422,6 @@ export default {
       }
 
     const privadaOgobierno = (op) =>{
-      console.log('opcion privada gob '+ op)
       if (op == 1){
         sol.value.gobierno = true;
         sol.value.privada = false;
