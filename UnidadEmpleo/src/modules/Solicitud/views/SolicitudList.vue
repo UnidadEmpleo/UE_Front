@@ -8,7 +8,7 @@
 
     <div class="d-sm-flex justify-content-end ">
       <div class="me-4">
-        <material-button v-permiso="'Usuarios.Agregar'" color="primary" variant="gradient" @click="navigateToCreate"
+        <material-button v-permiso="'Usuarios.Agregar'" color="info" variant="gradient" @click="navigateToCreate"
           class="d-flex align-items-center">
           <i class="material-icons-round me-2">person_add</i>
           Nueva Solicitud
@@ -85,24 +85,28 @@
         <material-button color="secundary" variant="gradient"
           size="sm" @click="printSolicitud(row)"
           class="me-2" v-permiso="'Grupos.Editar'">
-          pdf
-        </material-button>
+          solicitud-pdf
+        </material-button>        
         <material-button color="secundary" variant="gradient"
           size="sm" @click="handleEvaluar(row)"
           class="me-2" v-permiso="'Grupos.Editar'">
-          Evaluación
+          Ver evaluación
         </material-button>
 
       </template>
     </DataTable>
 
+
   <PdfContainer
     :visible="pdfVisible"
     :IdSolicitud="idSolicitud"
     :curp:="curpSelected"
+    :solref:="true"
     @update:completo="v => closePdfView(v)"
     @close="pdfVisible = false"
   />
+
+
 
 
   </div>
@@ -146,8 +150,9 @@ export default {
     let { rowsCuerpo } = storeToRefs(cuerpoStore); 
     let regionesLista =  ref([]);
     let idSolicitud =  ref([]);
+    let solref =  ref(true);
     let curpSelected =  ref([]);    
-    const pdfVisible = ref(false)
+    const pdfVisible = ref(false)    
     const statusLista = getStatusSolicitud();
     const aspiranteStore = useAspiranteStore();
     
@@ -180,13 +185,15 @@ export default {
 
     const printSolicitud = async (row)=>{     
       idSolicitud.value = row.id
-      curpSelected.value = row.Curp
-      pdfVisible.value = true      
+      curpSelected.value = row.Curp      
+      pdfVisible.value = true
     }
     
     function closePdfView() {          
       pdfVisible.value = false            
     }
+
+   
     const handleUpdate = async (row) => {
       itmesStore.aspirante = { ...row };    
       await itmesStore.fetchSolicitudById(row.id);
@@ -233,7 +240,7 @@ export default {
       filtrar,
       itmesStore,options,rowsCuerpo,
       regionesLista,availableRegiones,statusLista,
-      printSolicitud, idSolicitud,pdfVisible,closePdfView,curpSelected,
+      printSolicitud,solref, idSolicitud,pdfVisible,closePdfView,curpSelected,
       handleEvaluar
     };
   },

@@ -13,7 +13,7 @@ import localStorageService from "@/utils/localStorageService";
 import routeAspirante from "../../UnidadEmpleo/src/modules/Aspirante/route/routeAspirante";
 import routeSolicitud from "../../UnidadEmpleo/src/modules/Solicitud/route/routeSolicitud";
 import routeEvaluacion from "@ue/modules/Evaluacion/routeEvaluacion.js"
-
+import routeEjecutivo from "@ue/modules/Ejecutivo/routeEjecutivo.js"
 const requireAuth = (to, from, next) => {
 
   const isSystemUser = localStorageService.get("isSystemUser");
@@ -81,6 +81,7 @@ const routes = [
   ,...routeAspirante
   ,...routeSolicitud
   ,...routeEvaluacion
+  ,...routeEjecutivo
   ,
     {
     path: "/:pathMatch(.*)*",

@@ -3,6 +3,27 @@ import { useMainStore } from '@/store/useMainStore'
 
 const endpoint = '/Evaluacion';
 
+
+export async function getItemsByOptions(options){    
+    const mainStore = useMainStore();
+      
+    var opt = { 
+        "cuerpoId":options.cuerpoId,
+        "regionId":options.regionId+"",
+        "perfilId":options.perfilId+"",
+        "statusSolicitud":options.situacion+"",
+        "fechaInicio":options.fechaInicio+"",
+        "fechaTermino":options.fechaFinal+""
+      }    
+    const result = await apiRequest({ url: `${endpoint}/list`, method: "POST", data:JSON.stringify(opt)});    
+          
+    if (!Array.isArray(result.data) || result.data.length === 0) {
+        mainStore.triggerAlert({message: "No se encontraron registros.",color: "warning",icon: "warning",});
+        return [];
+    }
+    return result.data;
+}
+
 export async function getEvaluaciones(idsolicitud) {
   
   const mainStore = useMainStore();
@@ -64,7 +85,7 @@ export async function updateEvaluation(dato, userName, password,termino){
         "id": dato.id,
         "ingreso": dato.ingreso,
         "salida": dato.salida,
-        "resultado": !!dato.resultado,
+        "resultado": dato.resultado=="true",
         "observaciones": dato.observaciones,
         "revalorable": dato.revalorable,
         "idSoliciud": dato.idSoliciud,

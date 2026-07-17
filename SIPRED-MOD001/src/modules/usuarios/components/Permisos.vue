@@ -5,7 +5,7 @@
   >
     <h5 class="font-weight-bolder mb-0">Permisos</h5>
     <p class="mb-0 text-sm">Configuración de los Permisos</p>
-    <div>ok {{}}</div>
+   
     <div class="multisteps-form__content">
       <form class="multisteps-form__form" @submit.prevent="handleSubmit">
         <div class="form-grid">
@@ -78,38 +78,18 @@
         </div>
 
         <div class="mb-1">
-          <DataTable
-            title="Permisos"
-            description="Lista de Permisos Agregados"
-            table-id="permisos-table"
-            :columns="columns"
-            :rows="formattedPermisos"
-            :searchable="true"
-            :loadingProgress="loadingProgress"
-          >
+          <DataTable title="Permisos"  description="Lista de Permisos Agregados" table-id="permisos-table"
+            :columns="columns" :rows="formattedPermisos" :searchable="true" :loadingProgress="loadingProgress">
+
             <template #row-actions="{ row, index }">
-              <div class="form-check form-check-inline" 
-                v-for="(valor, clave) in row.Permiso[0]"
-                :key="clave"
-              >
-                <input 
-                  class="form-check-input"
-                  type="checkbox"
-                  v-model="row.Permiso[0][clave]"
-                  :id="`chk-${index}-${clave}`"
-                />
-                <label class="form-check-label" :for="`chk-${row}-${clave}`">{{
-                  clave
-                }}</label>
+              <div class="form-check form-check-inline" v-for="(valor, clave) in row.Permiso[0]" :key="clave">
+                <input  class="form-check-input" type="checkbox"
+                  v-model="row.Permiso[0][clave]" :id="`chk-${index}-${clave}`"/>
+                <label class="form-check-label" :for="`chk-${row}-${clave}`">{{clave}}</label>
               </div>
 
               <div class="form-check form-check-inline">
-                <material-button
-                  color="danger"
-                  variant="gradient"
-                  size="sm"
-                  @click="handleDelete(row)"
-                >
+                <material-button  color="danger" variant="gradient" size="sm" @click="handleDelete(row)">
                   Eliminar
                 </material-button>
               </div>
@@ -261,18 +241,12 @@ export default {
       },
       { immediate: true }
     );
-    /*
-    const availableRegiones = computed(() => {
-      return cuerpos[0].Regiones;
-    })*/
-
+   
     const availableRegiones = () => {
       for (var i = 0; i < rowsCuerpo.value.length; i++) {
-        if (rowsCuerpo.value[i].id === user.value.cuerpoId) {
-          // cuperoSeleccionado.value){
+        if (rowsCuerpo.value[i].id === user.value.cuerpoId) {         
           regionesLista.value = [];
-          regionesLista.value = rowsCuerpo.value[i].regiones;
-          //console.log("cuerpoId " + rowsCuerpo.value[i].regiones.length);
+          regionesLista.value = rowsCuerpo.value[i].regiones;         
         }
       }
     };

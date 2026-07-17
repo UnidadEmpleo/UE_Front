@@ -65,6 +65,7 @@
         <div class="col-sm-3 mb-2">
           <MaterialInput 
             id="givenfechaNacimiento" 
+            type="date"
             v-model="dato.Fecha_Nacimiento" 
             label="Fecha de Nacimiento" 
             :isRequired="true" 

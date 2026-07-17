@@ -31,6 +31,7 @@
                 }}
               </p>
 
+              
               <div class="multisteps-form__progress">
                 <button class="multisteps-form__progress-btn" type="button" title="User Info"
                   :class="activeStep >= 0 ? activeClass : ''" @click="activeStep = 0">
@@ -95,6 +96,9 @@ export default {
     };
 
     const handleSubmit = () => {
+
+      console.log('Enviando solicitud acciones = '+procesoStore.selectedProceso.acciones)
+
       if (procesoStore.selectedProceso.id == null) {
         procesoStore.createProcess();
       } else {

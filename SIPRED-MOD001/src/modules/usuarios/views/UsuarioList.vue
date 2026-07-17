@@ -15,8 +15,13 @@
       </div>
     </div>
 
-    <DataTable title="Listado de Usuarios" description="Administre las cuentas y accesos de usuarios"
-      table-id="employee-table" :columns="columns" :rows="rowUsers" :searchable="true"
+    <DataTable 
+      title="Listado de Usuarios" 
+      description="Administre las cuentas y accesos de usuarios"
+      table-id="employee-table" 
+      :columns="columns" 
+      :rows="rowUsers" 
+      :searchable="true" 
       :loadingProgress="loadingProgress">
       <!-- Custom Row Actions -->
       <template #row-actions="{ row }">

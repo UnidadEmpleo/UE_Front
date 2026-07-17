@@ -37,7 +37,8 @@
 
           <div class="row col-sm-5 justify-content-start">
             <material-switch  id="resultado" name="resultado" :disabled="true" label="Expediente completo" v-model:checked="registro.resultado" />      
-            <hr>        
+            <hr>                    
+            <material-switch  id="revalorables" name="revalorable" :disabled="disabledRregistro" label="Concluye evaluación" v-model:checked="registro.revalorable" />  
             
           </div>
           <div>
@@ -46,7 +47,7 @@
           <div class=""> 
             
             <material-button color="primary" variant="gradient" size="sm" @click.prevent="openExpediente()" :disabled="
-              (registro.salida == null || registro.salida.length == 0)? true:(registro.observaciones? false:disabledRregistro) ">Validar Registro</material-button>
+              (registro.salida == null || registro.salida.length == 0)? false:(registro.observaciones? false:disabledRregistro) ">Validar Registro</material-button>
             <label  class="form-label col-sm-auto label" >{{ registro.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
@@ -105,8 +106,6 @@
           </div>
         </div>
 
-
-
         <div class="card col-sm-3" :style="{display: visibleMedico}">
           <div class="card-header d-flex text-center">
               <h3>M É D I C O</h3>
@@ -137,11 +136,11 @@
             <div class="col-sm-6 ">
               <div class="row justify-content-start">
                 <div class="col-sm-auto">
-                  <input class="form-check-input" type="radio" id="true" value="true"  v-model="medico.resultado"/>
+                  <input class="form-check-input" type="radio" id="true" value=true  v-model="medico.resultado"/>
                   <label for="one">APTO</label>
                 </div>
                 <div class="col-sm-auto">
-                  <input class="form-check-input"  type="radio" id="false" value="false" v-model="medico.resultado" />
+                  <input class="form-check-input"  type="radio" id="false" value=false v-model="medico.resultado" />
                   <label for="two">NO APTO</label>
                 </div>
               </div>
@@ -159,8 +158,6 @@
 
           
         </div>
-
-
 
         <div class="card col-sm-3" :style="{display: visibleAnti}">
           <div class="card-header d-flex text-center">
@@ -192,11 +189,11 @@
             <div class="col-sm-6 ">
               <div class="row justify-content-start">
                 <div class="col-sm-auto">
-                  <input class="form-check-input" type="radio" id="true" value="true"  v-model="antidoping.resultado"/>
+                  <input class="form-check-input" type="radio" id="true" value=true  v-model="antidoping.resultado"/>
                   <label for="one">NEGATIVO</label>
                 </div>
                 <div class="col-sm-auto">
-                  <input class="form-check-input"  type="radio" id="false" value="false"  v-model="antidoping.resultado"/>
+                  <input class="form-check-input"  type="radio" id="false" value=false  v-model="antidoping.resultado"/>
                   <label for="two">POSITIVO</label>
                 </div>
               </div>
@@ -244,11 +241,11 @@
             <div class="col-sm-6 ">
               <div class="row justify-content-start">
                 <div class="col-sm-auto">
-                  <input class="form-check-input" type="radio" id="true" value="true" v-model="pie.resultado" />
+                  <input class="form-check-input" type="radio" id="true" value=true v-model="pie.resultado" />
                   <label for="one">NEGATIVO</label>
                 </div>
                 <div class="col-sm-auto">
-                  <input class="form-check-input"  type="radio" id="false" value="false"  v-model="pie.resultado"/>
+                  <input class="form-check-input"  type="radio" id="false" value=false  v-model="pie.resultado"/>
                   <label for="two">POSITIVO</label>
                 </div>
               </div>

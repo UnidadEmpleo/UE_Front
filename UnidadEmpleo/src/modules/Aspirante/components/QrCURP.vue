@@ -37,7 +37,6 @@ export default {
   props: {
     visible: { type: Boolean, default: false },
     completo:{ type: Boolean, default: false },
-    //previewHandler: { type: Function, required: true },
   },
   emits: ['close', 'update:completo'],
   setup(props, { emit }) {

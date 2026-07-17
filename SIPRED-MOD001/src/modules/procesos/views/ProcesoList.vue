@@ -87,7 +87,8 @@ export default {
         ruta: row.ruta,
         procesoPadreId: row.procesoPadreId,
         subprocesos: subprocesos,
-        sistemaId: row.sistemaId
+        sistemaId: row.sistemaId,
+        acciones: row.acciones,
       };
       procesoStore.proceso = { ...row };
 

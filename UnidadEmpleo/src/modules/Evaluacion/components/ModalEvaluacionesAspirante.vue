@@ -24,7 +24,7 @@
                 
                 
                 <material-button class="btn-link me-2" size="sm" @click="openEvaluacion(row)"  >
-                  ver detalle 
+                  ver evaluación 
                 </material-button>
                 
             </template>

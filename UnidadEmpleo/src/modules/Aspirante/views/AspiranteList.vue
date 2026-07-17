@@ -1,9 +1,9 @@
 <template>
   <div class="container-fluid py-4">
 
-    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-primary bg-gradient-primary"
+    <div class="text-uppercase h3 mt-4 text-center font-weight-bolder text-white bg-gradient-primary"
       style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
-      Gestión de Aspirantes
+      Lista de Aspirantes
     </div>
 
     <div class="d-sm-flex justify-content-end ">
@@ -15,9 +15,6 @@
         </material-button>
       </div>
     </div>
-
-
-    
       
       <div class="card ">
         <div class="row container-fluid mt-3 ">

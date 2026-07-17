@@ -75,6 +75,7 @@
 import { useMainStore } from "@/store/useMainStore";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
+import {decimalARomano} from "@ue/services/utilService";
 import auxiliar from "@/assets/img/auxiliar.png";
 import cuautitlan from "@/assets/img/cuautitlan.png";
 import lerma from "@/assets/img/lerma.png";
@@ -106,54 +107,6 @@ export default {
         region: decimalARomano(userdata.value?.regionId),
       };
     });
-
-    
-    
-
-    function decimalARomano(num) {
-    // Validación de tipo y rango
-        if (typeof num !== 'number' || !Number.isInteger(num)) {
-            return 'Error: Debe ingresar un número entero.';
-        
-        }
-        if (num == 0) 
-          return 'G';
-
-        if (num < 1 ) {
-            return 'S';
-        }
-
-        if ( num > 101) {
-            return 'Error: El número debe estar entre 1 y 100.';
-        }
-
-        // Tabla de equivalencias
-        const valores = [
-            { valor: 100, simbolo: 'C' },
-            { valor: 90, simbolo: 'XC' },
-            { valor: 50, simbolo: 'L' },
-            { valor: 40, simbolo: 'XL' },
-            { valor: 10, simbolo: 'X' },
-            { valor: 9, simbolo: 'IX' },
-            { valor: 5, simbolo: 'V' },
-            { valor: 4, simbolo: 'IV' },
-            { valor: 1, simbolo: 'I' }
-        ];
-
-        let resultado = '';
-        let restante = num;
-
-        // Construcción del número romano
-        for (const item of valores) {
-            while (restante >= item.valor) {
-                resultado += item.simbolo;
-                restante -= item.valor;
-            }
-        }
-
-        return resultado + ' Rn';
-    }
-
 
     const cuerpo = computed(() =>{
         if (userdata.value?.cuerpoId=='CGSIBCVCT')

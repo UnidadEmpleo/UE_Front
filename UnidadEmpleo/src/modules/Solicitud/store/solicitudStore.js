@@ -6,6 +6,7 @@ import { getSexoById } from "@ue/services/catalogosDbService"
 import { useMainStore } from '@/store/useMainStore.js'
 import { yyyymmddFecha,getTimeOffset} from "@ue/services/utilService"
 import { faWarning } from '@fortawesome/free-solid-svg-icons';
+import {decimalARomano} from "@ue/services/utilService";
 
 export const useSolicitudStore = defineStore('solicitud', {
   state: () => ({
@@ -119,7 +120,7 @@ export const useSolicitudStore = defineStore('solicitud', {
             "Estatus Solicitud":  getStatusSolicitudById(ev.status),
             "Observaciones": ev.observaciones,
             "CorporacionId": ev.corporacionId,
-            "RegionId": ev.regionId,
+            "RegionId": decimalARomano(ev.regionId),
             "Curp": ev.curp,
         }))
       } catch (error) {
@@ -140,7 +141,7 @@ export const useSolicitudStore = defineStore('solicitud', {
             "Estatus Solicitud":  getStatusSolicitudById(ev.status),
             "Observaciones": ev.observaciones,
             "CorporacionId": ev.corporacionId,
-            "RegionId": ev.regionId,
+            "RegionId": decimalARomano(ev.regionId),
             "Curp": ev.curp,
             "Sexo": getSexoById(ev.aspirante.sexo),
             "sexoid":ev.aspirante.sexo
@@ -169,7 +170,7 @@ export const useSolicitudStore = defineStore('solicitud', {
             "Estatus Solicitud":  getStatusSolicitudById(ev.status),
             "Observaciones": ev.observaciones,
             "CorporacionId": ev.corporacionId,
-            "RegionId": ev.regionId,
+            "RegionId": decimalARomano(ev.regionId),
             "Curp": ev.curp,
             "Sexo": getSexoById(ev.aspirante.sexo),
             "sexoid":ev.aspirante.sexo
@@ -200,7 +201,7 @@ export const useSolicitudStore = defineStore('solicitud', {
             "Estatus Solicitud": getStatusSolicitudById(asp.status),
             "Observaciones": asp.observaciones,
             "Corporacion": asp.corporacionId,
-            "Region": asp.regionId,
+            "Region": decimalARomano(asp.regionId),
             "Curp": asp.curp,
             "sexoid":asp.aspirante.sexo,
             
@@ -224,7 +225,7 @@ export const useSolicitudStore = defineStore('solicitud', {
             "Estatus Solicitud": getStatusSolicitudById(asp.status),
             "Observaciones": asp.observaciones,
             "Corporacion": asp.corporacionId,
-            "Region": asp.regionId,
+            "Region": decimalARomano(asp.regionId),
             "Curp": asp.curp,
             "sexoid":asp.aspirante.sexo
           }))

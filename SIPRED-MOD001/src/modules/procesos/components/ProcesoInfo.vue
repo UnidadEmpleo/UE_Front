@@ -8,11 +8,8 @@
       <br />
       
       <!-- Sistema -->
-      <MaterialComboBox
-        id="proceso-sistema"
-        label="Sistema"
-        v-model="selectedProceso.sistemaId"
-        :options="listaSistema"
+      <MaterialComboBox id="proceso-sistema" label="Sistema"
+        v-model="selectedProceso.sistemaId" :options="listaSistema"
         seleccionaPlaceholder="Selecciona el sistema"
       />
       <br />
@@ -22,9 +19,7 @@
                                 
       <br />
 
-      <MaterialInput id="proceso-icono" v-model="selectedProceso.icono" label="icono" type="textarea" 
-      
-      />
+      <MaterialInput id="proceso-icono" v-model="selectedProceso.icono" label="icono" type="textarea" />
       <br />
       <MaterialInput id="proceso-ruta" v-model="selectedProceso.ruta" label="ruta" type="textarea"/>
       <br/>
@@ -32,16 +27,17 @@
      <div class="form-grid">
       <div class="form-group">
           <label for="proceso-tipo" class="form-label">Tipo de Proceso</label>
-          <select
-              id="proceso-tipo"
+          <select id="proceso-tipo"
               class="form-control"                
-              v-model="selectedProceso.tipo"
-              :disabled="selectedProceso.tipo === 'PROCESO'">
+              v-model="selectedProceso.tipo">
+              <!--:disabled="selectedProceso.tipo === 'PROCESO'">-->
                 <option>AGRUPADOR</option>
-                <option v-if="selectedProceso.id && selectedProceso.id !== 0">PROCESO</option>
+                <option >PROCESO</option>
+                <!-- <option v-if="selectedProceso.id && selectedProceso.id !== 0">PROCESO</option> -->
           </select>
       </div>
-      <div class="form-group">
+      {{ selectedProceso.tipo != null && selectedProceso.tipo != '' && selectedProceso.tipo === 'AGRUPADOR' }}
+      <div class="form-group" :style="{display: selectedProceso.tipo != null && selectedProceso.tipo != '' && selectedProceso.tipo === 'AGRUPADOR' ? 'block':'none'}">
         <MaterialTags 
           v-if="selectedProceso.tipo != null && selectedProceso.tipo != '' && selectedProceso.tipo === 'AGRUPADOR'"
           id="proceso-users" 
@@ -61,6 +57,10 @@
               </option>
               </select>
       </div>
+
+      <ProcesoAccion :style="{display: selectedProceso.tipo != null && selectedProceso.tipo != '' && selectedProceso.tipo === 'AGRUPADOR' ? 'none':'block'}"/>
+
+
  </div>
     
 
@@ -78,14 +78,15 @@ import { ref, computed } from "vue";
 import MaterialSwitch from "@/components/common/MaterialSwitch.vue";
 import MaterialComboBox from "@/components/common/MaterialComboBox.vue";
 import { onBeforeMount } from "vue";
-
+import ProcesoAccion from "./ProcesoAccion.vue";
 export default {
   name: "ProcesoInfo",
   components: {
     MaterialInput,
     MaterialTags,
     MaterialSwitch,
-    MaterialComboBox
+    MaterialComboBox,
+    ProcesoAccion
   },     
 
   setup() {

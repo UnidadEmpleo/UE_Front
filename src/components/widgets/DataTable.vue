@@ -103,6 +103,16 @@
                         {{ row[column] ? 'SI' : 'NO' }}
                       </span>
                     </template>
+
+                    <template v-else-if="column === 'Estatus Solicitud'">
+                      <span :class="row[column] == 'Apto' ? 'tag tag-green' : 
+                                    row[column] == 'No Apto' ? 'tag tag-yellow' :
+                                    row[column] == 'Captura' ? 'tag ' :
+                                    row[column] == 'Evaluando' ? 'tag tag-red' : 'tag tag-gray'" class="fw-bold shadow-sm">
+                        {{ row[column] }}
+                      </span>
+                    </template>
+                    
                     <template v-else>
                       <div :class="isWrapped(column) ? 'wrap-text' : ''">{{ formatCell(row, column) }}</div>
                     </template>
@@ -640,9 +650,18 @@ export default {
 }
 
 .tag-red {
-  background-color: #7b7b7b;
+  background-color: #3309ee;
   color: white;
+}
 
+.tag-yellow{
+  background-color: #9fad1e;
+  color: white;
+}
+
+.tag-gray{
+  background-color: #7e8181;
+  color: white;
 }
 
 .search-container .form-control {

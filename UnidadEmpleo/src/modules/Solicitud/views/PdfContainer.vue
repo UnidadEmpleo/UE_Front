@@ -7,6 +7,7 @@ const props = defineProps({
   visible: { type: Boolean, default: false },
   completo:{ type: Boolean, default: false },
   IdSolicitud: {type: String, defatul:'00'},
+  solref:{type: Boolean, default: true },
   curp: {type: String, defatul:'unico'},
 })
 const emit = defineEmits(['close', 'update:completo'])
@@ -17,8 +18,7 @@ const virtual = ref(true);
 const pdfRef = ref(null);
 const pdfUrl = ref(process.env.VUE_APP_API_BASE_URL+"/Pdf/presolicitud");
 
-const handlePageChange = (newPage) => {
-  //console.log(`new page: ${newPage}`);
+const handlePageChange = (newPage) => {  
   page.value = newPage;
 };
 
@@ -48,17 +48,17 @@ const handlePdfInit = (pdf) => {
 };
 
   watch(() => props.visible, (v) => {
-      if (v) {
-        //AQUI PUEDO AGREGAR UNA FUNCIÓN DE VALORES INICIALES        
-        getPdf(props.IdSolicitud)
+    
+      if (v) {                        
+        getPresolicitudPdf(props.IdSolicitud)        
       }
   }, { immediate: true })
 
 
-  async function getPdf(id){
+  async function getPresolicitudPdf(id){
     pdfUrl.value = process.env.VUE_APP_API_BASE_URL+"/Pdf/presolicitud/"+id
   }
-
+ 
   function syncFilters(estado) {
       const resultadoout = estado
       emit('update:completo', resultadoout)

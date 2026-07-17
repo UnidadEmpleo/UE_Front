@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import localStorageService from "@/utils/localStorageService";
 import {  getCodigoPostal, getAspirantes,fetchAspiranteByID,createAspirante,updateAspirante,deleteAspiranteByID,} from '@ue/services/aspiranteService.js'
 import { useMainStore } from '@/store/useMainStore';
-
+import {decimalARomano} from "@ue/services/utilService"
 
 export const useAspiranteStore = defineStore('candidate', {
   state: () => ({
@@ -77,7 +77,7 @@ export const useAspiranteStore = defineStore('candidate', {
               'Apellido Paterno': asp.apellido_Paterno,
               'Apellido Materno': asp.apellido_Materno,
               Cuerpo:asp.idCuerpoCaptura,
-              Region:asp.idRegionCaptura,
+              Region: decimalARomano(asp.idRegionCaptura),
               Solicitudes:asp.solicitudes.length
 
           }))

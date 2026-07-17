@@ -43,10 +43,8 @@ export const useProcesoStore = defineStore('proceso', {
     async fetchProceso() {
       try {
        
-        this.proceso = await getProcess()
-        
-        this.listaProceso = this.proceso;
-      
+        this.proceso = await getProcess()        
+        this.listaProceso = this.proceso;      
         this.listaProceso = this.proceso.map((val) => ({
 
           id: val.id,
@@ -57,6 +55,7 @@ export const useProcesoStore = defineStore('proceso', {
           ruta: val.ruta,      
           procesoPadreId: val.procesoPadreId,    
           sistemaId: val.sistemaId,
+          acciones: val.acciones
 
         }));
 
@@ -69,7 +68,8 @@ export const useProcesoStore = defineStore('proceso', {
           activo: val.activo,
           ruta: val.ruta,         
           procesoPadreId: val.procesoPadreId,   
-          sistemaId:val.sistemaId
+          sistemaId:val.sistemaId,
+          acciones: val.acciones
         }));
 
      
@@ -82,10 +82,8 @@ export const useProcesoStore = defineStore('proceso', {
     async createProcess() {
       try 
       {
-       
-     
         
- const procesoCreate = {
+        const procesoCreate = {
 
           id: this.selectedProceso.id,
           descr: this.selectedProceso.nombre,          
@@ -95,7 +93,8 @@ export const useProcesoStore = defineStore('proceso', {
           procesoPadreId: this.selectedProceso.procesoPadreId,
           icono: this.selectedProceso.icono  != null ? this.selectedProceso.icono : "",
           SubProcesoIds: this.selectedProceso.tipo == "P" ? [] : (this.selectedProceso.subprocesos.length > 0 ? this.selectedProceso.subprocesos.map(x => x.id) : [])  ,      
-          sistemaId: this.selectedProceso.sistemaId
+          sistemaId: this.selectedProceso.sistemaId,
+          acciones: this.selectedProceso.tipo == "P" ? '['+this.selectedProceso.acciones+']' : '',      
         };
 
         await setProcess(procesoCreate)
@@ -105,8 +104,11 @@ export const useProcesoStore = defineStore('proceso', {
       }
     },
     async updateProcess() {
+      
       try {        
 
+        console.log('ACCIONES ' + this.selectedProceso.acciones  )     
+        
         const procesoToUpdate = {
 
           id: this.selectedProceso.id,
@@ -117,7 +119,8 @@ export const useProcesoStore = defineStore('proceso', {
           procesoPadreId: this.selectedProceso.procesoPadreId,
           icono: this.selectedProceso.icono  != null ? this.selectedProceso.icono : "",
           SubProcesoIds: this.selectedProceso.tipo == "P" ? [] : (this.selectedProceso.subprocesos.length > 0 ? this.selectedProceso.subprocesos.map(x => x.id) : [])  ,      
-          sistemaId: this.selectedProceso.sistemaId
+          sistemaId: this.selectedProceso.sistemaId,
+          acciones: this.selectedProceso.tipo == "P" ? '': '['+this.selectedProceso.acciones+']',     
         };
 
          await updateProcess(procesoToUpdate)
