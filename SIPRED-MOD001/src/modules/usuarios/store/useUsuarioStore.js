@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getUsers, setUser, updateUser,getUserById } from "@mod1/services/userService.js";
+import { getUsers, setUser, updateUser,getUserById,setNewPsw } from "@mod1/services/userService.js";
 import { getAllRol,getRolById } from "@mod1/services/rolService.js";
 import { getCorporation } from "@mod1/services/corporationService.js";
 import { getProcess } from "@mod1/services/processService.js";
@@ -50,6 +50,7 @@ export const useUsuarioStore = defineStore("usuario", {
     userUpdated: false,  
   }),
   actions: {
+    
     validUpdate(valid) {
       this.userUpdated = valid;
     },
@@ -250,6 +251,17 @@ export const useUsuarioStore = defineStore("usuario", {
         console.log("Error creating user:", error);
       }
     },
+
+     async setNewPassword(psw, psw1, psw2, username) {
+      try {
+        
+       return await setNewPsw(psw, psw1, psw2, username);
+       
+      } catch (error) {
+        console.log("Error creating user:", error);
+      }
+    },
+
     async updateUser() {
       try {
        

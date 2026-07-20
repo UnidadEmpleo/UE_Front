@@ -15,13 +15,25 @@
             rol: (userRol != null && userRol.name != null) ? userRol.name : 'No disponible',
           }" :action="{
               route: 'javascript:;',
-              tooltip: 'Editar Perfil',
+              tooltip: '',
             }" />
         </div>
+       
+          <div class="text-end">
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="openCambioPassword" >Cambiar contraseña</material-button>            
+          </div>  
+        
       </div>
     </div>
+    <CambioContra 
+      :visible="cambioContraVisible"      
+      @update:completo="v => closeCambioPassword(v)"
+      @close="cambioContraVisible = false"
+    />
   </div>
   <div v-else>Cargando Información...</div>
+
+
 </template>
 
 <script>
@@ -29,28 +41,46 @@ import ProfileInfoCard from "./ProfileInfoCard.vue";
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
 import { useMainStore } from "@/store/useMainStore";
+import { useUsuarioStore } from "../../../../../SIPRED-MOD001/src/modules/usuarios/store/useUsuarioStore.js";
 import { storeToRefs } from "pinia";
-import { onBeforeMount } from "vue";
-
+import { onBeforeMount,ref } from "vue";
+import CambioContra from "../../../../../SIPRED-MOD001/src/modules/usuarios/components/CambioContra.vue";
+import MaterialButton from "../../../../components/common/MaterialButton.vue";
 export default {
   name: "ProfileOverview",
   components: {
-    ProfileInfoCard,
+    ProfileInfoCard,CambioContra,MaterialButton
   },
   setup() {
     const store = useMainStore();
+    const usuarioStore = useUsuarioStore();
     const { userdata: user, userRol, coporacionSelected } = storeToRefs(store);
-
+    const cambioContraVisible = ref(false)
     onBeforeMount(async () => {
       await store.getUserInfo();
     });
 
-    return { store, user, userRol, onBeforeMount, coporacionSelected };
+    function openCambioPassword(){
+      cambioContraVisible.value = true
+    }
+    
+    function closeCambioPassword(v){      
+      let username = store.externalUser.username;      
+      usuarioStore.setNewPassword(v.value.password,v.value.password1,v.value.password2,username)
+      cambioContraVisible.value = false  
+
+    }
+
+    return { store, user, userRol, onBeforeMount, coporacionSelected,cambioContraVisible,openCambioPassword,closeCambioPassword };
   },
+ 
   data() {
     return {
       showMenu: false,
     };
+  },
+   methods:{
+    
   },
   persist: {
     enabled: true,

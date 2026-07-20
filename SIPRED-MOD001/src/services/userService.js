@@ -76,6 +76,17 @@ export async function setUser(userData) {
   }
 }
 
+export async function setNewPsw(psw, psw1, psw2, usrname){
+  let userData = {username : usrname,password :psw,psw1 : psw1,psw2: psw2}
+  const result = await apiRequest({
+      url: `/Users/np`,
+      method: "POST",
+      data: userData,
+      showSuccess: true,
+      successMessage: "Contraseña cambiada exitosamente."
+    });
+    return result.success;
+}
 
 export async function updateUser(userData) {
   
