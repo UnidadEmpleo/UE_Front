@@ -84,7 +84,7 @@ export const useSolicitudStore = defineStore('solicitud', {
     activeStep: 0,
     activeClass: 'js-active position-relative',
     formSteps: 2,
-    columns: ['Sexo','Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud', 'Observaciones'], // Table columns
+    columns: ['id','Sexo','Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud', 'Observaciones'], // Table columns
     rowsSolicitudes: [],
 
     // para el filtro de List
@@ -160,7 +160,7 @@ export const useSolicitudStore = defineStore('solicitud', {
         try {
           const evals = await getItemsByOptions(this.options)
           //const evals = await getItems()
-          this.columns = ['Sexo','Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud','CorporacionId', 'Observaciones'], // Table columns
+          this.columns = ['id','Sexo','Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud','CorporacionId', 'Observaciones'], // Table columns
           this.rowsSolicitudes = evals.map((ev) => ({
             "id": ev.id,
             "Nombre": ev.aspirante.nombre + ' '+ev.aspirante.apellido_Paterno+' '+ev.aspirante.apellido_Materno,
@@ -323,13 +323,13 @@ export const useSolicitudStore = defineStore('solicitud', {
         }      
     },
 
-    
-
     async createSolicitud() {
       try {
         var result = await createItem()
         if (result.success){
           this.solicitud.id = result.data
+          console.log('Se obtuvo el id = '+this.solicitud.id)
+          await this.fetchSolicitudById(this.solicitud.id)
           return true
         }
         return false

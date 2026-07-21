@@ -439,9 +439,7 @@ export default {
       }
     }
 
-    const EdicionRegistro = ()=> {disabledRregistro = !disabledRregistro  
-      console.log('disabled '+disabledRregistro)
-    }
+    const EdicionRegistro = ()=> {disabledRregistro = !disabledRregistro  }
 
     onMounted(() => {
       

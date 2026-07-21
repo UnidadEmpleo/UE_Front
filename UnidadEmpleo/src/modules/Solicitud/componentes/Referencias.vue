@@ -8,6 +8,7 @@
         <p class="mb-0 text-sm">1. Padre, madre, esposa o hermano</p>
         <p class="mb-0 text-sm">2. Tío, primo, sobrino, cuñado, abuelo o suegro</p>
         <p class="mb-0 text-sm">3. Amigo, vecino o conocido</p>
+        <p>{{ solicitud.id }}</p>
       </div>
 
       <div class="multisteps-form__content">      
@@ -412,7 +413,7 @@ export default {
             return isValid;
     }
     onMounted(() => {
-        
+      
         //Carga mapa1
       map.value = L.map(mapContainer.value).setView([lat.value, lng.value],13);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19,

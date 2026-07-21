@@ -205,6 +205,7 @@ export default {
     let idSolicitud =  ref([]);
     let curpSelected =  ref([]); 
     const pdfVisible = ref(false)
+
     const printSolicitud = async (idsolicitud, curp)=>{     
       idSolicitud.value = idsolicitud
       curpSelected.value = curp
@@ -288,8 +289,10 @@ export default {
     const handleNextStep = () => {
       if (validateStep()) {
         if (activeStep.value === 0) {
-          //sol.value.fechaSolicitud =  fecha.toLocaleDateString()
+          
           referenciaStore.resetReferencia();
+          
+          //referenciaStore.fetchReferenciasBySolicitud(solicitudStore.solicitud.id)
           nextStep();
 
         } else if (activeStep.value === 1) {
