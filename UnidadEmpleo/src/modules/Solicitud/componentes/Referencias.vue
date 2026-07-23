@@ -56,7 +56,7 @@
                   <div class="col-sm-8 mb-3">
                     <MaterialInput id="givenCalle"  type="text" label="Calle" name="givenCalle"
                       v-model="dato.Calle" :isRequired="true" placeholder="Escribe la Calle"
-                      @input="dato.Calle = dato.Calle.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,'').toUpperCase()"/>
+                      @input="dato.Calle = dato.Calle.toUpperCase()"/>
                   </div>
 
                   <div class="col-sm-2 mb-3">
@@ -72,7 +72,7 @@
                   <div class="col-sm-12 mb-3">
                     <MaterialInput id="givenEntreCalles" type="text" label="Entre Calles" name="givenEntreCalles"
                       v-model="dato.EntreCalles" :isRequired="true" placeholder="Escribe Entre Calles se encuentra" 
-                      @input="dato.EntreCalles = dato.EntreCalles.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,'').toUpperCase()"
+                      @input="dato.EntreCalles = dato.EntreCalles.toUpperCase()"
                       />
                   </div>
 
@@ -104,7 +104,7 @@
 
                   <div class="mt-4 mb-3 col-sm-3">
                       <MaterialInput id="asentamientoi"  type="text" label="Asentamiento" name="asentamientoi" v-model="dato.Colonia"
-                      :isRequired="true" placeholder="Colonia" @input="dato.Colonia = dato.Colonia.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,'').toUpperCase()"
+                      :isRequired="true" placeholder="Colonia" @input="dato.Colonia = dato.Colonia.toUpperCase()"
                       />
                   </div>
 
@@ -120,7 +120,7 @@
                   <div class="mt-4 mb-3 col-sm-3">
                       <MaterialInput id="tipoasentamiento" type="text" label="Tipo Asentamiento" name="tipoasentamiento"
                       v-model="dato.TipoAsentamiento" :isRequired="true" placeholder="Tipo de asentamiento"
-                      @input="dato.TipoAsentamiento = dato.TipoAsentamiento.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,'').toUpperCase()"/>
+                      @input="dato.TipoAsentamiento = dato.TipoAsentamiento.toUpperCase()"/>
                   </div>
                   <div class="form-group col-sm-1">
                       <label for="municipio" class="form-label">Municipio</label>
@@ -132,7 +132,7 @@
                   </div>
                   <div class="mt-4 mb-3 col-sm-3">
                       <MaterialInput id="givenMunicipio" type="text" label="Municipio" name="givenMunicipio" v-model="dato.Municipio" :isRequired="true"
-                      disabled="true" @input="dato.Municipio = dato.Municipio.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,'').toUpperCase()"/>
+                      disabled="true" @input="dato.Municipio = dato.Municipio.toUpperCase()"/>
                   </div>
 
                   <div class="form-group col-sm-1">

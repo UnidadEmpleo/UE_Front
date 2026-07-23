@@ -12,7 +12,7 @@
         <div class="card col-sm-3" :style="{display: visibleRegistro}">
           <div class="card-header d-flex justify-content-between">
             <div  class="col-sm-6"> 
-              <h3>R E G I S T R O</h3>
+              <h3>REGISTRO</h3>
             </div>
             
           </div>
@@ -26,7 +26,7 @@
 
           <div class="card col-sm-12"> 
             
-            <material-button color="success" size="sm" @click.prevent="termino(1, true)" :disabled="(registro.salida == null || registro.salida.length == 0) && registro.salida != registro.ingreso? disabledRregistro: true">Salida</material-button>
+            <material-button color="success" size="sm" @click.prevent="termino(1, true, false)" :disabled="(registro.salida == null || registro.salida.length == 0) && registro.salida != registro.ingreso? disabledRregistro: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ registro.salida }}</label>
             
           </div>
@@ -69,7 +69,7 @@
 
           <div class="card col-sm-12"> 
             
-              <material-button color="success" size="sm" @click.prevent="termino(3,true)" :disabled="(psicologia.salida == null || psicologia.salida.length == 0) && psicologia.salida != psicologia.ingreso? disabledPsico: true">Salida</material-button>
+              <material-button color="success" size="sm" @click.prevent="termino(3,true,false)" :disabled="(psicologia.salida == null || psicologia.salida.length == 0) && psicologia.salida != psicologia.ingreso? disabledPsico: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ psicologia.salida }}</label>     
             
           </div>
@@ -101,7 +101,7 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="psicologia.observaciones" is-required :disabled="disabledPsico"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(3,false)" :disabled=" (psicologia.salida == null || psicologia.salida.length == 0)? true: disabledPsico">Validar Psicología</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(3,false,true)" :disabled=" (psicologia.salida == null || psicologia.salida.length == 0)? true: disabledPsico">Validar Psicología</material-button>
             <label  class="form-label col-sm-auto label" >{{ psicologia.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
@@ -120,7 +120,7 @@
 
           <div class="card col-sm-12"> 
             
-              <material-button color="success" size="sm" @click.prevent="termino(2,true)" :disabled="(medico.salida == null || medico.salida.length == 0) && medico.salida != medico.ingreso? disabledMedico: true">Salida</material-button>
+              <material-button color="success" size="sm" @click.prevent="termino(2,true,false)" :disabled="(medico.salida == null || medico.salida.length == 0) && medico.salida != medico.ingreso? disabledMedico: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ medico.salida }}</label>
              
           </div>
@@ -152,7 +152,7 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="medico.observaciones" is-required :disabled="disabledMedico"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(2,false)" :disabled=" (medico.salida == null || medico.salida.length == 0)? true:disabledMedico">Validar Médico</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(2,false,true)" :disabled=" (medico.salida == null || medico.salida.length == 0)? true:disabledMedico">Validar Médico</material-button>
             <label  class="form-label col-sm-auto label" >{{ medico.nombreUsuarioEvaluo }} </label>
           </div>
 
@@ -173,7 +173,7 @@
 
           <div class="card col-sm-12"> 
             
-              <material-button color="success" size="sm" @click.prevent="termino(4,true)" :disabled="(antidoping.salida == null || antidoping.salida.length == 0) && antidoping.salida != antidoping.ingreso? disabledAnti: true">Salida</material-button>
+              <material-button color="success" size="sm" @click.prevent="termino(4,true,false)" :disabled="(antidoping.salida == null || antidoping.salida.length == 0) && antidoping.salida != antidoping.ingreso? disabledAnti: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ antidoping.salida }}</label>
            
           </div>
@@ -205,7 +205,7 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="antidoping.observaciones" is-required :disabled="disabledAnti"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(4,false)" :disabled=" (antidoping.salida == null || antidoping.salida.length == 0)? true:disabledAnti">Validar Antidoping</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(4,false,true)" :disabled=" (antidoping.salida == null || antidoping.salida.length == 0)? true:disabledAnti">Validar Antidoping</material-button>
             <label  class="form-label col-sm-auto label" >{{ antidoping.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
@@ -225,7 +225,7 @@
 
           <div class="card col-sm-12"> 
             
-              <material-button color="success" size="sm" @click.prevent="termino(5,true)" :disabled="(pie.salida == null || pie.salida.length == 0) && pie.salida != pie.ingreso? disabledPie:true">Salida</material-button>
+              <material-button color="success" size="sm" @click.prevent="termino(5,true,false)" :disabled="(pie.salida == null || pie.salida.length == 0) && pie.salida != pie.ingreso? disabledPie:true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ pie.salida }}</label>
             
           </div>
@@ -257,7 +257,7 @@
             <RichTextEditor id="obs" label="Observaciones" v-model="pie.observaciones" is-required :disabled="disabledPie"/>
           </div>
           <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(5,false)" :disabled=" (pie.salida == null || pie.salida.length == 0)? true:disabledPie">Validar PIE</material-button>
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(5,false,true)" :disabled=" (pie.salida == null || pie.salida.length == 0)? true:disabledPie">Validar PIE</material-button>
             <label  class="form-label col-sm-auto label" >{{ pie.nombreUsuarioEvaluo }} </label>
           </div>
         </div>
@@ -348,12 +348,33 @@ export default {
     function closeExpediente() {
       registro.value.resultado = sol.value.statusExp
       expedienteVisible.value = false
-      termino(1,false);//crea el registro de atn y registro
+      termino(1,false,true);//crea el registro de atn y registro
     }
+
+    const confirmar = async () =>{
+      let { value: confirmar } = await Swal.fire({
+        title: 'CAPTURA "confirmar" PARA CONTINUAR ',
+        input: "text",
+        value: "",
+        inputLabel: "confirmar",        
+        inputAttributes: {
+          maxlength: "20",
+          autocapitalize: "off",
+          autocorrect: "off"
+        },
+        inputValidator: (value) => {
+          console.log(value)
+          if (value != 'confirmar') return "confirma";
+        }
+      });
+
+      return confirmar
+    }
+
 
     const psw = async () =>{
       let { value: password } = await Swal.fire({
-        title: "Introduce el password para "+usuario.value,
+        title: "Introduce la CONTRASEÑA para "+usuario,
         input: "password",
         value: "Password123!",
         inputLabel: "Password",
@@ -374,21 +395,20 @@ export default {
     const ingreso = async (op) => {
       //Levantar pupop para autenticar al usuario
       var continuar = false;
-      let password = await psw().then((result) => {
+      let confirm = await confirmar().then((result) => {
         if (result=='') continuar = false
-        else if (result != undefined ) continuar = true
+        else if (result != undefined && result == 'confirmar') continuar = true
         return result
-      });      
-      
+      });
+
       if (continuar){
-        let res = await evalStore.createEvaluaciones(op, usuario, password)
+        let res = await evalStore.createEvaluaciones(op, usuario, confirm)
         if (res)
           EdicionRegistro()
         else
           setEmptyDate(op)
-
       }
-       
+
     }
 
     const setEmptyDate = (op) =>{
@@ -414,21 +434,27 @@ export default {
 
     //OPCION 1 a 5 DE ACUERDO AL TIPO DE EVALUACIÓN
     //termino = true se agrega la hora de termino
-    const termino = async (op, termino) => {
+    const termino = async (op, termino, pswd) => {
       
       //Levantar pupop para autenticar al usuario
       var continuar = false;
-      let password = await psw().then((result) => {
-        if (result=='') continuar = false
-        else if (result != undefined ) continuar = true
-        return result
-      });      
-      //Indicar la hora de termino      
-      //setear los datos del put
-      //put update      
+      let dato = ''
+      if (pswd)
+        dato = await psw().then((result) => {
+          if (result=='') continuar = false
+          else if (result != undefined ) continuar = true
+          return result
+        });
+      else
+        dato = await confirmar().then((result) => {
+          if (result=='') continuar = false
+          else if (result != undefined && result == 'confirmar') continuar = true
+          return result
+        });  
+    
       if (continuar){
         
-        let resp = await evalStore.updateEvaluaciones(op, usuario, password, termino)
+        let resp = await evalStore.updateEvaluaciones(op, usuario, dato, termino)
         
         if(resp) {//Actualiza evaluación
           if (op == 1 & !termino)
