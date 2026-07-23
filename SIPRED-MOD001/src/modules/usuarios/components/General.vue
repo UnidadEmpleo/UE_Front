@@ -54,8 +54,6 @@
                          :isRequired="true"
                       placeholder="Ingrese el correo electronico."
                       v-model="user.email"
-                    
-                     
                     />
                   
       </div>  

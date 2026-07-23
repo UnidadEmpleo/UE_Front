@@ -189,6 +189,8 @@ export const useAspiranteStore = defineStore('candidate', {
       var externalUser = localStorageService.get("externalUser");
       var perfil = externalUser.perfilId[0];
       try {
+        if (region== 'G')
+          region = 0
         let aspiranteResult = await fetchAspiranteByID(curp, perfil, cuerpo, region)
         if (aspiranteResult.success){
           let aspiranteById = aspiranteResult.data;
@@ -226,11 +228,7 @@ export const useAspiranteStore = defineStore('candidate', {
         }
       } catch (error) {
         console.error('Error fetching Aspirantes:', error)
-        useMainStore().triggerAlert({
-          message: error || 'Error fetching Aspirante',
-          color: 'danger',
-          icon: 'error',
-        })
+        useMainStore().triggerAlert({message: error || 'Error fetching Aspirante',color: 'danger',icon: 'error',})
         this.loadingProgress = 0
       }
     },
