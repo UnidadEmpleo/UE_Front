@@ -79,7 +79,6 @@ export const useAspiranteStore = defineStore('candidate', {
               Cuerpo:asp.idCuerpoCaptura,
               Region: decimalARomano(asp.idRegionCaptura),
               Solicitudes:asp.solicitudes.length
-
           }))
         } catch (error) {
           console.error('Error fetching lists:', error)

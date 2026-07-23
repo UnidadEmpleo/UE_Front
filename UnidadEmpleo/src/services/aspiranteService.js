@@ -8,7 +8,7 @@ export async function getAspirantes(options) {
   
   var opt = { 
     "cuerpoId":options.cuerpoId,
-    "regionId":options.regionId+"",
+    "regionId":options.regionId=='G'? '0':options.regionId+"",
     "perfilId":options.perfilId+"",
     "situacion":options.situacion+""
   }
