@@ -440,7 +440,7 @@ export const useSolicitudStore = defineStore('solicitud', {
         "privada": false,
         "nombreEmpresa": "",
         "descripcionEmpresa": "",
-        "puesto": "striaquing",
+        "puesto": "",
         "jefeInmediato": "",
         "telefonoEmpleo": "",
         "fechaInicio": "",

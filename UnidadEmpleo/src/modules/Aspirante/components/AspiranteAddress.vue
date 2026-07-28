@@ -179,7 +179,7 @@
           
         </div>
 
-        <div ref="mapContainer" style="width: 400px; height: 400px; align-content: center;"></div>
+        <div ref="mapContainer" style="width: 600px; height: 600px; align-content: center;"></div>
 
         
       </form>
@@ -244,7 +244,7 @@ export default {
           lng.value = dato.value.longitud;
         }
           
-        map.value.setView([lat.value, lng.value], 15);
+        map.value.setView([lat.value, lng.value], 18);
         
       }
     };

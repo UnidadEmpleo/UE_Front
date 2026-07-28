@@ -50,7 +50,9 @@ export default {
         
         
         try{
-          const dataCurp = dato.value.Curp.split(']')
+
+          let caracterSeparacion = dato.value.Curp.includes('|')? '|':']';          
+          const dataCurp = dato.value.Curp.split(caracterSeparacion)
           dato.value.Rfc = dato.value.Curp.substring(0, 10)
           dato.value.Curp = dataCurp[0]
           
@@ -65,7 +67,8 @@ export default {
               dato.value.Nombre = dataCurp[4]
               dato.value.Apellido_Paterno = dataCurp[2]
               dato.value.Apellido_Materno = dataCurp[3]
-              const fechaPaso = dataCurp[6].split("-")
+              let caracterFecha =  dataCurp[6].includes('-')? '-': dataCurp[6].includes('/')? '/':'&'
+              const fechaPaso = dataCurp[6].split(caracterFecha)
               dato.value.Fecha_Nacimiento = fechaPaso[2]+'-'+fechaPaso[1]+'-'+fechaPaso[0]
               dato.value.Sexo = getSexoByName(dataCurp[5])            
               dato.value.Rfc = dato.value.Curp.substring(0, 10)
