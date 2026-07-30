@@ -58,14 +58,12 @@
           
         </div>
 
-        <material-button
-         color="primary"
-          variant="gradient"
-          size="sm"
-          @click="handleEvaluar(row)"
-          class="me-2"
-          v-permiso="'Grupos.Editar'">
+        <material-button color="primary" variant="gradient" size="sm" @click="handleEvaluar(row)" class="me-2" v-permiso="'Grupos.Editar'">
           Evaluar
+        </material-button>
+        
+        <material-button color="primary" size="sm" @click="handleEvaluar1(row)" class="me-2" v-permiso="'Grupos.Editar'">
+          Evaluar1
         </material-button>
         
       </template>
@@ -84,6 +82,7 @@ import { useRouter } from "vue-router";
 import { useCuerpoStore } from "@ue/modules/Cuerpo/useCuerpoStore";
 import { useAspiranteStore } from "../../Aspirante/store/useAspiranteStore";
 import { useEvaluacionStore } from "../useEvaluacionStore";
+import { useEvaluacionStore1 } from "../useEvaluacionStore1";
 import { getStatusSolicitud } from "../../../services/catalogosDbService";
 export default {
   name: "SolicitudesList",
@@ -95,6 +94,7 @@ export default {
     const solicitudStore = useSolicitudStore();
     const aspiranteStore = useAspiranteStore();
     const evalStore = useEvaluacionStore();
+    const evalStore1 = useEvaluacionStore1();
     const { rowsSolicitudes, columns, loadingProgress } = storeToRefs(solicitudStore);
     const router = useRouter();
     const { options } = storeToRefs(solicitudStore);
@@ -109,12 +109,50 @@ export default {
     };
 
     const handleEvaluar = async (row) => {
+
       aspiranteStore.verifyAspiranteByCurp(row.Curp)
       evalStore.solicitudId = row.id
       evalStore.sexo = row.sexoid
-      evalStore.fetchEvaluaciones(row.id)
+      evalStore.rowsEvaluaciones = []
+      
+      if (options.value.perfilId == 1 || options.value.perfilId == 2 || options.value.perfilId == 3)
+        evalStore.fetchEvaluaciones(row.id, row.sexoid)
+      else if (options.value.perfilId == 4) // psicologia
+        evalStore.fetchTipoEvaluacion(row.id, 3,0)
+      else if (options.value.perfilId == 5) // medico
+        evalStore.fetchTipoEvaluacion(row.id, 2,0)
+      else if (options.value.perfilId == 6){ // antidoping
+        if (!evalStore.sexo)  
+          evalStore.fetchTipoEvaluacion(row.id, 4,5)
+        else
+          evalStore.fetchTipoEvaluacion(row.id, 4,0)
+      }
       solicitudStore.fetchSolicitudById(row.id)
+
       router.push({ name: "EvaluacionForm" });
+    };
+    const handleEvaluar1 = async (row) => {
+
+      aspiranteStore.verifyAspiranteByCurp(row.Curp)
+      evalStore1.solicitudId = row.id
+      evalStore1.sexo = row.sexoid
+      evalStore1.rowsEvaluaciones = []
+      
+      if (options.value.perfilId == 1 || options.value.perfilId == 2 || options.value.perfilId == 3)
+        evalStore1.fetchEvaluaciones(row.id, row.sexoid)
+      else if (options.value.perfilId == 4) // psicologia
+        evalStore1.fetchTipoEvaluacion(row.id, 3,0)
+      else if (options.value.perfilId == 5) // medico
+        evalStore1.fetchTipoEvaluacion(row.id, 2,0)
+      else if (options.value.perfilId == 6){ // antidoping
+        if (!evalStore1.sexo)  
+          evalStore1.fetchTipoEvaluacion(row.id, 4,5)
+        else
+          evalStore1.fetchTipoEvaluacion(row.id, 4,0)
+      }
+      solicitudStore.fetchSolicitudById(row.id)
+
+      router.push({ name: "EvaluacionForm1" });
     };
 
     const handleDelete = (row) => {
@@ -138,8 +176,7 @@ export default {
         for (var i = 0; i<rowsCuerpo.value.length; i++){
           if (rowsCuerpo.value[i].id === options.value.cuerpoId){// cuperoSeleccionado.value){
            regionesLista.value = [];
-           regionesLista.value =  rowsCuerpo.value[i].regiones
-           
+           regionesLista.value =  rowsCuerpo.value[i].regiones           
            regionesLista.value.find((e) => 
            {
             if (e.id == -1){
@@ -159,7 +196,7 @@ export default {
       navigateToCreate,
       handleEvaluar,
       handleDelete,
-      
+      handleEvaluar1,
       //consultas
       filtrar,
       solicitudStore,options,rowsCuerpo,

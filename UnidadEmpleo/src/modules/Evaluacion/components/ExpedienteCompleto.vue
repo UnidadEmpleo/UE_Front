@@ -532,7 +532,6 @@ export default {
 
     watch(() => props.visible, (v) => {
       if (v) {
-        //AQUI PUEDO AGREGAR UNA FUNCIÓN DE VALORES INICIALES
         console.log('. '+v)
       }
     }, { immediate: true })

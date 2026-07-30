@@ -67,79 +67,100 @@
       </div>
 
       <div class="card-body">
-            <form class="multisteps-form__form">
-              <CardEval :class="activeStep === 0 ? activeClass : ''"/>
+            <form class="row flex justify-content-center">
               
-              <div class="mt-4 d-flex justify-content-between">
+              <MaterialButton id="next-step-button"  @click.prevent="openExpediente()">
+                  Revisar Solicitud
+                </MaterialButton>
+
+
+                <div class="col-sm-4" v-for="(item, index) in rowsEvaluaciones" :key="index">
+                    <CardEval 
+                    :disabledData="item.nombreUsuarioEvaluo=='' && item.tipoEvaluacion > 0? false:true" 
+                    :tipo="item.tipoEvaluacion" 
+                    :valor="item"
+                    @addEvaluation="agregarEvaluacion"
+                    @openExpediente="expedienteVisible"/>
+                </div>
                 
+              <div class="mt-4 d-flex justify-content-between">                
                 <MaterialButton id="next-step-button" :color="sigColor" :variant="sigVariant" :disabled="sigPaso"
-                  @click.prevent="activeStep === 0 ? handleSave() : handleNextStep()">
-                  {{ activeStep !== 0 ? "Continuar con su evaluacion" : "Terminar" }}
+                  @click.prevent="handleSave()">
+                  Terminar
                 </MaterialButton>
 
               </div>
+              <ExpedienteCompleto 
+                :visible="expedienteVisible"
+                @update:completo="v => closeExpediente(v)"
+                @close="expedienteVisible = false"
+              />   
             </form>
       </div>
     </div>
+    
   </div>  
 </template>
 
 <script>
 
-//import CardEval from "../components/CardEval.vue/index.js";
-
-
+import CardEval from "../components/CardEval1.vue";
 import { getSexoById,calculaEdad } from "@ue/services/catalogosDbService"
 import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
-import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
-import { useEvaluacionStore } from "../useEvaluacionStore.js";
+import { useEvaluacionStore1 } from "../useEvaluacionStore1.js";
 import fotoDefault from "@/assets/img/user.png";
-
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
-import CardEval from '../components/CardEval.vue';
-
+import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
+import ExpedienteCompleto from "../components/ExpedienteCompleto.vue";
+import MaterialButton from "../../../../../src/components/common/MaterialButton.vue";
 
 export default {
   name: "EvaluacionActive",
   components: {
-     CardEval,
-     
-
+     CardEval,ExpedienteCompleto,MaterialButton
   },
-  setup() {
-    
+  setup() {        
     const solicitudStore = useSolicitudStore();
-    const evalStore = useEvaluacionStore();
-    const { activeStep, activeClass } = storeToRefs(evalStore); 
-    const { nextStep, prevStep } = evalStore;
-    const { solicitud: sol } = storeToRefs(solicitudStore);
+    const evalStore = useEvaluacionStore1();
     
+    const { rowsEvaluaciones } = storeToRefs(evalStore);     
     const aspiranteStore = useAspiranteStore();
-    const { aspirante: asp } = storeToRefs(aspiranteStore);
-    
+    const { aspirante: asp } = storeToRefs(aspiranteStore);    
     const router = useRouter();
-    const fecha = new Date();
-    
-    let sigPaso = ref( true);
-    let sigColor = ref('secundary');
-    let sigVariant = ref('outline');
-    
-    let isCreateMode = sol.value.id == 0;
-
+    const fecha = new Date();    
     const placeholder = fotoDefault;
+    const solicitudId = ref(null)
+    const tipoEvaluacion = ref(null)
     
-    onMounted(() => {
-      activeStep.value = 0;      
+    const expedienteVisible = ref(true)
+    function openExpediente() {      
+      console.log('opening xfile')
+      console.log(expedienteVisible.value)
+      expedienteVisible.value = true
+      console.log(expedienteVisible.value)
+
+    }
+    
+    function closeExpediente() {      
+      expedienteVisible.value = false
+      //termino(1,false,true);//crea el registro de atn y registro
+    }
+
+
+    onMounted(() => {      
+      evalStore.setRecurso()            
     });
-    
+
+    function agregarEvaluacion(data) {
+      evalStore.initEvaluacion(data.solicitudId,data.tipoEvaluacion)
+    }
    
     const navigateToList = () => {
       aspiranteStore.resetSelectedAspirante();
       evalStore.resetAll();
-      solicitudStore.resetSelectedSolicitud();
-      activeStep.value = 0;
+      solicitudStore.resetSelectedSolicitud();      
       router.push({ name: "EvaluacionList" });
     }
 
@@ -147,67 +168,40 @@ export default {
         router.push({ name: "EvaluacionList" }); // DE AQUI SE VA A LA PAGINA DE EVALUAR
     }
 
-    const verifyData = () => {
-      if (validateStep()) {
-        let result = false;
-        if (isCreateMode && sol.value.id == 0){
-          sol.value.fechaSolicitud = fecha.getFullYear()+'-'+(fecha.getMonth() + 1).toString().padStart(2, '0')+'-'+fecha.getDate().toString().padStart(2, '0')
-          result = solicitudStore.createSolicitud();
-        }
-        else result =  solicitudStore.updateSolicitud();
-        
-        if (result){
-          sigColor.value = 'primary';
-          sigVariant.value = 'gradient';
-          sigPaso.value = false;
-          
-        }
-      }
-    }
-      
-
-    const setActiveStep = () => {
-      if (validateStep()) {
-        nextStep();
-      }
-    };
-
-    const handlePrevStep = ()=>{
-      prevStep()
-    }
-
-    const handleNextStep = () => {
-      if (validateStep()) {
-        if (activeStep.value === 0){
-            
-            nextStep();
-
-        }else if (activeStep.value === 1){
-           nextStep();
-        }
-      }
-    };
-
-    const validateStep = () => {
-      let isValid = true;
-      return isValid;
-    };
-
-    const nodeWasClicked = () => {
-      alert("Node clicked");
-    };
-
-    return {
-      activeStep,activeClass,
-      nextStep,handlePrevStep,
-      isCreateMode,handleNextStep,
-      handleSave,setActiveStep,
-      navigateToList,nodeWasClicked,
-      asp,sol,placeholder,
+    return {      
+      handleSave,
+      navigateToList,
+      asp,placeholder,
       calculaEdad,getSexoById,
-      fecha,verifyData,sigPaso,sigColor,sigVariant
-      
+      fecha
+
+      ,rowsEvaluaciones
+      ,solicitudId,tipoEvaluacion,agregarEvaluacion
+      ,openExpediente,closeExpediente
     };
   },
 };
 </script>
+
+<style scoped>
+.eval {
+    display: flex;      /* Coloca los hijos en horizontal */
+    list-style: none;   /* Elimina los puntos */
+    padding: 0;
+    margin: 0;
+    gap: 20px;          /* Espacio entre elementos */
+}
+
+.eval li {
+    padding: 10px 20px;
+    background-color: rgba(243, 245, 230, 0.6);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.eval li:hover {
+     background-color: rgba(160, 158, 158, 0.6);
+}
+
+</style>

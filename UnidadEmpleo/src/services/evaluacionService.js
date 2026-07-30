@@ -48,11 +48,23 @@ export async function getEvaluacion(id) {
   return result.data;
 }
 
-export async function createEvaluation(dato,userName, password){
+export async function getTipoEvaluacion(id,tipo, tipo5) {
+  
+  const mainStore = useMainStore();
+  const result = await apiRequest({ url: `${endpoint}/evxsolicitud/${id}/${tipo}/${tipo5}` });
+  
+  if (!result.success) {
+    mainStore.triggerAlert({message: "No se encontraron registros.",color: "warning",icon: "warning",});
+    return [];
+  }
+  return result.data;
+}
+
+export async function createEvaluation(dato, userName, password){
   
   const itemRequest = {
         "id": dato.id,
-        "ingreso": dato.ingreso,
+        "ingreso": dato.ingreso==''? (new Date()) : dato.ingreso,
         "salida": dato.salida,
         "resultado": dato.resultado,
         "observaciones": dato.observaciones,
@@ -79,7 +91,7 @@ export async function createEvaluation(dato,userName, password){
 }
 
 export async function updateEvaluation(dato, userName, password,termino){
-
+ 
   const itemRequest = 
     {
         "id": dato.id,

@@ -322,7 +322,7 @@ export default {
     let disabledMedico = ref(false)
     let disabledAnti = ref(false)
     let disabledPie = ref(false)
-    const expedienteVisible = ref(false)
+    const expedienteVisible = ref(true)
 
     const setPerfilVisibleDisabled= (vr,vp,vm,va,vpi,dr,dp,dm,da,dpi) =>{
 
@@ -340,7 +340,6 @@ export default {
 
     }
 
-    //let enableRegistroUpd = false;
     function openExpediente() {
       expedienteVisible.value = true
     }
