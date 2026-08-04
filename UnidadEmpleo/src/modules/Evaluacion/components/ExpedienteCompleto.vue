@@ -530,11 +530,7 @@ export default {
 
     const loading = ref(false)
 
-    watch(() => props.visible, (v) => {
-      if (v) {
-        console.log('. '+v)
-      }
-    }, { immediate: true })
+    watch(() => props.visible, () => {}, { immediate: true })
 
     function syncFilters() {
       const resultadoout = sol.statusExp

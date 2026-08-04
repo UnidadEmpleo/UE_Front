@@ -1,354 +1,182 @@
 <template>
-  <div  class="multisteps-form__panel border-radius-xl bg-white" data-animation="FadeIn"  >
-    <div class="mb-3">
-      <h5 class="font-weight-bolder mb-0">Evaluaciones</h5>
-      <p class="mb-0 text-sm">Resultados</p>
-      {{ perfil }}
-    </div>
-    
 
-      <div class="row justify-content-center">
-
-        <div class="card col-sm-3" :style="{display: visibleRegistro}">
+        <div class="card bg-custom " :style="{display: disabledDat}">
           <div class="card-header d-flex justify-content-between">
             <div  class="col-sm-6"> 
-              <h3>REGISTRO</h3>
-            </div>
-            
-          </div>
-
-          <div class="card col-sm-12">   
-            
-            <material-button color="warning" size="sm" @click.prevent="ingreso(1)" :disabled="registro.ingreso.length == 0? disabledRregistro: true">Ingreso</material-button>
-            <label  class="form-label  col-sm-auto"> {{ registro.ingreso }}</label>
-            
-          </div>
-
-          <div class="card col-sm-12"> 
-            
-            <material-button color="success" size="sm" @click.prevent="termino(1, true, false)" :disabled="(registro.salida == null || registro.salida.length == 0) && registro.salida != registro.ingreso? disabledRregistro: true">Salida</material-button>
-              <label  class="form-label col-sm-auto"> {{ registro.salida }}</label>
-            
-          </div>
-
-          <div class="row"> 
-            <label  class="form-label font-weight-bolder col-sm-auto col-form-label-lg">DOCUMENTACIÓN </label>
-          </div>
-
-          <div class="row col-sm-5 justify-content-start">
-            <material-switch  id="resultado" name="resultado" :disabled="true" label="Expediente completo" v-model:checked="registro.resultado" />      
-            <hr>                    
-            <material-switch  id="revalorables" name="revalorable" :disabled="disabledRregistro" label="Concluye evaluación" v-model:checked="registro.revalorable" />  
-            
-          </div>
-          <div>
-            <RichTextEditor id="obs" label="Observaciones" v-model="registro.observaciones" is-required :disabled="disabledRregistro"/>
-          </div>
-          <div class=""> 
-            
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="openExpediente()" :disabled="
-              (registro.salida == null || registro.salida.length == 0)? false:(registro.observaciones? false:disabledRregistro) ">Validar Registro</material-button>
-            <label  class="form-label col-sm-auto label" >{{ registro.nombreUsuarioEvaluo }} </label>
-          </div>
-        </div>
-        
-        <div class="card col-sm-3 " :style="{display: visiblePsico}">
-          <div class="card-header d-flex text-center">
-              <h3>PSICOLOGÍA</h3>
+              <h3>{{ visualData[data.tipoEvaluacion-1].title }}</h3>
+            </div>            
           </div>
           
-          <div class="card col-sm-12">   
-            
-            <material-button color="warning" size="sm" 
-            @click.prevent="ingreso(3)" 
-            :disabled="psicologia.ingreso.length == 0? disabledPsico: true">
-            Ingreso</material-button>
-            <label  class="form-label  col-sm-auto"> {{ psicologia.ingreso }}</label>
-            
+          <div class="card col-sm-12"> 
+              
+            <material-button color="warning" size="sm" @click.prevent="ingreso(data.tipoEvaluacion)" 
+            :disabled=" noPermiso.includes(options.perfilId)?  (options.perfilId == 3 && data.tipoEvaluacion ==1 ? data.ingreso.length == 0? disabledDat:true:true) :  data.ingreso.length == 0? disabledDat:true">Ingreso</material-button>
+            <label  class="form-label  col-sm-auto"> {{ data.ingreso }}</label>            
           </div>
 
           <div class="card col-sm-12"> 
-            
-              <material-button color="success" size="sm" @click.prevent="termino(3,true,false)" :disabled="(psicologia.salida == null || psicologia.salida.length == 0) && psicologia.salida != psicologia.ingreso? disabledPsico: true">Salida</material-button>
-              <label  class="form-label col-sm-auto"> {{ psicologia.salida }}</label>     
-            
+            {{ disabledDat }}, {{ data.tipoEvaluacion }}, {{data.nombreUsuarioEvaluo}}
+            <material-button color="success" size="sm" @click.prevent="termino(data.tipoEvaluacion, true, false)" :disabled="(data.salida == null || data.salida.length == 0) && data.salida != data.ingreso? disabledDat: true">Salida</material-button>
+              <label  class="form-label col-sm-auto"> {{ data.salida }}</label>
           </div>
 
           <div class="row"> 
-            <label  class="form-label font-weight-bolder col-sm-auto col-form-label-lg">RESULTADO </label>
+            <label  class="form-label font-weight-bolder col-sm-auto col-form-label-lg">{{visualData[data.tipoEvaluacion-1].subtitle}} </label>
           </div>
 
-          <div class="row">
-            <div class="col-sm-auto">
-
+          <div v-if="data.tipoEvaluacion == 1" class="row col-sm-5 justify-content-start">
+            <div class="row justify-content-center">
+              <div class="col-sm-auto">
+                <material-switch  id="resultado" name="resultado" :disabled="true" :label=visualData[data.tipoEvaluacion-1].op1  v-model:checked="data.resultado" />      
+              </div>
+              <hr>                    
+              <div class="col-sm-auto">
+                <material-switch  id="revalorables" name="revalorable" :disabled="disabledDat" :label= visualData[data.tipoEvaluacion-1].revalorable v-model:checked="data.revalorable" />              
+              </div>
             </div>
-            <div class="col-sm-6 ">
+            
+            <ExpedienteCompleto 
+                :visible="expedienteVisible"
+                @update:completo="v => closeExpediente(v)"
+                @close="expedienteVisible = false"
+              />   
+            
+          </div>
+
+          <div v-if="data.tipoEvaluacion > 1" class="col-sm-auto ">
               <div class="row justify-content-center">
                 <div class="col-sm-auto">
-                  <input class="form-check-input" type="radio" id="true" value="true" v-model="psicologia.resultado" />
-                  <label for="one">APTO</label>
+                  <input class="form-check-input" type="radio" id="true" value="true" v-model="data.resultado" />
+                  <label for="one">{{ visualData[data.tipoEvaluacion-1].op1 }}</label>
                 </div>
                 <div class="col-sm-auto">
-                  <input class="form-check-input"  type="radio" id="false" value="false"  v-model="psicologia.resultado"/>
-                  <label for="two">NO APTO</label>
+                  <input class="form-check-input"  type="radio" id="false" value="false"  v-model="data.resultado"/>
+                  <label for="two">{{ visualData[data.tipoEvaluacion-1].op2 }}</label>
                 </div>
               </div>
               <hr>
-              <material-switch  id="revalorable" name="revalorable" :disabled="disabledPsico" label="Revalorable" v-model:checked="psicologia.revalorable" />              
-            </div>
-          </div>
-          <div>
-            <RichTextEditor id="obs" label="Observaciones" v-model="psicologia.observaciones" is-required :disabled="disabledPsico"/>
-          </div>
-          <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(3,false,true)" :disabled=" (psicologia.salida == null || psicologia.salida.length == 0)? true: disabledPsico">Validar Psicología</material-button>
-            <label  class="form-label col-sm-auto label" >{{ psicologia.nombreUsuarioEvaluo }} </label>
-          </div>
-        </div>
-
-        <div class="card col-sm-3" :style="{display: visibleMedico}">
-          <div class="card-header d-flex text-center">
-              <h3>M É D I C O</h3>
-          </div>
-          
-          <div class="card col-sm-12">   
-            
-            <material-button color="warning" size="sm" @click.prevent="ingreso(2)" :disabled="medico.ingreso.length == 0? disabledMedico: true">Ingreso</material-button>
-            <label  class="form-label  col-sm-auto"> {{ medico.ingreso }}</label>
-            
-          </div>
-
-          <div class="card col-sm-12"> 
-            
-              <material-button color="success" size="sm" @click.prevent="termino(2,true,false)" :disabled="(medico.salida == null || medico.salida.length == 0) && medico.salida != medico.ingreso? disabledMedico: true">Salida</material-button>
-              <label  class="form-label col-sm-auto"> {{ medico.salida }}</label>
-             
-          </div>
-
-          <div class="row"> 
-            <label  class="form-label font-weight-bolder col-sm-auto col-form-label-lg">RESULTADO </label>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-auto">
-
-            </div>
-            <div class="col-sm-6 ">
-              <div class="row justify-content-start">
-                <div class="col-sm-auto">
-                  <input class="form-check-input" type="radio" id="true" value=true  v-model="medico.resultado"/>
-                  <label for="one">APTO</label>
-                </div>
-                <div class="col-sm-auto">
-                  <input class="form-check-input"  type="radio" id="false" value=false v-model="medico.resultado" />
-                  <label for="two">NO APTO</label>
-                </div>
+              <div class="col-sm-auto d-flex justify-content-between ">
+                -
+                <material-switch  id="revalorable" name="revalorable" :disabled="disabledDat" :label=visualData[data.tipoEvaluacion-1].revalorable  v-model:checked="data.revalorable" />    
+                <MaterialButton id="ev-nueva" color="secondary" variant="outline" @click.prevent="nuevaValoracion()"
+                  :disabled="(!data.revalorable && !existePar(options.perfilId, data.tipoEvaluacion))"> Nueva valoración </MaterialButton>                  
               </div>
-              <hr>
-              <material-switch  id="revalorables" name="revalorable" :disabled="disabledMedico" label="Revalorable" v-model:checked="medico.revalorable" />              
-            </div>
+                 
           </div>
+
           <div>
-            <RichTextEditor id="obs" label="Observaciones" v-model="medico.observaciones" is-required :disabled="disabledMedico"/>
+            <RichTextEditor id="obs" label="Observaciones" v-model="data.observaciones" is-required :disabled="disabledDat"/>
           </div>
-          <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(2,false,true)" :disabled=" (medico.salida == null || medico.salida.length == 0)? true:disabledMedico">Validar Médico</material-button>
-            <label  class="form-label col-sm-auto label" >{{ medico.nombreUsuarioEvaluo }} </label>
-          </div>
-
-          
-        </div>
-
-        <div class="card col-sm-3" :style="{display: visibleAnti}">
-          <div class="card-header d-flex text-center">
-              <h3>ANTIDOPING</h3>
-          </div>
-          
-          <div class="card col-sm-12">   
-            
-            <material-button color="warning" size="sm" @click.prevent="ingreso(4)" :disabled="antidoping.ingreso.length == 0? disabledAnti: true">Ingreso</material-button>
-            <label  class="form-label  col-sm-auto"> {{ antidoping.ingreso }}</label>
-            
+          <div v-if=" data.tipoEvaluacion == 1" >             
+            <material-button  color="primary" variant="gradient" size="sm" @click.prevent="openExpediente()"  
+            :disabled="(data.salida == null || data.salida.length == 0)? false:(data.observaciones? false:disabledDat) ">
+            {{ visualData[data.tipoEvaluacion-1].validar }}</material-button>
+            <label  class="form-label col-sm-auto label" >{{ data.nombreUsuarioEvaluo }} </label>
           </div>
 
-          <div class="card col-sm-12"> 
-            
-              <material-button color="success" size="sm" @click.prevent="termino(4,true,false)" :disabled="(antidoping.salida == null || antidoping.salida.length == 0) && antidoping.salida != antidoping.ingreso? disabledAnti: true">Salida</material-button>
-              <label  class="form-label col-sm-auto"> {{ antidoping.salida }}</label>
-           
-          </div>
-
-          <div class="row"> 
-            <label  class="form-label font-weight-bolder col-sm-auto col-form-label-lg">RESULTADO </label>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-auto">
-
-            </div>
-            <div class="col-sm-6 ">
-              <div class="row justify-content-start">
-                <div class="col-sm-auto">
-                  <input class="form-check-input" type="radio" id="true" value=true  v-model="antidoping.resultado"/>
-                  <label for="one">NEGATIVO</label>
-                </div>
-                <div class="col-sm-auto">
-                  <input class="form-check-input"  type="radio" id="false" value=false  v-model="antidoping.resultado"/>
-                  <label for="two">POSITIVO</label>
-                </div>
-              </div>
-              <hr>
-              <material-switch  id="revalorable" name="revalorable" :disabled="disabledAnti" label="Revalorable" v-model:checked="antidoping.revalorable" />              
-            </div>
-          </div>
-          <div>
-            <RichTextEditor id="obs" label="Observaciones" v-model="antidoping.observaciones" is-required :disabled="disabledAnti"/>
-          </div>
-          <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(4,false,true)" :disabled=" (antidoping.salida == null || antidoping.salida.length == 0)? true:disabledAnti">Validar Antidoping</material-button>
-            <label  class="form-label col-sm-auto label" >{{ antidoping.nombreUsuarioEvaluo }} </label>
+          <div v-if=" data.tipoEvaluacion > 1">
+            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(5,false,true)" :disabled=" (data.salida == null || data.salida.length == 0)? true:disabledDat">{{ visualData[data.tipoEvaluacion-1].validar }}</material-button>
+            <label  class="form-label col-sm-auto label" >{{ data.nombreUsuarioEvaluo }} </label>
+      
           </div>
         </div>
-
-
-        <div class="card col-sm-3 " :style="{display: visiblePie}">
-          <div class="card-header d-flex text-center ">
-              <h3>P I E</h3>
-          </div>
-          
-          <div class="card col-sm-12">   
-            
-            <material-button color="warning" size="sm" @click.prevent="ingreso(5)" :disabled="pie.ingreso.length == 0? disabledPie:true">Ingreso</material-button>
-            <label  class="form-label  col-sm-auto"> {{ pie.ingreso }}</label>
-            
-          </div>
-
-          <div class="card col-sm-12"> 
-            
-              <material-button color="success" size="sm" @click.prevent="termino(5,true,false)" :disabled="(pie.salida == null || pie.salida.length == 0) && pie.salida != pie.ingreso? disabledPie:true">Salida</material-button>
-              <label  class="form-label col-sm-auto"> {{ pie.salida }}</label>
-            
-          </div>
-
-          <div class="row"> 
-            <label  class="form-label font-weight-bolder col-sm-auto col-form-label-lg">RESULTADO </label>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-auto">
-
-            </div>
-            <div class="col-sm-6 ">
-              <div class="row justify-content-start">
-                <div class="col-sm-auto">
-                  <input class="form-check-input" type="radio" id="true" value=true v-model="pie.resultado" />
-                  <label for="one">NEGATIVO</label>
-                </div>
-                <div class="col-sm-auto">
-                  <input class="form-check-input"  type="radio" id="false" value=false  v-model="pie.resultado"/>
-                  <label for="two">POSITIVO</label>
-                </div>
-              </div>
-              <hr>
-              <material-switch  id="revalorable" name="revalorable" :disabled="disabledPie" label="Revalorable" v-model:checked="pie.revalorable" />              
-            </div>
-          </div>
-          <div>
-            <RichTextEditor id="obs" label="Observaciones" v-model="pie.observaciones" is-required :disabled="disabledPie"/>
-          </div>
-          <div>
-            <material-button color="primary" variant="gradient" size="sm" @click.prevent="termino(5,false,true)" :disabled=" (pie.salida == null || pie.salida.length == 0)? true:disabledPie">Validar PIE</material-button>
-            <label  class="form-label col-sm-auto label" >{{ pie.nombreUsuarioEvaluo }} </label>
-          </div>
-        </div>
-
-      </div>
-
-    
-    <ExpedienteCompleto
-      :visible="expedienteVisible"
-      @update:completo="v => closeExpediente(v)"
-      @close="expedienteVisible = false"
-    />
-
-  </div>
 
 </template>
 
 <style>
 .label {font: italic small-caps bold 12px/2 cursive;}
+
+.bg-custom {
+    background-color: rgba(239, 248, 188, 0.6);
+    color: black;
+}
 </style>
 
 <script>
 
-import { useMainStore } from '@/store/useMainStore.js';
-import { useEvaluacionStore } from '../useEvaluacionStore.js';
-import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
-
-import ExpedienteCompleto from './ExpedienteCompleto.vue';
-import MaterialButton from '../../../../../src/components/common/MaterialButton.vue';
-import MaterialSwitch from "@/components/common/MaterialSwitch.vue";
+import { useMainStore } from '@/store/useMainStore.js'
+import { useEvaluacionStore } from '../useEvaluacionStore.js'
+import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore.js"
+import ExpedienteCompleto from './ExpedienteCompleto.vue'
+import MaterialButton from '../../../../../src/components/common/MaterialButton.vue'
+import MaterialSwitch from "@/components/common/MaterialSwitch.vue"
 import Swal from 'sweetalert2'
-import RichTextEditor from '@/components/common/RichTextEditor.vue';
-import { onMounted, ref } from "vue";
-import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
+import RichTextEditor from '@/components/common/RichTextEditor.vue'
+import { storeToRefs } from "pinia"
+import { ref } from 'vue'
 
 
 export default {
+  name: "SolicitudDatosBasicos",
   components: {
     MaterialButton,MaterialSwitch,
     RichTextEditor,ExpedienteCompleto
   },
-  
-  name: "SolicitudDatosBasicos",
-  setup() {
+  props: {    
+    disabledData:{type:Boolean, default: false},
+    tipo:{type:Number, default: 1},    
+    valor: {"id": 0,
+        "ingreso": '',
+        "salida": '',
+        "resultado": '',
+        "observaciones": '',
+        "revalorable": false,
+        "idSoliciud": 0,
+        "tipoEvaluacion": 1,
+        "usuarioSalida": '',
+        "usuarioIngreso": '',
+        "usuarioEvaluo": '',
+        "nombreUsuarioEvaluo": ''}
+  },
+  emits: ['addEvaluation'],
+  setup(props, { emit }) {
     
     const store = useMainStore();    
     const evalStore = useEvaluacionStore()
-    const { registro, psicologia,medico,antidoping,pie, options, } = storeToRefs(evalStore);
+    const { options } = storeToRefs(evalStore);
     const usuario = store.externalUser.username;
     const solicitudStore = useSolicitudStore();
     const { solicitud: sol } = storeToRefs(solicitudStore);
-    const router = useRouter();
-    const perfil = ref()
-    let visibleRegistro=ref("flex")
-    let visiblePsico=ref("flex")
-    let visibleMedico=ref("flex")
-    let visibleAnti=ref("flex")
-    let visiblePie= ref("flex")
-    let disabledRregistro = registro.id == 0? true:ref(false)
-    let disabledPsico = ref(false)
-    let disabledMedico = ref(false)
-    let disabledAnti = ref(false)
-    let disabledPie = ref(false)
-    const expedienteVisible = ref(true)
-
-    const setPerfilVisibleDisabled= (vr,vp,vm,va,vpi,dr,dp,dm,da,dpi) =>{
-
-      visibleRegistro.value = vr
-      visiblePsico.value = vp
-      visibleMedico.value = vm
-      visibleAnti.value = va
-      visiblePie.value = vpi
-
-      disabledRregistro.value = dr
-      disabledPsico.value = dp
-      disabledMedico.value = dm
-      disabledAnti.value = da
-      disabledPie.value = dpi
+    const visualData = [      
+      {tipo : 1, title :'REGISTRO', subtitle :'DOCUMENTACIÓN', op1:'Expediente completo', op2:'' , revalorable:'Concluye evaluación', validar:'Validar registro'},
+      {tipo : 2, title :'M É D I C O', subtitle :'RESULTADO', op1:'APTO', op2:'NO APTO' , revalorable:'Revalorable', validar:'Validar médico'},
+      {tipo : 3, title :'PSICOLOGÍA', subtitle :'RESULTADO', op1:'APTO', op2:'NO APTO' , revalorable:'Revalorable', validar:'Validar psicología'},
+      {tipo : 4, title :'ANTIDOPING', subtitle :'RESULTADO', op1:'NEGATIVO', op2:'POSITIVO' , revalorable:'Revalorable', validar:'Validar antidoping'},
+      {tipo : 5, title :'P I E ', subtitle :'RESULTADO', op1:'NEGATIVO', op2:'POSITIVO' , revalorable:'Revalorable', validar:'Validar PIE'}
+    ]
+    const noPermiso=[1,2,3,8]
+    const activaRevaloracion = [[4, 3],[5, 2],[6, 4],[6, 5]];
+    function existePar(a, b) {return activaRevaloracion.some(([x, y]) => x === a && y === b);}
+    function nuevaValoracion( ){
+       if (existePar(options.value.perfilId, data.value.tipoEvaluacion))        
+        emit('addEvaluation',{
+          solicitudId: data.value.idSoliciud,
+          tipoEvaluacion: data.value.tipoEvaluacion
+        })
+        else
+          Swal.fire({
+            icon: "error",
+            title: "Sin privilegios",
+            text: "¡Solo el especialista puede agregar nueva valoración!",
+          });
 
     }
-
-    function openExpediente() {
-      expedienteVisible.value = true
-    }
+    const data = ref({
+        "id": props.valor.id,
+        "ingreso": props.valor.ingreso,
+        "salida": props.valor.salida,
+        "resultado": props.valor.resultado,
+        "observaciones": props.valor.observaciones,
+        "revalorable": props.valor.revalorable,
+        "idSoliciud": props.valor.idSoliciud,
+        "tipoEvaluacion": props.valor.tipoEvaluacion,
+        "usuarioSalida": props.valor.usuarioSalida,
+        "usuarioIngreso": props.valor.usuarioIngreso,
+        "usuarioEvaluo": props.valor.usuarioEvaluo,
+        "nombreUsuarioEvaluo": props.valor.nombreUsuarioEvaluo
+    })    
     
-    function closeExpediente() {
-      registro.value.resultado = sol.value.statusExp
-      expedienteVisible.value = false
-      termino(1,false,true);//crea el registro de atn y registro
-    }
+    
 
     const confirmar = async () =>{
       let { value: confirmar } = await Swal.fire({
@@ -362,14 +190,13 @@ export default {
           autocorrect: "off"
         },
         inputValidator: (value) => {
-          console.log(value)
+          
           if (value != 'confirmar') return "confirma";
         }
       });
 
       return confirmar
     }
-
 
     const psw = async () =>{
       let { value: password } = await Swal.fire({
@@ -391,7 +218,7 @@ export default {
       return password
     }
 
-    const ingreso = async (op) => {
+    const ingreso = async () => {
       //Levantar pupop para autenticar al usuario
       var continuar = false;
       let confirm = await confirmar().then((result) => {
@@ -401,38 +228,21 @@ export default {
       });
 
       if (continuar){
-        let res = await evalStore.createEvaluaciones(op, usuario, confirm)
-        if (res)
-          EdicionRegistro()
-        else
-          setEmptyDate(op)
+        let res = await evalStore.createEvaluaciones(data.value, usuario, confirm)
+        if (!res)
+          setEmptyDate()
+
       }
 
     }
 
-    const setEmptyDate = (op) =>{
-      
-      switch (op) {
-        case 1:
-          registro.value.salida = '';
-          break;
-        case 2:
-          medico.value.salida = '';
-          break;
-        case 3:
-          psicologia.value.salida = '';
-          break;
-        case 4:
-          antidoping.value.salida = '';
-          break;
-        case 5:
-          pie.value.salida = '';
-          break;               
-      }          
+    const setEmptyDate = () =>{
+      data.value.salida = ''
     }
 
     //OPCION 1 a 5 DE ACUERDO AL TIPO DE EVALUACIÓN
-    //termino = true se agrega la hora de termino
+    //termino = true se agrega la hora de termino, false: es validación
+    //psw valor booleano true: pide password, fals: pide continuar
     const termino = async (op, termino, pswd) => {
       
       //Levantar pupop para autenticar al usuario
@@ -450,75 +260,60 @@ export default {
           else if (result != undefined && result == 'confirmar') continuar = true
           return result
         });  
-    
+      
       if (continuar){
-        
-        let resp = await evalStore.updateEvaluaciones(op, usuario, dato, termino)
-        
+        console.log('Se actualizó : data.expedientecompleto '+data.value.resultado )
+        let resp = await evalStore.updateEvaluaciones(data.value, usuario, dato, termino)
+        console.log('Se actualizó : '+resp+ ' data.expedientecompleto '+data.value.resultado )
         if(resp) {//Actualiza evaluación
           if (op == 1 & !termino)
             solicitudStore.updateSolicitud() //se actualiza datos de solicitud
-        }else 
-          setEmptyDate(op)
+        }else
+          resp = true;
+        
+        if (resp && !termino){
+            var ev = await evalStore.fetchEvaluacion(data.value.id)
+            if (ev !=null)
+              data.value = {
+                "id": ev.id,
+                "ingreso": ev.ingreso,
+                "salida": ev.salida,
+                "resultado": ev.resultado,
+                "observaciones": ev.observaciones,
+                "revalorable": ev.revalorable,
+                "idSoliciud": ev.idSoliciud,
+                "tipoEvaluacion": ev.tipoEvaluacion,
+                "usuarioSalida": ev.usuarioSalida,
+                "usuarioIngreso": ev.usuarioIngreso,
+                "usuarioEvaluo": ev.usuarioEvaluo,
+                "nombreUsuarioEvaluo": ev.nombreUsuarioEvaluo
+              }
+
+            EdicionRegistro()
+        }
+            
 
       }
     }
-
-    const EdicionRegistro = ()=> {disabledRregistro = !disabledRregistro  }
-
-    onMounted(() => {
-      
-      evalStore.setRecurso()
-
-      perfil.value = options.value.perfilId
-      
-      if (options.value.perfilId == null ){
-        alert('No hay perfil o se perdió la solicitud');
-        router.push({ name: "EvaluacionList" });
-      }else if (options.value.perfilId == 8){ //Administrador
-        if (!evalStore.sexo)
-          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",false,false,false,false,false)
-        else
-          setPerfilVisibleDisabled("flex","flex","flex","flex","none",false,false,false,false,true)
-        
-      }      
-      else if (options.value.perfilId == 1 || options.value.perfilId == 2){ //Subdirector y gerente
-        if (!evalStore.sexo)
-          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",true,true,true,true,true)  
-        else
-          setPerfilVisibleDisabled("flex","flex","flex","flex","none",true,true,true,true,true)
-        
-      }
-      else if (options.value.perfilId == 3){  //Atención y registro
-        if (evalStore.sexo)
-          setPerfilVisibleDisabled("flex","flex","flex","flex","none",false,true,true,true,true)
-        else
-          setPerfilVisibleDisabled("flex","flex","flex","flex","flex",false,true,true,true,true)
-      }
-      else if (options.value.perfilId == 4){ //Psicologo
-        setPerfilVisibleDisabled("none","flex","none","none","none",true,false,true,true,true)
-      }
-      else if (options.value.perfilId == 5){ //Medico
-        setPerfilVisibleDisabled("none","none","flex","none","none",true,true,false,true,true)
-      }
-      else if (options.value.perfilId == 6){//Antidoping
-        if (!evalStore.sexo)
-          setPerfilVisibleDisabled("none","none","none","flex","flex",true,true,true,false,false)
-        else
-          setPerfilVisibleDisabled("none","none","none","flex","none",true,true,true,false,true)
-      }
-      
-    });
-
-    return { visibleRegistro,visiblePsico,visibleMedico,visibleAnti,visiblePie,
-      disabledRregistro,disabledPsico,disabledMedico,disabledAnti,disabledPie,
-      registro, psicologia,medico,antidoping,pie,
-
-      EdicionRegistro,
-      ingreso,termino,openExpediente,closeExpediente,expedienteVisible,perfil
-      
+    const disabledDat = ref(props.disabledData)
+    const EdicionRegistro = ()=> {
+      if (data.value.tipoEvaluacion > 1)
+        disabledDat.value = !disabledDat.value  
+    }
+    
+    const expedienteVisible = ref(false)
+    const openExpediente = ()=> {expedienteVisible.value = true}
+    const closeExpediente = ()=> {
+      data.value.resultado = sol.value.statusExp
+      expedienteVisible.value = false
+      termino(1,false,true);//crea el registro de atn y registro
+    }
 
 
+    return { 
+      openExpediente,closeExpediente,expedienteVisible,
+      ingreso,termino      
+      ,data,visualData,disabledDat,options,noPermiso,existePar,nuevaValoracion
     };
   },
 };

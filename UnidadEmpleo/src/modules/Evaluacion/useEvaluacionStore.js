@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import localStorageService from "@/utils/localStorageService";
-import {getEvaluacion, getEvaluaciones, createEvaluation, updateEvaluation } from '../../services/evaluacionService';
+import {getEvaluacion, getEvaluaciones, createEvaluation, updateEvaluation,getTipoEvaluacion } from '../../services/evaluacionService';
 
 export const useEvaluacionStore = defineStore('evaluacion', {
   state: () => ({
@@ -18,35 +18,15 @@ export const useEvaluacionStore = defineStore('evaluacion', {
         "usuarioIngreso": '',
         "usuarioEvaluo": '',
         "nombreUsuarioEvaluo": ''
-    },
-    psicologia: 
-    {
-        "id": 0,"ingreso": "","salida": "","resultado": false,
-        "observaciones": "Observaciones","revalorable": false,"idSoliciud": 0,
-        "tipoEvaluacion": 2,  "usuarioEvaluo":"","nombreUsuarioEvaluo":""
-    },
-    medico: 
-    {
-        "id": 0,"ingreso": "","salida": "","resultado": false,
-        "observaciones": "Observaciones","revalorable": false,"idSoliciud": 0,
-        "tipoEvaluacion": 3,  "usuarioEvaluo":"","nombreUsuarioEvaluo":""
-    },
-    antidoping: 
-    {
-        "id": 0,"ingreso": "","salida": "","resultado": false,
-        "observaciones": "Observaciones","revalorable": false,"idSoliciud": 0,
-        "tipoEvaluacion": 4,  "usuarioEvaluo":"","nombreUsuarioEvaluo":""
-    },
-    pie: 
-    {
-        "id": 0,"ingreso": "","salida": "","resultado": false,
-        "observaciones": "Observaciones","revalorable": false,"idSoliciud": 0,
-        "tipoEvaluacion": 5,  "usuarioEvaluo":"","nombreUsuarioEvaluo":""
-    },
+    },    
     solicitudId:0,
     activeStep: 0,
     activeClass: 'js-active position-relative',
     formSteps: 4,
+    evaluacion:{
+      "id": 0,"ingreso": '',"salida": '',"resultado": false,"observaciones": '',"revalorable": false,"idSoliciud": 0,"tipoEvaluacion": 1,"usuarioSalida": '',
+        "usuarioIngreso": '',"usuarioEvaluo": '',"nombreUsuarioEvaluo": ''
+    },
     rowsEvaluaciones: [],
     options : {
             cuerpoId:'',//useMainStore.externalUser.cuerpoId,
@@ -81,7 +61,8 @@ export const useEvaluacionStore = defineStore('evaluacion', {
   }),
   
   actions: {
-    async fetchEvaluaciones(solicitudId) {
+    async fetchEvaluaciones(solicitudId, mujer) {
+      
         try {
           
           const evaluaciones = await getEvaluaciones(solicitudId)        
@@ -99,195 +80,103 @@ export const useEvaluacionStore = defineStore('evaluacion', {
               "usuarioEvaluo": ev.usuarioEvaluo,
               "nombreUsuarioEvaluo": ev.nombreUsuarioEvaluo
           }))
-          
-          let a=false,b=false,c=false,d=false,p=false;
-          
-          this.rowsEvaluaciones.forEach(e => {
-            
-            switch (e.tipoEvaluacion) {
-              case 1:
-                a = true
-                this.registro = e;
-                break;
-              case 2:
-                b = true
-                this.medico = e;
-                break;
-              case 3:
-                c = true                
-                this.psicologia = e;
-                break;
-              case 4:
-                d = true
-                this.antidoping = e;
-                break;
-              case 5:
-                p = true
-                this.pie = e;
-                break;
-            }
-          });
 
-          if (!a)
-            this.resetRegistro()
-          if (!b)
-            this.resetMedico()
-          if (!c)
-            this.resetPsicologia()
-          if (!d)
-            this.resetAntidoping()
-          if (!p)
-            this.resetPie()
+          
+          if (this.rowsEvaluaciones.length==0)
+            this.setInitBasico(0,mujer==0,solicitudId)
+          else{
+            console.log('que pedo')
+            for (let i = 1; i<6; i++){                
+                let x = this.rowsEvaluaciones.find((e) => e.tipoEvaluacion == i)       
+                try{
+                  x.tipoEvaluacion
+                }catch{                  
+                  this.setInitBasico(i,i==5? mujer==0:false,solicitudId)          
+                }
+            }
+            this.rowsEvaluaciones.sort((a, b) => a.tipoEvaluacion - b.tipoEvaluacion) 
+          }
+          
+        } catch (error) {
+          console.error('Error fetching lists:', error)
+          this.loadingProgress = 0 // Reset progress on error
+        }
+      },
+    
+      async fetchTipoEvaluacion(solicitudId, tipo, tipo5) {
+        try {
+
+          const evaluaciones = await getTipoEvaluacion(solicitudId, tipo, tipo5)
+
+          this.rowsEvaluaciones = evaluaciones.map((ev) => ({
+              "id": ev.id,
+              "ingreso": ev.ingreso,
+              "salida": ev.salida,
+              "resultado": ev.resultado,
+              "observaciones": ev.observaciones,
+              "revalorable": ev.revalorable,
+              "idSoliciud": ev.idSoliciud,
+              "tipoEvaluacion": ev.tipoEvaluacion,
+              "usuarioSalida": ev.usuarioSalida,
+              "usuarioIngreso": ev.usuarioIngreso,
+              "usuarioEvaluo": ev.usuarioEvaluo,
+              "nombreUsuarioEvaluo": ev.nombreUsuarioEvaluo
+          }))
+          
+          if (this.rowsEvaluaciones.length == 0){
+            this.setInitBasico(tipo,tipo5==5,solicitudId)
+          }
+          
         } catch (error) {
           console.error('Error fetching lists:', error)
           this.loadingProgress = 0 // Reset progress on error
         }
       },
 
-    //Definir donde quedara este paso.
-    async createEvaluaciones(tipo, usuario, password) {
-      let result;
-      //try {
-       
-        switch (tipo) {
-          case 1:
-            this.registro.idSoliciud = this.solicitudId
-            this.registro.ingreso = new Date()
-            result = await createEvaluation(this.registro, usuario, password)
-            if (result.success){
-              this.registro.id = result.data
-              return true
-            }
-            this.registro.ingreso = ""
-            return false
-            
-          case 2:
-            this.medico.idSoliciud = this.solicitudId
-            this.medico.ingreso = new Date()
-            result = await createEvaluation(this.medico,usuario, password)
-            if (result.success){
-              this.medico.id = result.data
-              return true;
-            }
-            this.medico.ingreso = ""
-            return false;
-            
-          case 3:
-            this.psicologia.idSoliciud = this.solicitudId
-            this.psicologia.ingreso = new Date()
-            result = await createEvaluation(this.psicologia,usuario, password)
-            if (result.success){
-              this.psicologia.id = result.data
-              return true
-            }
-            this.psicologia.ingreso = ""
-            return false
-
-          case 4:
-            this.antidoping.idSoliciud = this.solicitudId
-            this.antidoping.ingreso = new Date()
-            result = await createEvaluation(this.antidoping,usuario, password)
-            if (result.success){
-              this.antidoping.id = result.data
-              return true;
-            }
-            this.antidoping.ingreso = ""
-            return false;
-
-          case 5:
-            this.pie.idSoliciud = this.solicitudId
-            this.pie.ingreso = new Date()
-            result = await createEvaluation(this.pie,usuario, password)
-            if (result.success){
-              this.pie.id = result.data
-              return true;
-            }
-            this.pie.ingreso = ""
-            return false;
+    async fetchEvaluacion(id) {
+        try {
+          const evaluacion = await getEvaluacion(id)
+          return evaluacion         
+        } catch (error) {
+          console.error('Error fetching lists:', error)
+          this.loadingProgress = 0 // Reset progress on error
+          return null
         }
-       /* 
-      } catch (error) {
-        console.error('Error al crear las evaluaciones:', error)
-      }*/
+      },
+
+    //Definir donde quedara este paso.
+    async createEvaluaciones(ev, usuario, password) {
+            ev.ingreso = new Date()
+            //console.log(ev.ingreso)
+            //ev.idSoliciud = this.solicitudId
+            ev.usuarioIngreso = usuario
+            
+            let result = await createEvaluation(ev, usuario, password)
+            if (result.success){
+              ev.id = result.data
+              return ev
+            }
+            ev.ingreso = ""
+            return false
+     
     },
     
-    async updateEvaluaciones(tipo, usuario, password, termino) {
+    async updateEvaluaciones(ev, usuario, password, termino) {
       try {      
         
-        switch (tipo) {
-          case 1:
             if (termino)
-              this.registro.salida = new Date();
+              ev.salida = new Date();
             
-            if (!await updateEvaluation(this.registro,usuario, password,termino))
+            if (!await updateEvaluation(ev,usuario, password,termino))
               return false;  
             else
               if (!termino){
-                const data = await getEvaluacion(this.registro.id);
+                const data = await getEvaluacion(ev.id);
                 if (!Array.isArray(data) || data.length > 0) {
                   this.registro.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
                 }
               }
             return true; 
-            
-          case 2:
-            if (termino)
-              this.medico.salida = new Date()
-
-            if (!await updateEvaluation(this.medico,usuario, password,termino))
-              return false
-            else
-              if (!termino){
-                const data = await getEvaluacion(this.medico.id);
-                if (!Array.isArray(data) || data.length > 0) {
-                  this.medico.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
-                  
-                }
-              }
-            return true;
-          case 3:
-            if (termino)
-              this.psicologia.salida = new Date()
-            
-            if (!await updateEvaluation(this.psicologia,usuario, password,termino))
-              return false;
-            else
-              if (!termino){
-                const data = await getEvaluacion(this.psicologia.id);
-                if (!Array.isArray(data) || data.length > 0) {
-                  this.psicologia.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo                  
-                }
-              }
-            return true
-          case 4:
-            if (termino)
-              this.antidoping.salida = new Date()
-
-            if (!await updateEvaluation(this.antidoping,usuario, password,termino))
-              return false
-            else
-              if (!termino){
-                const data = await getEvaluacion(this.antidoping.id);
-                if (!Array.isArray(data) || data.length > 0) {
-                  this.antidoping.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo                  
-                }
-              }
-            return true
-          case 5:
-            if (termino)
-              this.pie.salida = new Date()
-            if (!await updateEvaluation(this.pie,usuario, password,termino))
-              return false
-            else
-              if (!termino){
-                const data = await getEvaluacion(this.pie.id);
-                if (!Array.isArray(data) || data.length > 0) {
-                  this.pie.nombreUsuarioEvaluo = data.nombreUsuarioEvaluo
-                  
-                }
-              }
-            return true
-        }
         
       } catch (error) {
         console.error('Error updating Aspirante:', error)
@@ -321,42 +210,29 @@ export const useEvaluacionStore = defineStore('evaluacion', {
         this.activeStep = step;
       }
     },
-    resetRegistro() {    
-      this.registro=  {
-        "id": 0,"ingreso": '',"salida": '',"resultado": false,"observaciones": '',"revalorable": false,"idSoliciud": 0,"tipoEvaluacion": 1,"usuarioSalida": '',
-        "usuarioIngreso": '',"usuarioEvaluo": '',"nombreUsuarioEvaluo": ''
+
+    setInitBasico(tipo, femenino, idSol){    
+      if (tipo == 0){
+        for (let i = 1; i<5; i ++)
+          this.initEvaluacion(idSol,i)        
+        console.log('0 basic')
       }
+      else if (tipo >= 1 && tipo <=4)
+        this.initEvaluacion(idSol,tipo)
+      
+      if (femenino)
+            this.initEvaluacion(idSol,5)
+        
     },
-    resetMedico() {    
-      this.medico =  {
-        "id": 0,"ingreso": '',"salida": '',"resultado": false,"observaciones": '',"revalorable": false,"idSoliciud": 0,"tipoEvaluacion": 2,"usuarioSalida": '',
+
+    initEvaluacion(idSol = 0, tipo) {  
+      this.rowsEvaluaciones.push(  {
+        "id": 0,"ingreso": '',"salida": '',"resultado": false,"observaciones": '',"revalorable": false,"idSoliciud": idSol,"tipoEvaluacion": tipo,"usuarioSalida": '',
         "usuarioIngreso": '',"usuarioEvaluo": '',"nombreUsuarioEvaluo": ''
-      }
-    },
-    resetPsicologia() {    
-      this.psicologia =  {
-        "id": 0,"ingreso": '',"salida": '',"resultado": false,"observaciones": '',"revalorable": false,"idSoliciud": 0,"tipoEvaluacion": 3,"usuarioSalida": '',
-        "usuarioIngreso": '',"usuarioEvaluo": '',"nombreUsuarioEvaluo": ''
-      }
-    },
-    resetAntidoping() {    
-      this.antidoping =  {
-        "id": 0,"ingreso": '',"salida": '',"resultado": false,"observaciones": '',"revalorable": false,"idSoliciud": 0,"tipoEvaluacion": 4,"usuarioSalida": '',
-        "usuarioIngreso": '',"usuarioEvaluo": '',"nombreUsuarioEvaluo": ''
-      }
-    },
-    resetPie() {    
-      this.pie =  {
-        "id": 0,"ingreso": '',"salida": '',"resultado": false,"observaciones": '',"revalorable": false,"idSoliciud": 0,"tipoEvaluacion": 5,"usuarioSalida": '',
-        "usuarioIngreso": '',"usuarioEvaluo": '',"nombreUsuarioEvaluo": ''
-      }
+      })
     },
     resetAll(){
-      this.resetRegistro();
-      this.resetMedico();
-      this.resetPsicologia();
-      this.resetAntidoping();
-      this.resetPie();
+      
       this.options = {
             cuerpoId:'',
             regionId:0,

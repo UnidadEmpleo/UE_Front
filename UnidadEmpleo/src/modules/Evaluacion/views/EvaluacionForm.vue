@@ -67,79 +67,73 @@
       </div>
 
       <div class="card-body">
-            <form class="multisteps-form__form">
-              <CardEval :class="activeStep === 0 ? activeClass : ''"/>
-              
-              <div class="mt-4 d-flex justify-content-between">
-                
+            <form class="row flex justify-content-center">
+             
+                <div class="col-sm-4" v-for="(item, index) in rowsEvaluaciones" :key="index">                  
+                    <CardEval 
+                    :disabledData="(item.nombreUsuarioEvaluo=='' )? false:item.tipoEvaluacion == 1? false:true" 
+                    :tipo="item.tipoEvaluacion" 
+                    :valor="item"
+                    @addEvaluation="agregarEvaluacion"/>                    
+                </div>
+      
+              <div class="mt-4 d-flex justify-content-between">                
                 <MaterialButton id="next-step-button" :color="sigColor" :variant="sigVariant" :disabled="sigPaso"
-                  @click.prevent="activeStep === 0 ? handleSave() : handleNextStep()">
-                  {{ activeStep !== 0 ? "Continuar con su evaluacion" : "Terminar" }}
+                  @click.prevent="handleSave()">
+                  Terminar
                 </MaterialButton>
-
               </div>
-            </form>
+           
+            </form> 
       </div>
     </div>
+    
   </div>  
 </template>
 
 <script>
 
-//import CardEval from "../components/CardEval.vue/index.js";
-
-
+import CardEval from "../components/CardEval.vue";
 import { getSexoById,calculaEdad } from "@ue/services/catalogosDbService"
 import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
-import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
 import { useEvaluacionStore } from "../useEvaluacionStore.js";
 import fotoDefault from "@/assets/img/user.png";
-
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
-import CardEval from '../components/CardEval.vue';
-
+import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
+import MaterialButton from "../../../../../src/components/common/MaterialButton.vue";
 
 export default {
   name: "EvaluacionActive",
   components: {
-     CardEval,
-     
-
+     CardEval,MaterialButton
   },
-  setup() {
-    
+  setup() {        
     const solicitudStore = useSolicitudStore();
     const evalStore = useEvaluacionStore();
-    const { activeStep, activeClass } = storeToRefs(evalStore); 
-    const { nextStep, prevStep } = evalStore;
-    const { solicitud: sol } = storeToRefs(solicitudStore);
     
+    const { rowsEvaluaciones } = storeToRefs(evalStore);     
     const aspiranteStore = useAspiranteStore();
-    const { aspirante: asp } = storeToRefs(aspiranteStore);
-    
+    const { aspirante: asp } = storeToRefs(aspiranteStore);    
     const router = useRouter();
-    const fecha = new Date();
-    
-    let sigPaso = ref( true);
-    let sigColor = ref('secundary');
-    let sigVariant = ref('outline');
-    
-    let isCreateMode = sol.value.id == 0;
-
+    const fecha = new Date();    
     const placeholder = fotoDefault;
-    
-    onMounted(() => {
-      activeStep.value = 0;      
+    const solicitudId = ref(null)
+    const tipoEvaluacion = ref(null)
+
+    onMounted(() => {      
+      evalStore.setRecurso()            
     });
-    
+
+    function agregarEvaluacion(data) {
+      evalStore.initEvaluacion(data.solicitudId,data.tipoEvaluacion)
+    }
    
     const navigateToList = () => {
       aspiranteStore.resetSelectedAspirante();
       evalStore.resetAll();
-      solicitudStore.resetSelectedSolicitud();
-      activeStep.value = 0;
+      solicitudStore.resetSelectedSolicitud();      
       router.push({ name: "EvaluacionList" });
     }
 
@@ -147,67 +141,40 @@ export default {
         router.push({ name: "EvaluacionList" }); // DE AQUI SE VA A LA PAGINA DE EVALUAR
     }
 
-    const verifyData = () => {
-      if (validateStep()) {
-        let result = false;
-        if (isCreateMode && sol.value.id == 0){
-          sol.value.fechaSolicitud = fecha.getFullYear()+'-'+(fecha.getMonth() + 1).toString().padStart(2, '0')+'-'+fecha.getDate().toString().padStart(2, '0')
-          result = solicitudStore.createSolicitud();
-        }
-        else result =  solicitudStore.updateSolicitud();
-        
-        if (result){
-          sigColor.value = 'primary';
-          sigVariant.value = 'gradient';
-          sigPaso.value = false;
-          
-        }
-      }
-    }
-      
 
-    const setActiveStep = () => {
-      if (validateStep()) {
-        nextStep();
-      }
-    };
-
-    const handlePrevStep = ()=>{
-      prevStep()
-    }
-
-    const handleNextStep = () => {
-      if (validateStep()) {
-        if (activeStep.value === 0){
-            
-            nextStep();
-
-        }else if (activeStep.value === 1){
-           nextStep();
-        }
-      }
-    };
-
-    const validateStep = () => {
-      let isValid = true;
-      return isValid;
-    };
-
-    const nodeWasClicked = () => {
-      alert("Node clicked");
-    };
-
-    return {
-      activeStep,activeClass,
-      nextStep,handlePrevStep,
-      isCreateMode,handleNextStep,
-      handleSave,setActiveStep,
-      navigateToList,nodeWasClicked,
-      asp,sol,placeholder,
+    return {      
+      handleSave,
+      navigateToList,
+      asp,placeholder,
       calculaEdad,getSexoById,
-      fecha,verifyData,sigPaso,sigColor,sigVariant
-      
+      fecha
+      ,rowsEvaluaciones
+      ,solicitudId,tipoEvaluacion,agregarEvaluacion
+
     };
   },
 };
 </script>
+
+<style scoped>
+.eval {
+    display: flex;      /* Coloca los hijos en horizontal */
+    list-style: none;   /* Elimina los puntos */
+    padding: 0;
+    margin: 0;
+    gap: 20px;          /* Espacio entre elementos */
+}
+
+.eval li {
+    padding: 10px 20px;
+    background-color: rgba(243, 245, 230, 0.6);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.eval li:hover {
+     background-color: rgba(160, 158, 158, 0.6);
+}
+
+</style>

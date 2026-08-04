@@ -3,7 +3,7 @@ import axios from './axiosInstance'
 // import { getApiHeadersWithCorporation } from './apiHeaders';
 import { useMainStore } from '@/store/useMainStore';
 import localStorageService from "@/utils/localStorageService";
-
+import Swal from 'sweetalert2'
 
 export async function apiRequest({
           url,
@@ -56,7 +56,7 @@ export async function apiRequest({
       }
          
     } catch (error) {
-
+      
       let message = 'Error desconocido'
 
       if (error.response) {
@@ -83,7 +83,7 @@ export async function apiRequest({
         else if(error.response.status === 100) // MENSAJE PARTICULAR 
           message = error.response.data?.message || 'Error de operacion'; //Este codigo es para mensaje particular
         else if(error.response.status === 401) // MENSAJE PARTICULAR 
-          message = error.response.data || 'Error de autenticacion'; //Este codigo es para mensaje particular
+          message = error.response.data || 'Error de autenticacion'; //Este codigo es para mensaje particular         
         else
         {
           const { data } = error.response
@@ -106,7 +106,6 @@ export async function apiRequest({
             message =  data?.detail || data?.message || error.response.statusText;
             
           }
-          
 
          if (data?.errors) 
           {           
@@ -123,7 +122,16 @@ export async function apiRequest({
         }
       }      
       
-      if (customAlert) { mainStore.triggerAlert({message,color: 'danger',icon: 'error',})}
+      if (customAlert) { 
+        Swal.fire({
+          icon: "error",
+          title: message,
+          text: "error",
+        });
+        
+        //mainStore.triggerAlert({message,color: 'danger',icon: 'error',})
+      
+      }
 
       return { success: false,data: null,error: message,headers: error.response?.headers ?? null,}   
     }

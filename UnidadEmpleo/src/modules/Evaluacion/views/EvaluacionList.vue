@@ -62,12 +62,10 @@
           Evaluar
         </material-button>
         
-        <material-button color="primary" size="sm" @click="handleEvaluar1(row)" class="me-2" v-permiso="'Grupos.Editar'">
-          Evaluar1
-        </material-button>
-        
       </template>
+      
     </DataTable>
+    
   </div>
 </template>
 
@@ -82,8 +80,8 @@ import { useRouter } from "vue-router";
 import { useCuerpoStore } from "@ue/modules/Cuerpo/useCuerpoStore";
 import { useAspiranteStore } from "../../Aspirante/store/useAspiranteStore";
 import { useEvaluacionStore } from "../useEvaluacionStore";
-import { useEvaluacionStore1 } from "../useEvaluacionStore1";
 import { getStatusSolicitud } from "../../../services/catalogosDbService";
+
 export default {
   name: "SolicitudesList",
   components: {
@@ -94,7 +92,7 @@ export default {
     const solicitudStore = useSolicitudStore();
     const aspiranteStore = useAspiranteStore();
     const evalStore = useEvaluacionStore();
-    const evalStore1 = useEvaluacionStore1();
+   
     const { rowsSolicitudes, columns, loadingProgress } = storeToRefs(solicitudStore);
     const router = useRouter();
     const { options } = storeToRefs(solicitudStore);
@@ -109,7 +107,6 @@ export default {
     };
 
     const handleEvaluar = async (row) => {
-
       aspiranteStore.verifyAspiranteByCurp(row.Curp)
       evalStore.solicitudId = row.id
       evalStore.sexo = row.sexoid
@@ -131,30 +128,7 @@ export default {
 
       router.push({ name: "EvaluacionForm" });
     };
-    const handleEvaluar1 = async (row) => {
-
-      aspiranteStore.verifyAspiranteByCurp(row.Curp)
-      evalStore1.solicitudId = row.id
-      evalStore1.sexo = row.sexoid
-      evalStore1.rowsEvaluaciones = []
-      
-      if (options.value.perfilId == 1 || options.value.perfilId == 2 || options.value.perfilId == 3)
-        evalStore1.fetchEvaluaciones(row.id, row.sexoid)
-      else if (options.value.perfilId == 4) // psicologia
-        evalStore1.fetchTipoEvaluacion(row.id, 3,0)
-      else if (options.value.perfilId == 5) // medico
-        evalStore1.fetchTipoEvaluacion(row.id, 2,0)
-      else if (options.value.perfilId == 6){ // antidoping
-        if (!evalStore1.sexo)  
-          evalStore1.fetchTipoEvaluacion(row.id, 4,5)
-        else
-          evalStore1.fetchTipoEvaluacion(row.id, 4,0)
-      }
-      solicitudStore.fetchSolicitudById(row.id)
-
-      router.push({ name: "EvaluacionForm1" });
-    };
-
+    
     const handleDelete = (row) => {
       if (confirm(`¿Estás seguro de que deseas eliminar la solicitud "${row.nombre}"?`)) {
         //itmesStore.deleteAspirante(row.id);
@@ -196,11 +170,12 @@ export default {
       navigateToCreate,
       handleEvaluar,
       handleDelete,
-      handleEvaluar1,
+      
       //consultas
       filtrar,
       solicitudStore,options,rowsCuerpo,
       regionesLista,availableRegiones,statusLista
+
     };
   },
 };

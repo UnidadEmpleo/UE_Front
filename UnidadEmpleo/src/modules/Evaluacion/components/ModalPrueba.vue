@@ -9,26 +9,7 @@
         <!-- Selección de datos -->
         <div class="section-title">Evaluaciones de Aspirante</div>
 
-            <DataTable
-            title="Solicitudes"
-            description="Lista de Solicitudes"
-            table-id="solicitud-table"
-            :columns="columns"
-            :rows="rowsSolicitudes"
-            :searchable="true"
-            :loadingProgress="loadingProgress"
-            >
-            <!-- Custom Row Actions -->
-            <template #row-actions="{ row }">
-                <div></div>
-                
-                
-                <material-button class="btn-link me-2" size="sm" @click="openEvaluacion(row)"  >
-                  ver evaluación 
-                </material-button>
-                
-            </template>
-            </DataTable>
+           ¡¡¡¡¡ Vamonos al angel !!!!!
 
           <div class="d-flex justify-content-between mt-3">
             <button class="btn btn-secondary" @click="$emit('close')">Cancelar</button>
@@ -43,36 +24,21 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch } from 'vue'
-import { storeToRefs } from "pinia";
-import { verificaPermiso } from "@ue/services/securityService"
-import { useSolicitudStore } from "@ue/modules/Solicitud/store/solicitudStore";
-import { useEvaluacionStore } from '../useEvaluacionStore';
-import { useAspiranteStore } from '../../Aspirante/store/useAspiranteStore';
-import { useRouter } from "vue-router";
-import DataTable from "@/components/widgets/DataTable.vue";
-import Swal from 'sweetalert2'
+import { defineComponent,  watch } from 'vue'
 
 export default defineComponent({
-  name: 'ReportModalAdvanced',
+  name: 'ModalPrueba',
   components: {    
-    DataTable,
+    
   },
   props: {
     visible: { type: Boolean, default: false },
     title: { type: String, default: '' },
-    completo:{ type: Boolean, default: false },
-    curp:{ type: String, default: '' },    
-    permisos:[]
+    completo:{ type: Boolean, default: false },   
   },
   emits: ['close', 'update:completo'],
   setup(props, { emit }) {      
-    const loading = ref(false)    
-    const store = useSolicitudStore();
-    const {rowsSolicitudes, columns,loadingProgress} =  storeToRefs(store);
-    const aspiranteStore = useAspiranteStore();
-    const evalStore = useEvaluacionStore();
-    const router = useRouter();    
+
     
     // Inicializa los filtros locales y limpia la vista previa al abrir/cerrar el modal
     watch(() => props.visible, (v) => {
@@ -86,29 +52,6 @@ export default defineComponent({
       syncFilters(true)
     }
 
-    async function openEvaluacion(row){     
-      //Identificar en que vista estoy. = this.$options.name      
-      //revisar si entre sus derechos tiene Evaluar= true, cualquier otra cosa no hacer nada
-      
-      let go = verificaPermiso(props.permisos, "AspiranteList", this.$options.name)
-      if (go){
-        console.log(row)        
-        aspiranteStore.verifyAspiranteByCurp(row.Curp)
-        evalStore.solicitudId = row.Id
-        evalStore.sexo = row.sexoid
-        evalStore.fetchEvaluaciones(row.Id)
-        store.fetchSolicitudById(row.Id)
-        router.push({ name: "EvaluacionForm" });
-      }
-      else       
-        Swal.fire({
-          icon: "error",
-          title: "Sin privilegios",
-          text: "¡No tienes acceso a esta información!",
-        });
-      
-    }
-
     function syncFilters(estado) {
       const resultadoout = estado
       emit('update:completo', resultadoout)
@@ -117,7 +60,7 @@ export default defineComponent({
 
     
 
-    return { rowsSolicitudes, columns,loadingProgress,loading,onPrevSave,openEvaluacion}
+    return { onPrevSave}
   }
 })
 </script>

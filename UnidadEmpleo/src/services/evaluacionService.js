@@ -91,13 +91,14 @@ export async function createEvaluation(dato, userName, password){
 }
 
 export async function updateEvaluation(dato, userName, password,termino){
- 
+ console.log('resultado '+dato.resultado+' valor send '+ dato.resultado === "true" || dato.resultado === true)
+
   const itemRequest = 
     {
         "id": dato.id,
         "ingreso": dato.ingreso,
         "salida": dato.salida,
-        "resultado": dato.resultado=="true",
+        "resultado": dato.resultado === "true" || dato.resultado === true,
         "observaciones": dato.observaciones,
         "revalorable": dato.revalorable,
         "idSoliciud": dato.idSoliciud,
@@ -117,9 +118,9 @@ export async function updateEvaluation(dato, userName, password,termino){
       showSuccess: true,
       successMessage: "Registro se actualizó exitosamente."
     });
-    if (result.success)
-      return true
-    return true
+
+    return result.success
+    
   }
   else if (!termino){
     const result = await apiRequest({
@@ -130,9 +131,8 @@ export async function updateEvaluation(dato, userName, password,termino){
       successMessage: "Registro se actualizó exitosamente."
     });
 
-    if (result.success)
-      return true
-    return true
+    return result.success
+      
   }
   return false
 }
