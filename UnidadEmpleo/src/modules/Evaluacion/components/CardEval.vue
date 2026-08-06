@@ -3,8 +3,9 @@
         <div class="card bg-custom " :style="{display: disabledDat}">
           <div class="card-header d-flex justify-content-between">
             <div  class="col-sm-6"> 
-              <h3>{{ visualData[data.tipoEvaluacion-1].title }}</h3>
+              <h3>{{ visualData[data.tipoEvaluacion-1].title }} </h3> 
             </div>            
+            <div ><label>{{ data.id }}</label></div>
           </div>
           
           <div class="card col-sm-12"> 
@@ -15,7 +16,8 @@
           </div>
 
           <div class="card col-sm-12"> 
-            {{ disabledDat }}, {{ data.tipoEvaluacion }}, {{data.nombreUsuarioEvaluo}}
+            
+            <!--{{ disabledDat }}, {{ data.tipoEvaluacion }}, {{data.nombreUsuarioEvaluo}}-->
             <material-button color="success" size="sm" @click.prevent="termino(data.tipoEvaluacion, true, false)" :disabled="(data.salida == null || data.salida.length == 0) && data.salida != data.ingreso? disabledDat: true">Salida</material-button>
               <label  class="form-label col-sm-auto"> {{ data.salida }}</label>
           </div>
@@ -175,8 +177,6 @@ export default {
         "usuarioEvaluo": props.valor.usuarioEvaluo,
         "nombreUsuarioEvaluo": props.valor.nombreUsuarioEvaluo
     })    
-    
-    
 
     const confirmar = async () =>{
       let { value: confirmar } = await Swal.fire({
@@ -261,13 +261,12 @@ export default {
           return result
         });  
       
-      if (continuar){
-        console.log('Se actualizó : data.expedientecompleto '+data.value.resultado )
-        let resp = await evalStore.updateEvaluaciones(data.value, usuario, dato, termino)
-        console.log('Se actualizó : '+resp+ ' data.expedientecompleto '+data.value.resultado )
+      if (continuar){        
+        let resp = await evalStore.updateEvaluaciones(data.value, usuario, dato, termino)        
         if(resp) {//Actualiza evaluación
           if (op == 1 & !termino)
-            solicitudStore.updateSolicitud() //se actualiza datos de solicitud
+            solicitudStore.fetchSolicitudById(data.value.idSoliciud)
+            
         }else
           resp = true;
         
@@ -304,6 +303,7 @@ export default {
     const expedienteVisible = ref(false)
     const openExpediente = ()=> {expedienteVisible.value = true}
     const closeExpediente = ()=> {
+      
       data.value.resultado = sol.value.statusExp
       expedienteVisible.value = false
       termino(1,false,true);//crea el registro de atn y registro

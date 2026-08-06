@@ -67,6 +67,14 @@ export async function getItemsByAspirante(curp) {
     return result.data; 
 }
 
+export async function getItemsRevalorable(curp) {  
+    const store = useSolicitudStore();
+    store.loadingProgress = 0
+    store.loadingProgress = 20
+    const result = await apiRequest({ url: `${endpoint}/revaloracion/${curp==''? '_':curp}` });    
+    return result.data; 
+}
+
 export async function getItemsByOptions(options){
     const store = useSolicitudStore();
     const mainStore = useMainStore();

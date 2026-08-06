@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import localStorageService from "@/utils/localStorageService";
-import {getSolicitudById,getItems,getItemsByAspirante,getItemsByOptions,createItem,updateItem,deleteItem, printSolicitud} from '@ue/services/solicitudService.js'
+import {getSolicitudById,getItems,getItemsByAspirante,getItemsByOptions,createItem,updateItem,deleteItem, printSolicitud,getItemsRevalorable} from '@ue/services/solicitudService.js'
 import { getStatusSolicitudById } from '../../../services/catalogosDbService';
 import { getSexoById } from "@ue/services/catalogosDbService"
 import { useMainStore } from '@/store/useMainStore.js'
@@ -186,6 +186,45 @@ export const useSolicitudStore = defineStore('solicitud', {
       else
         useMainStore().triggerAlert({message: faWarning || 'El perfil de usuario no puede visualizar este dato',
             color: 'danger',icon: 'error',})
+    },
+
+    //Los perfiles subdirector, gerente y administrador  (1,2,3,8) pueden consultar todos sin necesidad de indicar la curp
+    //Los demas perfiles obligados a poner la curp
+    async fetchRowsRevaloracion(curp){
+      var continuar = true;
+      if ((this.options.perfilId >=4 && this.options.perfilId <= 7 ) && !curp){
+        continuar = false  
+        useMainStore().triggerAlert({message:'INDICA LA CURP A CONSULTAR',color: 'danger',icon: 'error',})          
+      }
+      console.log('No se que paso '+continuar )
+      console.log(' perfil '+this.options.perfilId) 
+      console.log(' curp .'+!curp +'- '+(this.options.perfilId ===  8 || this.options.perfilId >= 1 || this.options.perfilId <= 3 ))
+      console.log('curpe '+ curp=='' +':')
+      console.log('curpe '+ curp==null +':')
+
+      if (continuar)
+        try {          
+          const evals = await getItemsRevalorable(curp)          
+          this.columns = ['id','Sexo','Nombre','Fecha solicitud','Expediente Completo','Revalorable','Estatus Solicitud','CorporacionId', 'Observaciones'], // Table columns
+          this.rowsSolicitudes = evals.map((ev) => ({
+            "id": ev.id,
+            "Nombre": ev.aspirante.nombre + ' '+ev.aspirante.apellido_Paterno+' '+ev.aspirante.apellido_Materno,
+            "Fecha solicitud": getTimeOffset(ev.fechaSolicitud),
+            "Expediente Completo":ev.statusExp? 'Sí':'No',
+            "Revalorable": ev.revalorable? 'Sí':'No',
+            "Estatus Solicitud":  getStatusSolicitudById(ev.status),
+            "Observaciones": ev.observaciones,
+            "CorporacionId": ev.corporacionId,
+            "RegionId": decimalARomano(ev.regionId),
+            "Curp": ev.curp,
+            "Sexo": getSexoById(ev.aspirante.sexo),
+            "sexoid":ev.aspirante.sexo
+        }))
+
+        } catch (error) {          
+          useMainStore().triggerAlert({message: error || 'Error fetching solicitudes',color: 'danger',icon: 'error',})          
+        }
+     
     },
 
     async fetchSolicitudesPorAspirante(curp) {
@@ -474,7 +513,8 @@ export const useSolicitudStore = defineStore('solicitud', {
       this.activeStep = 0,
       this.activeClass = 'js-active position-relative',
       this.formSteps = 4,
-      this.rowsAspirantes = []
+      this.rowsAspirantes = [],
+      this.rowsSolicitudes = []
     }
   },
 })

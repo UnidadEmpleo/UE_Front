@@ -36,6 +36,12 @@ const routeEvaluacion = [
     component: () => import("@ue/modules/Evaluacion/views/EvaluacionList.vue"),
       beforeEnter: requireAuth,
   },
+   {
+    path: "/revaloraciones",
+    name: "RevaloracionList",
+    component: () => import("@ue/modules/Evaluacion/views/RevaloracionList.vue"),
+      beforeEnter: requireAuth,
+  },
   {
     path: "/evaluacion",
     name: "EvaluacionForm",

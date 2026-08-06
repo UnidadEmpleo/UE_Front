@@ -40,6 +40,16 @@
           
       </div>
     </div>
+    <div class="card ">
+      <div class="col-sm-11 container-fluid mb-1">
+        <div class="container-fluid ">
+          <label  class="form-label font-weight-bolder col-sm-auto">No Prealta: </label><label  class="form-label  col-sm-2">{{ sol.id }}</label>
+          <label  class="form-label font-weight-bolder col-sm-auto">Documentación completa: </label><label  class="form-label  col-sm-2">{{ sol.statusExp=='true'? 'Sí': 'No' }}</label>
+          <label  class="form-label font-weight-bolder col-sm-auto">Revalorable: </label><label  class="form-label  col-sm-2">{{ sol.revalorable=='true'? 'Sí': 'No' }}</label>
+          <label  class="form-label font-weight-bolder col-sm-auto">Situación: </label><label  class="form-label  col-sm-2">{{getStatusSolicitudById(sol.status)}}</label>          
+        </div>                  
+      </div>
+    </div>
           
     <div class="row ">
       <div class="card">
@@ -94,7 +104,7 @@
 <script>
 
 import CardEval from "../components/CardEval.vue";
-import { getSexoById,calculaEdad } from "@ue/services/catalogosDbService"
+import { getSexoById,calculaEdad,getStatusSolicitudById } from "@ue/services/catalogosDbService"
 import { useAspiranteStore } from "@ue/modules/Aspirante/store/useAspiranteStore";
 import { useEvaluacionStore } from "../useEvaluacionStore.js";
 import fotoDefault from "@/assets/img/user.png";
@@ -116,6 +126,7 @@ export default {
     const { rowsEvaluaciones } = storeToRefs(evalStore);     
     const aspiranteStore = useAspiranteStore();
     const { aspirante: asp } = storeToRefs(aspiranteStore);    
+    const { solicitud:sol } = storeToRefs(solicitudStore);
     const router = useRouter();
     const fecha = new Date();    
     const placeholder = fotoDefault;
@@ -150,7 +161,7 @@ export default {
       fecha
       ,rowsEvaluaciones
       ,solicitudId,tipoEvaluacion,agregarEvaluacion
-
+      ,sol,getStatusSolicitudById
     };
   },
 };
